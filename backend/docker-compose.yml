@@ -1,0 +1,15 @@
+name: gorae
+
+services:
+  db:
+    image: postgres:17.4-alpine3.21
+    container_name: gorae-db
+    environment:
+      POSTGRES_USER: gorae
+      POSTGRES_PASSWORD: gorae123
+      POSTGRES_DB: gorae_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
