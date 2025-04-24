@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CustomException extends RuntimeException {
-    private final ErrorStatus status;
+    private final ErrorStatus errorStatus;
 
     @Override
     public String getMessage() {
-        return status.getMessage();
+        return errorStatus.getMessage();
     }
 }

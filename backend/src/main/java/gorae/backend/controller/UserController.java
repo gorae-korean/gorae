@@ -1,5 +1,7 @@
 package gorae.backend.controller;
 
+import gorae.backend.entity.dto.ResponseDto;
+import gorae.backend.entity.dto.ResponseStatus;
 import gorae.backend.entity.dto.user.LoginRequestDto;
 import gorae.backend.entity.dto.user.SignupRequestDto;
 import gorae.backend.entity.dto.user.TokenDto;
@@ -17,16 +19,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<TokenDto> signup(@RequestBody SignupRequestDto dto) {
+    public ResponseEntity<ResponseDto<TokenDto>> signup(@RequestBody SignupRequestDto dto) {
         log.info("[API] Signup requested: {}", dto.email());
         TokenDto tokenDto = userService.signup(dto);
-        return ResponseEntity.ok(tokenDto);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, tokenDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginRequestDto dto) {
+    public ResponseEntity<ResponseDto<TokenDto>> login(@RequestBody LoginRequestDto dto) {
         log.info("[API] Login requested: {}", dto.email());
         TokenDto tokenDto = userService.login(dto);
-        return ResponseEntity.ok(tokenDto);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, tokenDto));
     }
 }
