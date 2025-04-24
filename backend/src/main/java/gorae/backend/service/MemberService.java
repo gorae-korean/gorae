@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class MemberService {
     private final MemberRepository memberRepository;
     private final StudentRepository studentRepository;
     private final InstructorRepository instructorRepository;
