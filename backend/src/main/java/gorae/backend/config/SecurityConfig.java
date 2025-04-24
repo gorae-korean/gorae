@@ -30,8 +30,8 @@ public class SecurityConfig {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
 
         MvcRequestMatcher[] permitAllWhiteList = {
-                mvc.pattern("/api/users/signup"),
-                mvc.pattern("/api/users/login"),
+                mvc.pattern("/api/members/signup"),
+                mvc.pattern("/api/members/login"),
         };
 
         http.authorizeHttpRequests(auth -> auth
