@@ -3,19 +3,21 @@ package gorae.backend.service;
 import gorae.backend.entity.Instructor;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Member;
-import gorae.backend.entity.dto.user.LoginRequestDto;
-import gorae.backend.entity.dto.user.SignupRequestDto;
-import gorae.backend.entity.dto.user.TokenDto;
+import gorae.backend.entity.dto.member.LoginRequestDto;
+import gorae.backend.entity.dto.member.SignupRequestDto;
+import gorae.backend.entity.dto.member.TokenDto;
 import gorae.backend.entity.repository.InstructorRepository;
 import gorae.backend.entity.repository.StudentRepository;
 import gorae.backend.entity.repository.MemberRepository;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
-import gorae.backend.util.JwtTokenUtil;
+import gorae.backend.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,7 +27,7 @@ public class MemberService {
     private final StudentRepository studentRepository;
     private final InstructorRepository instructorRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public TokenDto signup(SignupRequestDto dto) {
         if (memberRepository.existsByEmail(dto.email())) {
@@ -34,6 +36,7 @@ public class MemberService {
 
         String encodedPassword = passwordEncoder.encode(dto.password());
         Member savedMember;
+        List<String> roles;
 
         switch (dto.accountType()) {
             case STUDENT -> {
@@ -45,6 +48,7 @@ public class MemberService {
                         .isFirst(true)
                         .build();
                 savedMember = studentRepository.save(student);
+                roles = List.of("ROLE_STUDENT");
             }
             case INSTRUCTOR -> {
                 Instructor instructor = Instructor.builder()
@@ -54,22 +58,30 @@ public class MemberService {
                         .phoneNumber(dto.phoneNumber())
                         .build();
                 savedMember = instructorRepository.save(instructor);
+                roles = List.of("ROLE_INSTRUCTOR");
             }
             default -> throw new IllegalStateException("Unexpected value: " + dto.accountType());
         }
 
         log.info("User signed up: {}", savedMember.getEmail());
-        String token = jwtTokenUtil.generateToken(savedMember);
+        String token = jwtTokenProvider.generateToken(savedMember, roles);
         return new TokenDto(token);
     }
 
     public TokenDto login(LoginRequestDto dto) {
         Member member;
+        List<String> roles;
         switch (dto.accountType()) {
-            case STUDENT -> member = studentRepository.findByEmail(dto.email())
-                    .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
-            case INSTRUCTOR -> member = instructorRepository.findByEmail(dto.email())
-                    .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+            case STUDENT -> {
+                member = studentRepository.findByEmail(dto.email())
+                        .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+                roles = List.of("ROLE_STUDENT");
+            }
+            case INSTRUCTOR -> {
+                member = instructorRepository.findByEmail(dto.email())
+                        .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+                roles = List.of("ROLE_INSTRUCTOR");
+            }
             default -> throw new IllegalStateException("Unexpected value: " + dto.accountType());
         }
 
@@ -78,7 +90,7 @@ public class MemberService {
         }
 
         log.info("User logged in: {}", member.getEmail());
-        String token = jwtTokenUtil.generateToken(member);
+        String token = jwtTokenProvider.generateToken(member, roles);
         return new TokenDto(token);
     }
 }

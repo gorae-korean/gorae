@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseDto<String>> handleException() {
-        log.error("Exception occurred");
+    public ResponseEntity<ResponseDto<String>> handleException(Exception e) {
+        log.error("Exception occurred: {}", e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ResponseDto<>(ResponseStatus.ERROR, "서버에서 에러가 발생했습니다."));
