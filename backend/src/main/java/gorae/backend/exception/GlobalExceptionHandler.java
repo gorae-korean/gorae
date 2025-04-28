@@ -13,15 +13,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseDto<String>> handleCustomException(CustomException e) {
-        log.error("CustomException occurred: {}", e.getErrorStatus().toString());
         return ResponseEntity
                 .status(e.getErrorStatus().getStatus())
                 .body(new ResponseDto<>(ResponseStatus.ERROR, e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseDto<String>> handleException(Exception e) {
-        log.error("Exception occurred: {}", e.getMessage());
+    public ResponseEntity<ResponseDto<String>> handleException() {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ResponseDto<>(ResponseStatus.ERROR, "서버에서 에러가 발생했습니다."));

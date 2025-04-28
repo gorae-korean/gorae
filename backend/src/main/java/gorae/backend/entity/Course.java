@@ -1,6 +1,7 @@
 package gorae.backend.entity;
 
 import gorae.backend.entity.constant.CourseLevel;
+import gorae.backend.entity.dto.course.CourseDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;
@@ -45,5 +46,14 @@ public class Course extends BaseEntity {
         }
         Enrollment enrollment = Enrollment.createEnrollment(student, this);
         enrollments.add(enrollment);
+    }
+
+    public CourseDto toDto() {
+        return CourseDto.builder()
+                .title(title)
+                .level(level)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
     }
 }
