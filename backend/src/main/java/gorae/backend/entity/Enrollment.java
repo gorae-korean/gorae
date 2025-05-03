@@ -1,6 +1,7 @@
 package gorae.backend.entity;
 
 import gorae.backend.entity.constant.EnrollmentStatus;
+import gorae.backend.entity.dto.enrollment.EnrollmentDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,5 +38,14 @@ public class Enrollment {
         enrollment.enrolledAt = LocalDateTime.now();
         enrollment.status = EnrollmentStatus.ENROLLED;
         return enrollment;
+    }
+
+    public EnrollmentDto toDto() {
+        return EnrollmentDto.builder()
+                .id(id)
+                .enrolledAt(enrolledAt)
+                .course(course.toDto())
+                .status(status)
+                .build();
     }
 }

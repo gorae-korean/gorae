@@ -3,16 +3,14 @@ package gorae.backend.controller;
 import gorae.backend.entity.dto.ResponseDto;
 import gorae.backend.entity.dto.ResponseStatus;
 import gorae.backend.entity.dto.course.CourseDto;
+import gorae.backend.entity.dto.enrollment.EnrollmentDto;
 import gorae.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
