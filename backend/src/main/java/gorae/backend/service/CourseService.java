@@ -1,0 +1,35 @@
+package gorae.backend.service;
+
+import gorae.backend.entity.Course;
+import gorae.backend.entity.dto.course.CourseDto;
+import gorae.backend.entity.repository.CourseRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class CourseService {
+    private final CourseRepository courseRepository;
+
+    public List<CourseDto> searchCourses(Long textbookId, LocalDateTime startTime) {
+        if (textbookId != null && textbookId <= 0) {
+            throw new IllegalArgumentException("교재의 ID 값은 양수여야 합니다.");
+        }
+
+        List<Course> courses;
+        if (textbookId != null && startTime != null) {
+            courses = courseRepository.findByTextbook_IdAndStartTime(textbookId, startTime);
+        } else if (textbookId != null) {
+            courses = courseRepository.findByTextbook_Id(textbookId);
+        } else {
+            courses = courseRepository.findByStartTime(startTime);
+        }
+
+        return courses.stream().map(Course::toDto).toList();
+    }
+}

@@ -2,6 +2,7 @@ package gorae.backend.util;
 
 import gorae.backend.entity.Member;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +11,11 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Component
-public class JwtTokenUtil {
+public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -25,11 +27,12 @@ public class JwtTokenUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(Member member) {
+    public String generateToken(Member member, List<String> roles) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         return Jwts.builder()
-                .subject(member.getId().toString())
+                .subject(String.valueOf(member.getId()))
+                .claim("roles", roles)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
@@ -47,5 +50,20 @@ public class JwtTokenUtil {
     public String getUserId(String token) {
         Claims claims = extractClaims(token);
         return claims.getSubject();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getUserRoles(String token) {
+        Claims claims = extractClaims(token);
+        return claims.get("roles", List.class);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            return !claims.getExpiration().before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }

@@ -2,9 +2,9 @@ package gorae.backend.controller;
 
 import gorae.backend.entity.dto.ResponseDto;
 import gorae.backend.entity.dto.ResponseStatus;
-import gorae.backend.entity.dto.user.LoginRequestDto;
-import gorae.backend.entity.dto.user.SignupRequestDto;
-import gorae.backend.entity.dto.user.TokenDto;
+import gorae.backend.entity.dto.member.LoginRequestDto;
+import gorae.backend.entity.dto.member.SignupRequestDto;
+import gorae.backend.entity.dto.member.TokenDto;
 import gorae.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

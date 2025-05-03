@@ -1,10 +1,10 @@
 package gorae.backend.entity.repository;
 
-import gorae.backend.entity.Member;
+import gorae.backend.entity.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByEmail(String email);
+public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+
 }
