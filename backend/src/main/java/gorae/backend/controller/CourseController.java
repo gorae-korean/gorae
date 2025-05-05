@@ -30,7 +30,7 @@ public class CourseController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String userId = userDetails.getUsername();
-        log.info("SearchCourses requested: {}", userId);
+        log.info("[API] SearchCourses requested: {}", userId);
 
         if (textbookId == null && startTime == null) {
             throw new IllegalArgumentException("한 개 이상의 매개변수가 필요합니다.");

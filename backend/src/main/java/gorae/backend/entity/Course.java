@@ -2,8 +2,6 @@ package gorae.backend.entity;
 
 import gorae.backend.entity.constant.CourseLevel;
 import gorae.backend.entity.dto.course.CourseDto;
-import gorae.backend.exception.CustomException;
-import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,14 +37,6 @@ public class Course extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "textbook_id", nullable = false)
     private Textbook textbook;
-
-    public void addEnrollment(Student student) {
-        if (enrollments.size() >= 4) {
-            throw new CustomException(ErrorStatus.COURSE_IS_FULL);
-        }
-        Enrollment enrollment = Enrollment.createEnrollment(student, this);
-        enrollments.add(enrollment);
-    }
 
     public CourseDto toDto() {
         return CourseDto.builder()
