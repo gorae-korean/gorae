@@ -1,6 +1,7 @@
 package gorae.backend.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,9 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
+    @Value("${swagger.enabled}")
+    private boolean swaggerEnabled;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,13 +40,24 @@ public class SecurityConfig {
 
         MvcRequestMatcher[] permitAllWhiteList = {
                 mvc.pattern("/api/members/signup"),
-                mvc.pattern("/api/members/login"),
+                mvc.pattern("/api/members/login")
         };
 
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(permitAllWhiteList).permitAll()
-                .anyRequest().authenticated()
-        );
+        MvcRequestMatcher[] swaggerPaths = {
+                mvc.pattern("/v3/api-docs/**"),
+                mvc.pattern("/swagger-ui/**"),
+                mvc.pattern("/swagger-ui.html"),
+                mvc.pattern("/swagger-resources/**"),
+                mvc.pattern("/webjars/**")
+        };
+
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers(permitAllWhiteList).permitAll();
+            if (swaggerEnabled) {
+                auth.requestMatchers(swaggerPaths).permitAll();
+            }
+            auth.anyRequest().authenticated();
+        });
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
