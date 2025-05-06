@@ -4,6 +4,7 @@ import gorae.backend.entity.Course;
 import gorae.backend.entity.Enrollment;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
+import gorae.backend.entity.constant.EnrollmentStatus;
 import gorae.backend.entity.constant.TicketStatus;
 import gorae.backend.entity.dto.enrollment.EnrollRequestDto;
 import gorae.backend.entity.dto.enrollment.EnrollmentDto;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +46,7 @@ public class EnrollmentService {
 
         Course course = courseRepository.findById(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
-        Enrollment enrollment = Enrollment.createEnrollment(student, course);
+        Enrollment enrollment = Enrollment.addEnrollment(student, course);
         enrollmentRepository.save(enrollment);
 
         ticket.use();
@@ -61,5 +64,32 @@ public class EnrollmentService {
                 .stream()
                 .map(Enrollment::toDto)
                 .toList();
+    }
+
+    public void drop(String userId, Long enrollmentId) {
+        Long studentId = Long.valueOf(userId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.ENROLLMENT_NOT_FOUND));
+        if (!enrollment.getStudent().equals(student)) {
+            throw new CustomException(ErrorStatus.NO_PERMISSIONS);
+        }
+        if (enrollment.getStatus() != EnrollmentStatus.ENROLLED) {
+            throw new CustomException(ErrorStatus.INVALID_DROP);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime courseStartTime = enrollment.getCourse().getStartTime();
+        if (courseStartTime.isBefore(now)) {
+            throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
+        }
+        long hoursDifference = Duration.between(now, courseStartTime).toHours();
+        if (hoursDifference < 6) {
+            throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
+        }
+
+        enrollment.setStatus(EnrollmentStatus.DROPPED);
+        enrollmentRepository.save(enrollment);
     }
 }

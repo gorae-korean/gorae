@@ -43,4 +43,15 @@ public class EnrollmentController {
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDtoList));
     }
+
+    @DeleteMapping
+    public ResponseEntity<ResponseDto<Void>> drop(Authentication authentication, Long enrollmentId) {
+
+        String userId = getUserId(authentication);
+        log.info("[API] Drop requested: {}", userId);
+
+        enrollmentService.drop(userId, enrollmentId);
+        return ResponseEntity.ok()
+                .body(new ResponseDto<>(ResponseStatus.SUCCESS, null));
+    }
 }

@@ -1,6 +1,7 @@
 package gorae.backend.entity;
 
 import gorae.backend.entity.constant.CourseLevel;
+import gorae.backend.entity.constant.EnrollmentStatus;
 import gorae.backend.entity.dto.course.CourseDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -45,5 +46,11 @@ public class Course extends BaseEntity {
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
+    }
+
+    public int getEnrollmentsSize() {
+        return (int) enrollments.stream()
+                .filter(enrollment -> enrollment.getStatus() == EnrollmentStatus.ENROLLED)
+                .count();
     }
 }

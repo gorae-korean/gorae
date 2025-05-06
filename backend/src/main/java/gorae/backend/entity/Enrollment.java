@@ -2,15 +2,19 @@ package gorae.backend.entity;
 
 import gorae.backend.entity.constant.EnrollmentStatus;
 import gorae.backend.entity.dto.enrollment.EnrollmentDto;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Enrollment {
     @Id
@@ -31,7 +35,16 @@ public class Enrollment {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
-    public static Enrollment createEnrollment(Student student, Course course) {
+    public static Enrollment addEnrollment(Student student, Course course) {
+        boolean alreadyEnrolled = course.getEnrollments().stream()
+                .anyMatch(enrollment -> enrollment.getStudent().equals(student)
+                        && enrollment.getStatus() == EnrollmentStatus.ENROLLED);
+        if (alreadyEnrolled) {
+            throw new CustomException(ErrorStatus.ALREADY_ENROLLED);
+        }
+        if (course.getEnrollmentsSize() >= 4) {
+            throw new CustomException(ErrorStatus.COURSE_IS_FULL);
+        }
         Enrollment enrollment = new Enrollment();
         enrollment.student = student;
         enrollment.course = course;
