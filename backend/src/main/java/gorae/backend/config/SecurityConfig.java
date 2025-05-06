@@ -1,5 +1,6 @@
 package gorae.backend.config;
 
+import gorae.backend.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

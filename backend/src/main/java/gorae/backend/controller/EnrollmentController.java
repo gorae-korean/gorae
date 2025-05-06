@@ -9,10 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static gorae.backend.util.JwtUtil.getUserId;
 
 @Slf4j
 @RestController
@@ -21,16 +22,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
-    @PostMapping("/enroll")
+    @PostMapping
     public ResponseEntity<ResponseDto<EnrollmentDto>> enroll(
-            Authentication authentication, EnrollRequestDto dto) {
+            Authentication authentication, @RequestBody EnrollRequestDto dto) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUsername();
+        String userId = getUserId(authentication);
         log.info("[API] Enroll requested: {}", userId);
 
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<EnrollmentDto>>> getEnrollments(Authentication authentication) {
+        String userId = getUserId(authentication);
+        log.info("[API] GetEnrollments requested: {}", userId);
+
+        List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
+        return ResponseEntity.ok()
+                .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDtoList));
     }
 }

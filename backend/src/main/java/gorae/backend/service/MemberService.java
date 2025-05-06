@@ -11,7 +11,7 @@ import gorae.backend.entity.repository.StudentRepository;
 import gorae.backend.entity.repository.MemberRepository;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
-import gorae.backend.util.JwtTokenProvider;
+import gorae.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,6 +1,5 @@
-package gorae.backend.config;
+package gorae.backend.security;
 
-import gorae.backend.util.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

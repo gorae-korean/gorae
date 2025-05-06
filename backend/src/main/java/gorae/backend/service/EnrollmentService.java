@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
 
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
-        Long memberId = Long.valueOf(userId);
-        Student student = studentRepository.findById(memberId)
+        Long studentId = Long.valueOf(userId);
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         Ticket ticket = ticketRepository.findById(dto.ticketId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
@@ -48,5 +50,16 @@ public class EnrollmentService {
         ticketRepository.save(ticket);
 
         return enrollment.toDto();
+    }
+
+    public List<EnrollmentDto> getEnrollments(String userId) {
+        Long studentId = Long.valueOf(userId);
+        if (!studentRepository.existsById(studentId)) {
+            throw new CustomException(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+        return enrollmentRepository.findByStudent_Id(studentId)
+                .stream()
+                .map(Enrollment::toDto)
+                .toList();
     }
 }

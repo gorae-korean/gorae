@@ -3,17 +3,17 @@ package gorae.backend.controller;
 import gorae.backend.entity.dto.ResponseDto;
 import gorae.backend.entity.dto.ResponseStatus;
 import gorae.backend.entity.dto.course.CourseDto;
-import gorae.backend.entity.dto.enrollment.EnrollmentDto;
 import gorae.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static gorae.backend.util.JwtUtil.getUserId;
 
 @Slf4j
 @RestController
@@ -28,8 +28,7 @@ public class CourseController {
             @RequestParam(required = false) Long textbookId,
             @RequestParam(required = false) LocalDateTime startTime) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUsername();
+        String userId = getUserId(authentication);
         log.info("[API] SearchCourses requested: {}", userId);
 
         if (textbookId == null && startTime == null) {
