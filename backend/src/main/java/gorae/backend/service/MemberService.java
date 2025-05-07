@@ -1,5 +1,6 @@
 package gorae.backend.service;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.entity.Instructor;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Member;
@@ -28,6 +29,7 @@ public class MemberService {
     private final InstructorRepository instructorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ProfileUtils profileUtils;
 
     public TokenDto signup(SignupRequestDto dto) {
         if (memberRepository.existsByEmail(dto.email())) {
@@ -85,7 +87,11 @@ public class MemberService {
             default -> throw new IllegalStateException("Unexpected value: " + dto.accountType());
         }
 
-        if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
+        if (profileUtils.isDevMode()) {
+            if (!member.getPassword().equals(dto.password()) && !passwordEncoder.matches(dto.password(), member.getPassword())) {
+                throw new CustomException(ErrorStatus.WRONG_CREDENTIAL);
+            }
+        } else if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
             throw new CustomException(ErrorStatus.WRONG_CREDENTIAL);
         }
 
