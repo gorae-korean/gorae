@@ -1,4 +1,4 @@
-package gorae.backend.entity.repository;
+package gorae.backend.repository;
 
 import gorae.backend.entity.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;

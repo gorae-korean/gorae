@@ -1,7 +1,7 @@
 package gorae.backend.entity;
 
-import gorae.backend.entity.constant.EnrollmentStatus;
-import gorae.backend.entity.dto.enrollment.EnrollmentDto;
+import gorae.backend.constant.EnrollmentStatus;
+import gorae.backend.dto.enrollment.EnrollmentDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;

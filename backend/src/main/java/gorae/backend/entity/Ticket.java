@@ -1,6 +1,6 @@
 package gorae.backend.entity;
 
-import gorae.backend.entity.constant.TicketStatus;
+import gorae.backend.constant.TicketStatus;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;

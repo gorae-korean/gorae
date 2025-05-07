@@ -1,7 +1,7 @@
 package gorae.backend.exception;
 
-import gorae.backend.entity.dto.ResponseDto;
-import gorae.backend.entity.dto.ResponseStatus;
+import gorae.backend.dto.ResponseDto;
+import gorae.backend.dto.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

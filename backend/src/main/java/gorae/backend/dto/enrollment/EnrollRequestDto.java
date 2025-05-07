@@ -1,4 +1,4 @@
-package gorae.backend.entity.dto.enrollment;
+package gorae.backend.dto.enrollment;
 
 public record EnrollRequestDto(
         Long courseId,

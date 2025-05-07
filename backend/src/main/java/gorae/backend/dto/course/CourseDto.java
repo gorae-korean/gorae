@@ -1,6 +1,6 @@
-package gorae.backend.entity.dto.course;
+package gorae.backend.dto.course;
 
-import gorae.backend.entity.constant.CourseLevel;
+import gorae.backend.constant.CourseLevel;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

@@ -1,8 +1,8 @@
 package gorae.backend.entity;
 
-import gorae.backend.entity.constant.CourseLevel;
-import gorae.backend.entity.constant.EnrollmentStatus;
-import gorae.backend.entity.dto.course.CourseDto;
+import gorae.backend.constant.CourseLevel;
+import gorae.backend.constant.EnrollmentStatus;
+import gorae.backend.dto.course.CourseDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

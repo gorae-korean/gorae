@@ -1,8 +1,8 @@
 package gorae.backend.controller;
 
-import gorae.backend.entity.dto.ResponseDto;
-import gorae.backend.entity.dto.ResponseStatus;
-import gorae.backend.entity.dto.course.CourseDto;
+import gorae.backend.dto.ResponseDto;
+import gorae.backend.dto.ResponseStatus;
+import gorae.backend.dto.course.CourseDto;
 import gorae.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static gorae.backend.util.JwtUtil.getUserId;
+import static gorae.backend.common.JwtUtils.getUserId;
 
 @Slf4j
 @RestController

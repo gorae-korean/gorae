@@ -1,10 +1,10 @@
-package gorae.backend.util;
+package gorae.backend.common;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class JwtUtil {
-    private JwtUtil() {
+public class JwtUtils {
+    private JwtUtils() {
         throw new IllegalStateException("Utility class");
     }
 

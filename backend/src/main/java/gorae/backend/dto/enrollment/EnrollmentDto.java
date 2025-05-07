@@ -1,7 +1,7 @@
-package gorae.backend.entity.dto.enrollment;
+package gorae.backend.dto.enrollment;
 
-import gorae.backend.entity.constant.EnrollmentStatus;
-import gorae.backend.entity.dto.course.CourseDto;
+import gorae.backend.constant.EnrollmentStatus;
+import gorae.backend.dto.course.CourseDto;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

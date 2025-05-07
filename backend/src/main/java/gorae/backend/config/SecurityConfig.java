@@ -1,8 +1,8 @@
 package gorae.backend.config;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,9 +21,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
-
-    @Value("${swagger.enabled}")
-    private boolean swaggerEnabled;
+    private final ProfileUtils profileUtils;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,7 +52,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();
-            if (swaggerEnabled) {
+            if (profileUtils.isDevMode()) {
                 auth.requestMatchers(swaggerPaths).permitAll();
             }
             auth.anyRequest().authenticated();
