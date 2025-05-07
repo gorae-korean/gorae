@@ -1,17 +1,18 @@
 package gorae.backend.service;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.entity.Instructor;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Member;
-import gorae.backend.entity.dto.member.LoginRequestDto;
-import gorae.backend.entity.dto.member.SignupRequestDto;
-import gorae.backend.entity.dto.member.TokenDto;
-import gorae.backend.entity.repository.InstructorRepository;
-import gorae.backend.entity.repository.StudentRepository;
-import gorae.backend.entity.repository.MemberRepository;
+import gorae.backend.dto.member.LoginRequestDto;
+import gorae.backend.dto.member.SignupRequestDto;
+import gorae.backend.dto.member.TokenDto;
+import gorae.backend.repository.InstructorRepository;
+import gorae.backend.repository.StudentRepository;
+import gorae.backend.repository.MemberRepository;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
-import gorae.backend.util.JwtTokenProvider;
+import gorae.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ public class MemberService {
     private final InstructorRepository instructorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ProfileUtils profileUtils;
 
     public TokenDto signup(SignupRequestDto dto) {
         if (memberRepository.existsByEmail(dto.email())) {
@@ -85,7 +87,11 @@ public class MemberService {
             default -> throw new IllegalStateException("Unexpected value: " + dto.accountType());
         }
 
-        if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
+        if (profileUtils.isDevMode()) {
+            if (!member.getPassword().equals(dto.password()) && !passwordEncoder.matches(dto.password(), member.getPassword())) {
+                throw new CustomException(ErrorStatus.WRONG_CREDENTIAL);
+            }
+        } else if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
             throw new CustomException(ErrorStatus.WRONG_CREDENTIAL);
         }
 

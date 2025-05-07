@@ -2,23 +2,22 @@
 
 -- Member 테이블 (Instructor, Student의 부모 테이블)
 -- 비밀번호: 모든 계정 'password123'
--- (BCrypt 해시: $2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK)
 INSERT INTO member (member_type, name, email, password, phone_number, created_at, updated_at)
-VALUES ('INSTRUCTOR', '김교수', 'instructor1@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+VALUES ('INSTRUCTOR', '김교수', 'instructor1@example.com', 'password123',
         '010-1234-5678', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('INSTRUCTOR', '이강사', 'instructor2@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('INSTRUCTOR', '이강사', 'instructor2@example.com', 'password123',
         '010-2345-6789', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('INSTRUCTOR', '박선생', 'instructor3@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('INSTRUCTOR', '박선생', 'instructor3@example.com', 'password123',
         '010-3456-7890', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('STUDENT', '최학생', 'student1@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('STUDENT', '최학생', 'student1@example.com', 'password123',
         '010-4567-8901', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('STUDENT', '정학생', 'student2@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('STUDENT', '정학생', 'student2@example.com', 'password123',
         '010-5678-9012', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('STUDENT', '한학생', 'student3@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('STUDENT', '한학생', 'student3@example.com', 'password123',
         '010-6789-0123', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('STUDENT', '윤학생', 'student4@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('STUDENT', '윤학생', 'student4@example.com', 'password123',
         '010-7890-1234', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('STUDENT', '임학생', 'student5@example.com', '$2a$10$hKDVYxLefVHV/vV76Nc.3uduiSk1mR5F6wrMmSMIgMVp5G3ZvDSHK',
+       ('STUDENT', '임학생', 'student5@example.com', 'password123',
         '010-8901-2345', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Instructor 테이블 (Member 상속)
@@ -35,7 +34,7 @@ VALUES (4, true),
        (7, false),
        (8, true);
 
--- Textbook 테이블 (추가)
+-- Textbook 테이블
 INSERT INTO textbook (created_at, updated_at)
 VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -68,3 +67,14 @@ VALUES (4, 1, '2025-04-15 10:30:00', 'ENROLLED'),
        (6, 5, '2025-06-10 11:30:00', 'ENROLLED'),
        (7, 4, '2025-04-28 15:40:00', 'ENROLLED'),
        (8, 5, '2025-06-12 09:50:00', 'ENROLLED');
+
+-- Ticket 테이블 (추가)
+INSERT INTO ticket (student_id, start_time, end_time, status, created_at, updated_at)
+VALUES (4, '2025-05-01 00:00:00', '2025-05-31 23:59:59', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (5, '2025-05-01 00:00:00', '2025-05-31 23:59:59', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (6, '2025-05-01 00:00:00', '2025-05-31 23:59:59', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (7, '2025-05-01 00:00:00', '2025-05-31 23:59:59', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (8, '2025-05-01 00:00:00', '2025-05-31 23:59:59', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (4, '2025-04-01 00:00:00', '2025-04-30 23:59:59', 'USED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (5, '2025-04-01 00:00:00', '2025-04-30 23:59:59', 'USED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (6, '2025-04-01 00:00:00', '2025-04-30 23:59:59', 'USED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

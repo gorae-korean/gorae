@@ -1,8 +1,8 @@
 package gorae.backend.service;
 
 import gorae.backend.entity.Course;
-import gorae.backend.entity.dto.course.CourseDto;
-import gorae.backend.entity.repository.CourseRepository;
+import gorae.backend.dto.course.CourseDto;
+import gorae.backend.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

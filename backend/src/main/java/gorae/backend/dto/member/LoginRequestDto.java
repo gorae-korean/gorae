@@ -1,4 +1,4 @@
-package gorae.backend.entity.dto.member;
+package gorae.backend.dto.member;
 
 public record LoginRequestDto(
         String email,
