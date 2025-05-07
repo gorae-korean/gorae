@@ -38,7 +38,7 @@ public class EnrollmentService {
         Ticket ticket = ticketRepository.findById(dto.ticketId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
         if (ticket.getStatus() == TicketStatus.USED) {
-            throw new CustomException(ErrorStatus.TICKET_NOT_FOUND);
+            throw new CustomException(ErrorStatus.TICKET_ALREADY_USED);
         }
         if (!student.getTickets().contains(ticket)) {
             throw new CustomException(ErrorStatus.TICKET_NOT_FOUND);
@@ -46,6 +46,9 @@ public class EnrollmentService {
 
         Course course = courseRepository.findById(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
+        if (course.getStartTime().isAfter(LocalDateTime.now())) {
+            throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
+        }
         Enrollment enrollment = Enrollment.addEnrollment(student, course);
         enrollmentRepository.save(enrollment);
 
