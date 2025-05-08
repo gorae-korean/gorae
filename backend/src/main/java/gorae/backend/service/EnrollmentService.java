@@ -1,11 +1,11 @@
 package gorae.backend.service;
 
+import gorae.backend.constant.TicketStatus;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Enrollment;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
 import gorae.backend.constant.EnrollmentStatus;
-import gorae.backend.constant.TicketStatus;
 import gorae.backend.dto.enrollment.EnrollRequestDto;
 import gorae.backend.dto.enrollment.EnrollmentDto;
 import gorae.backend.repository.CourseRepository;
@@ -17,6 +17,7 @@ import gorae.backend.exception.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -31,33 +32,37 @@ public class EnrollmentService {
     private final TicketRepository ticketRepository;
     private final CourseRepository courseRepository;
 
+    @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
-        Long studentId = Long.valueOf(userId);
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+        Course course = courseRepository.findById(dto.courseId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
+        if (course.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
+        }
+
         Ticket ticket = ticketRepository.findById(dto.ticketId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
         if (ticket.getStatus() == TicketStatus.USED) {
             throw new CustomException(ErrorStatus.TICKET_ALREADY_USED);
         }
+
+        Long studentId = Long.valueOf(userId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         if (!student.getTickets().contains(ticket)) {
             throw new CustomException(ErrorStatus.TICKET_NOT_FOUND);
         }
 
-        Course course = courseRepository.findById(dto.courseId())
-                .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
-        if (course.getStartTime().isAfter(LocalDateTime.now())) {
-            throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
-        }
         Enrollment enrollment = Enrollment.addEnrollment(student, course);
         enrollmentRepository.save(enrollment);
 
-        ticket.use();
+        ticket.useTicket();
         ticketRepository.save(ticket);
 
         return enrollment.toDto();
     }
 
+    @Transactional(readOnly = true)
     public List<EnrollmentDto> getEnrollments(String userId) {
         Long studentId = Long.valueOf(userId);
         if (!studentRepository.existsById(studentId)) {
@@ -69,6 +74,7 @@ public class EnrollmentService {
                 .toList();
     }
 
+    @Transactional
     public void drop(String userId, Long enrollmentId) {
         Long studentId = Long.valueOf(userId);
         Student student = studentRepository.findById(studentId)
@@ -92,7 +98,11 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
         }
 
-        enrollment.setStatus(EnrollmentStatus.DROPPED);
+        enrollment.cancelEnrollment();
         enrollmentRepository.save(enrollment);
+
+        Ticket ticket = enrollment.getTicket();
+        ticket.returnTicket();
+        ticketRepository.save(ticket);
     }
 }

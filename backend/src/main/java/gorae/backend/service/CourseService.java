@@ -6,6 +6,7 @@ import gorae.backend.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CourseService {
     private final CourseRepository courseRepository;
 
+    @Transactional(readOnly = true)
     public List<CourseDto> searchCourses(Long textbookId, LocalDateTime startTime) {
         if (textbookId != null && textbookId <= 0) {
             throw new IllegalArgumentException("교재의 ID 값은 양수여야 합니다.");
