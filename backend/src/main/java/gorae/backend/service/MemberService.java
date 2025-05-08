@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ProfileUtils profileUtils;
 
+    @Transactional
     public TokenDto signup(SignupRequestDto dto) {
         if (memberRepository.existsByEmail(dto.email())) {
             throw new CustomException(ErrorStatus.EMAIL_ALREADY_EXISTS);
@@ -70,6 +72,7 @@ public class MemberService {
         return new TokenDto(token);
     }
 
+    @Transactional(readOnly = true)
     public TokenDto login(LoginRequestDto dto) {
         Member member;
         List<String> roles;

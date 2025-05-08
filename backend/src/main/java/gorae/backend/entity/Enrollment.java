@@ -29,6 +29,10 @@ public class Enrollment {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
+
     @Column(nullable = false)
     private LocalDateTime enrolledAt;
 
@@ -51,6 +55,10 @@ public class Enrollment {
         enrollment.enrolledAt = LocalDateTime.now();
         enrollment.status = EnrollmentStatus.ENROLLED;
         return enrollment;
+    }
+
+    public void cancelEnrollment() {
+        status = EnrollmentStatus.DROPPED;
     }
 
     public EnrollmentDto toDto() {
