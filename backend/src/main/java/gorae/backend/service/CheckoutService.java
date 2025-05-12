@@ -80,15 +80,16 @@ public class CheckoutService {
 
         Student student = order.getStudent();
         Product product = order.getProduct();
-        // TODO: Product 종류 추가 및 아래 코드 추가
         switch (product.getName()) {
-            case ProductName.FIRST_TICKET:
-                student.takeFirstPurchase();
-                student.addTicket();
+            case FIRST_TICKET -> {
+                student.addFirstTicket();
                 studentRepository.save(student);
-                break;
-            default:
-                throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
+            }
+            case MONTHLY_TICKETS -> {
+                student.addMonthlyTickets();
+                studentRepository.save(student);
+            }
+            default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
     }
 }

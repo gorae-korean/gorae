@@ -29,7 +29,7 @@ public class Student extends Member {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<CheckoutOrder> orders = new ArrayList<>();
 
-    public void addTicket() {
+    public void addMonthlyTicket() {
         LocalDateTime now = LocalDateTime.now();
         Ticket ticket = Ticket.builder()
                 .student(this)
@@ -40,7 +40,14 @@ public class Student extends Member {
         tickets.add(ticket);
     }
 
-    public void takeFirstPurchase() {
+    public void addMonthlyTickets() {
+        for (int i = 0; i < 8; i++) {
+            addMonthlyTicket();
+        }
+    }
+
+    public void addFirstTicket() {
         isFirst = false;
+        addMonthlyTicket();
     }
 }
