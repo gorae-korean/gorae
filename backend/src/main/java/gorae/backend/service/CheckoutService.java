@@ -1,7 +1,7 @@
 package gorae.backend.service;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
-import gorae.backend.constant.OrderStatus;
+import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.paypal.PaymentSource;
 import gorae.backend.dto.paypal.CreateOrderDto;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -36,6 +35,11 @@ public class CheckoutService {
     public CreateOrderDto checkout(String userId, CheckoutRequestDto dto) throws Exception {
         Product product = productRepository.findById(dto.productId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
+        Student student = studentRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+        if (!student.isFirst() && product.getName() == ProductName.FIRST_TICKET) {
+            throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
+        }
 
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
@@ -55,8 +59,6 @@ public class CheckoutService {
                 .build();
 
         CreateOrderDto response = paypalHttpClient.createOrder(createOrderRequestDto);
-        Student student = studentRepository.findById(Long.valueOf(userId))
-                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
                 .orderId(response.id())
                 .status(response.status())
@@ -69,22 +71,24 @@ public class CheckoutService {
     }
 
     @Transactional
-    public void checkoutSuccess(String orderId) {
+    public void succeedCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
 
-        order.setStatus(OrderStatus.COMPLETED);
-        order.setPaymentDate(LocalDateTime.now());
+        order.succeedOrder();
         checkoutOrderRepository.save(order);
 
         Student student = order.getStudent();
         Product product = order.getProduct();
         // TODO: Product 종류 추가 및 아래 코드 추가
-        if (product.getName().equals("First ticket")) {
-            student.addTicket();
-            studentRepository.save(student);
-        } else {
-            throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
+        switch (product.getName()) {
+            case ProductName.FIRST_TICKET:
+                student.takeFirstPurchase();
+                student.addTicket();
+                studentRepository.save(student);
+                break;
+            default:
+                throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
     }
 }

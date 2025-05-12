@@ -34,10 +34,10 @@ public class CheckoutController {
     }
 
     @GetMapping("/success")
-    public ResponseEntity<ResponseDto<String>> checkoutSuccess(HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> succeedCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
-        log.info("orderId: {}", orderId);
-        checkoutService.checkoutSuccess(orderId);
+        log.info("[API] CheckoutSuccess requested, orderId: {}", orderId);
+        checkoutService.succeedCheckout(orderId);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "구매가 정상적으로 완료되었습니다."));
     }
 }

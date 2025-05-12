@@ -5,18 +5,17 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
+@Table(name = "checkout_order")
 public class CheckoutOrder extends BaseEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String orderId;
 
     @Enumerated(EnumType.STRING)
@@ -31,4 +30,9 @@ public class CheckoutOrder extends BaseEntity {
     private Product product;
 
     private LocalDateTime paymentDate;
+
+    public void succeedOrder() {
+        paymentDate = LocalDateTime.now();
+        status = OrderStatus.COMPLETED;
+    }
 }

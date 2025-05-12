@@ -39,4 +39,8 @@ public class Student extends Member {
                 .build();
         tickets.add(ticket);
     }
+
+    public void takeFirstPurchase() {
+        isFirst = false;
+    }
 }
