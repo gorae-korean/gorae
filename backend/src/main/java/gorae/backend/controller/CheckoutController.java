@@ -33,11 +33,19 @@ public class CheckoutController {
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, createOrderDto));
     }
 
-    @GetMapping("/success")
-    public ResponseEntity<ResponseDto<String>> succeedCheckout(HttpServletRequest request) {
+    @GetMapping("/complete")
+    public ResponseEntity<ResponseDto<String>> completeCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
         log.info("[API] CheckoutSuccess requested, orderId: {}", orderId);
-        checkoutService.succeedCheckout(orderId);
+        checkoutService.completeCheckout(orderId);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "구매가 정상적으로 완료되었습니다."));
+    }
+
+    @GetMapping("/cancel")
+    public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
+        String orderId = request.getParameter("token");
+        log.info("[API] CancelCheckout requested, orderId: {}", orderId);
+        checkoutService.cancelCheckout(orderId);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "주문이 취소되었습니다."));
     }
 }

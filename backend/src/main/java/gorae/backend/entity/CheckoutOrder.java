@@ -31,8 +31,12 @@ public class CheckoutOrder extends BaseEntity {
 
     private LocalDateTime paymentDate;
 
-    public void succeedOrder() {
+    public void completeOrder() {
         paymentDate = LocalDateTime.now();
         status = OrderStatus.COMPLETED;
+    }
+
+    public void cancelOrder() {
+        status = OrderStatus.VOIDED;
     }
 }

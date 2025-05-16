@@ -43,7 +43,7 @@ public class CheckoutService {
 
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
-                        .returnUrl("http://localhost:8080/api/checkouts/success")
+                        .returnUrl("http://localhost:8080/api/checkouts/complete")
                         .cancelUrl("http://localhost:8080/api/checkouts/cancel")
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
                         .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
@@ -71,11 +71,11 @@ public class CheckoutService {
     }
 
     @Transactional
-    public void succeedCheckout(String orderId) {
+    public void completeCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
 
-        order.succeedOrder();
+        order.completeOrder();
         checkoutOrderRepository.save(order);
 
         Student student = order.getStudent();
@@ -91,5 +91,14 @@ public class CheckoutService {
             }
             default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
+    }
+
+    @Transactional
+    public void cancelCheckout(String orderId) {
+        CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
+
+        order.cancelOrder();
+        checkoutOrderRepository.save(order);
     }
 }
