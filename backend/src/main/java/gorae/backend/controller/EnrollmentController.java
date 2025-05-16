@@ -44,14 +44,13 @@ public class EnrollmentController {
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDtoList));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Void>> drop(Authentication authentication, Long enrollmentId) {
-
+    @DeleteMapping("/{enrollmentId}")
+    public ResponseEntity<ResponseDto<String>> drop(Authentication authentication, @PathVariable Long enrollmentId) {
         String userId = getUserId(authentication);
         log.info("[API] Drop requested: {}", userId);
 
         enrollmentService.drop(userId, enrollmentId);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, null));
+                .body(new ResponseDto<>(ResponseStatus.SUCCESS, "정상적으로 취소되었습니다."));
     }
 }
