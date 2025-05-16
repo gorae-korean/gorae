@@ -39,7 +39,9 @@ public class SecurityConfig {
 
         MvcRequestMatcher[] permitAllWhiteList = {
                 mvc.pattern("/api/members/signup"),
-                mvc.pattern("/api/members/login")
+                mvc.pattern("/api/members/login"),
+                mvc.pattern("/api/checkouts/complete/**"),
+                mvc.pattern("/api/checkouts/cancel/**")
         };
 
         MvcRequestMatcher[] swaggerPaths = {

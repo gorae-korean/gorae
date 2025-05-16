@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorStatus {
     // 400 BAD_REQUEST
     ALREADY_ENROLLED(HttpStatus.BAD_REQUEST, "이미 신청되어 있습니다."),
+    CANNOT_BUY_THE_FIRST_PRODUCT(HttpStatus.BAD_REQUEST, "첫 구매 혜택이 이미 사용되었습니다."),
     CANNOT_DROP_COURSE_NEAR_START_TIME(HttpStatus.BAD_REQUEST, "강의 시작 시간이 얼마 남지 않아 취소가 불가능합니다."),
     COURSE_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "이미 시작된 강좌입니다."),
     COURSE_IS_FULL(HttpStatus.BAD_REQUEST, "해당 강좌 인원이 모두 찼습니다."),
@@ -25,6 +26,8 @@ public enum ErrorStatus {
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "강좌가 존재하지 않습니다."),
     ENROLLMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "수강신청이 존재하지 않습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."),
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문 내역이 존재하지 않습니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품이 존재하지 않습니다."),
     TICKET_NOT_FOUND(HttpStatus.NOT_FOUND, "수강권이 존재하지 않습니다.");
 
     private final HttpStatus status;
