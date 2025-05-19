@@ -18,6 +18,13 @@ public class GlobalExceptionHandler {
                 .body(new ResponseDto<>(ResponseStatus.ERROR, e.getMessage()));
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ResponseDto<String>> handleRuntimeException(RuntimeException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseDto<>(ResponseStatus.ERROR, e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<String>> handleException() {
         return ResponseEntity

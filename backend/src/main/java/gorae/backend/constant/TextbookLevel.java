@@ -1,6 +1,6 @@
 package gorae.backend.constant;
 
-public enum CourseLevel {
+public enum TextbookLevel {
     BEGINNER,
     INTERMEDIATE,
     ADVANCED

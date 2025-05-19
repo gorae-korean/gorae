@@ -1,6 +1,5 @@
 package gorae.backend.entity;
 
-import gorae.backend.constant.CourseLevel;
 import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.course.CourseDto;
 import jakarta.persistence.*;
@@ -16,9 +15,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends BaseEntity {
-    @Enumerated(value = EnumType.STRING)
-    private CourseLevel level;
-
     @Column(nullable = false)
     private String title;
 
@@ -42,7 +38,7 @@ public class Course extends BaseEntity {
     public CourseDto toDto() {
         return CourseDto.builder()
                 .title(title)
-                .level(level)
+                .level(textbook.getLevel())
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
