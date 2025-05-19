@@ -1,5 +1,6 @@
 package gorae.backend.specification;
 
+import gorae.backend.constant.TextbookLevel;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
 import gorae.backend.entity.Textbook;
 import jakarta.persistence.criteria.Join;
@@ -20,6 +21,7 @@ public class TextbookSpecification {
             Objects.requireNonNull(query).distinct(true);
             return Specification.where(withWord(dto.word()))
                     .and(withTags(dto.tags()))
+                    .and(withLevel(dto.level()))
                     .toPredicate(root, query, criteriaBuilder);
         });
     }
@@ -53,6 +55,16 @@ public class TextbookSpecification {
                     ));
 
             return root.get("id").in(subquery);
+        });
+    }
+
+    private static Specification<Textbook> withLevel(TextbookLevel level) {
+        return ((root, query, criteriaBuilder) -> {
+            if (level == null) {
+                return null;
+            }
+
+            return criteriaBuilder.equal(root.get("level"), level);
         });
     }
 }

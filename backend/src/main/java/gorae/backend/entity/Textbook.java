@@ -1,5 +1,6 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.TextbookLevel;
 import gorae.backend.dto.textbook.TextbookDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,6 +24,9 @@ public class Textbook extends BaseEntity {
     )
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
+
+    @Enumerated(value = EnumType.STRING)
+    private TextbookLevel level;
 
     public TextbookDto toDto() {
         return TextbookDto.builder()
