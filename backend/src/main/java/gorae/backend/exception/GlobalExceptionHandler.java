@@ -5,6 +5,7 @@ import gorae.backend.dto.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,6 +17,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getErrorStatus().getStatus())
                 .body(new ResponseDto<>(ResponseStatus.ERROR, e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ResponseDto<String>> handleAuthorizationDeniedException() {
+        CustomException exception = new CustomException(ErrorStatus.NO_PERMISSIONS);
+        return ResponseEntity
+                .status(exception.getErrorStatus().getStatus())
+                .body(new ResponseDto<>(ResponseStatus.ERROR, exception.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)

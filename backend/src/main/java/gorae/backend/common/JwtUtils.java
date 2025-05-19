@@ -9,6 +9,9 @@ public class JwtUtils {
     }
 
     public static String getUserId(Authentication authentication) {
+        if (authentication == null) {
+            throw new IllegalStateException("Authentication cannot be null");
+        }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
     }

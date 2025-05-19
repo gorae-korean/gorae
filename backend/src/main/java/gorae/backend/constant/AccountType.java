@@ -1,4 +1,4 @@
-package gorae.backend.dto.member;
+package gorae.backend.constant;
 
 public enum AccountType {
     STUDENT,
