@@ -24,15 +24,11 @@ public class Textbook extends BaseEntity {
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Instructor instructor;
-
     public TextbookDto toDto() {
         return TextbookDto.builder()
                 .id(this.getId())
                 .tags(tags)
                 .title(title)
-                .instructorName(instructor.getName())
                 .build();
     }
 }

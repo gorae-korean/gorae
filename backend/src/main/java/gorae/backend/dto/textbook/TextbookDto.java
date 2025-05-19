@@ -1,6 +1,5 @@
 package gorae.backend.dto.textbook;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 import java.util.Set;
@@ -9,7 +8,6 @@ import java.util.Set;
 public record TextbookDto(
         Long id,
         String title,
-        Set<String> tags,
-        @JsonProperty("instructor_name") String instructorName
+        Set<String> tags
 ) {
 }
