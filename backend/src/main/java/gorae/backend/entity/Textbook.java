@@ -33,6 +33,7 @@ public class Textbook extends BaseEntity {
                 .id(this.getId())
                 .tags(tags)
                 .title(title)
+                .level(level)
                 .build();
     }
 }

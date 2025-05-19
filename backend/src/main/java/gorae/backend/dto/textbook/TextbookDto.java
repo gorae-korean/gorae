@@ -1,5 +1,6 @@
 package gorae.backend.dto.textbook;
 
+import gorae.backend.constant.TextbookLevel;
 import lombok.Builder;
 
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 public record TextbookDto(
         Long id,
         String title,
-        Set<String> tags
+        Set<String> tags,
+        TextbookLevel level
 ) {
 }
