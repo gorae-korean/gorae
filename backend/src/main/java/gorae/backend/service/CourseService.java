@@ -3,6 +3,7 @@ package gorae.backend.service;
 import gorae.backend.entity.Course;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.repository.CourseRepository;
+import gorae.backend.repository.InstructorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final InstructorRepository instructorRepository;
 
-    @Transactional(readOnly = true)
     public List<CourseDto> searchCourses(Long textbookId, LocalDateTime startTime) {
         if (textbookId != null && textbookId <= 0) {
             throw new IllegalArgumentException("교재의 ID 값은 양수여야 합니다.");
