@@ -1,6 +1,7 @@
 package gorae.backend.service;
 
 import gorae.backend.dto.course.AvailabilityAddRequestDto;
+import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.exception.CustomException;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class InstructorService {
     private final InstructorRepository instructorRepository;
 
@@ -32,8 +35,8 @@ public class InstructorService {
             throw new CustomException(ErrorStatus.WRONG_HOUR);
         }
 
-        Long memberId = Long.valueOf(userId);
-        Instructor instructor = instructorRepository.findById(memberId)
+        Long instructorId = Long.valueOf(userId);
+        Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
         InstructorAvailability availability = InstructorAvailability.builder()
@@ -49,5 +52,15 @@ public class InstructorService {
 
         instructor.addAvailability(availability);
         instructorRepository.save(instructor);
+    }
+
+    public List<AvailabilityDto> getAvailabilities(String userId) {
+        Long instructorId = Long.valueOf(userId);
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return instructor.getAvailabilities().stream()
+                .map(InstructorAvailability::toDto)
+                .toList();
     }
 }

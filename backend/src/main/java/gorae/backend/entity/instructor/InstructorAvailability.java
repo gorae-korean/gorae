@@ -1,5 +1,6 @@
 package gorae.backend.entity.instructor;
 
+import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -45,5 +46,14 @@ public class InstructorAvailability extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(instructor, dayOfWeek, startTime, endTime);
+    }
+
+    public AvailabilityDto toDto() {
+        return AvailabilityDto.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .dayOfWeek(dayOfWeek)
+                .isActive(isActive)
+                .build();
     }
 }
