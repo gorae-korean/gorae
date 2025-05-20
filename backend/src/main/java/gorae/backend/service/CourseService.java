@@ -3,7 +3,6 @@ package gorae.backend.service;
 import gorae.backend.entity.Course;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.repository.CourseRepository;
-import gorae.backend.repository.InstructorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
-    private final InstructorRepository instructorRepository;
 
     public List<CourseDto> searchCourses(Long textbookId, LocalDateTime startTime) {
         if (textbookId != null && textbookId <= 0) {

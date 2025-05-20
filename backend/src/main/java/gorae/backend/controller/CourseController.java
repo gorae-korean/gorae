@@ -2,13 +2,11 @@ package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
-import gorae.backend.dto.course.AvailabilityAddRequestDto;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
