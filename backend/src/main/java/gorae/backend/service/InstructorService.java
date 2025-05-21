@@ -1,6 +1,6 @@
 package gorae.backend.service;
 
-import gorae.backend.dto.course.AvailabilityAddRequestDto;
+import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,15 +25,15 @@ public class InstructorService {
 
     @Transactional
     public void addAvailability(String userId, AvailabilityAddRequestDto dto) {
-        int startHour = dto.startHour();
-        int endHour = dto.endHour();
+        LocalTime startTime = dto.startTime();
+        LocalTime endTime = dto.endTime();
 
-        if (startHour == endHour) {
-            throw new CustomException(ErrorStatus.CANNOT_BE_START_HOUR_AND_END_HOUR_SAME);
+        if (startTime.isAfter(endTime)) {
+            throw new CustomException(ErrorStatus.WRONG_TIME);
         }
 
-        if (startHour > endHour) {
-            throw new CustomException(ErrorStatus.WRONG_HOUR);
+        if (Duration.between(startTime, endTime).toMinutes() < 60) {
+            throw new CustomException(ErrorStatus.MUST_BE_LONGER_THAN_60_MINUTES);
         }
 
         Long instructorId = Long.valueOf(userId);
@@ -40,8 +41,9 @@ public class InstructorService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
         InstructorAvailability availability = InstructorAvailability.builder()
-                .startTime(LocalTime.of(startHour, 0))
-                .endTime(LocalTime.of(endHour, 0))
+                .instructor(instructor)
+                .startTime(startTime)
+                .endTime(endTime)
                 .dayOfWeek(dto.dayOfWeek())
                 .isActive(true)
                 .build();
@@ -50,7 +52,7 @@ public class InstructorService {
             throw new CustomException(ErrorStatus.AVAILABILITY_OVERLAPPED);
         }
 
-        instructor.addAvailability(availability);
+        instructor.getAvailabilities().add(availability);
         instructorRepository.save(instructor);
     }
 

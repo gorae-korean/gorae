@@ -2,7 +2,7 @@ package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
-import gorae.backend.dto.course.AvailabilityAddRequestDto;
+import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.service.InstructorService;
 import lombok.RequiredArgsConstructor;
@@ -45,4 +45,11 @@ public class InstructorController {
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, "일정이 정상적으로 추가되었습니다."));
     }
+
+//    @PostMapping("/unavailabilites")
+//    @PreAuthorize("hasRole('INSTRUCTOR')")
+//    public ResponseEntity<ResponseDto<String>> addUnavailability(
+//            Authentication authentication,
+//            @RequestBody
+//    )
 }

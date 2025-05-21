@@ -33,16 +33,6 @@ public class Instructor extends Member {
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<InstructorUnavailableDate> unavailableDates = new HashSet<>();
 
-    public void addAvailability(InstructorAvailability availability) {
-        availabilities.add(availability);
-        availability.setInstructor(this);
-    }
-
-    public void addUnavailableDate(InstructorUnavailableDate unavailableDate) {
-        unavailableDates.add(unavailableDate);
-        unavailableDate.setInstructor(this);
-    }
-
     public boolean hasTimeConflict(InstructorAvailability newAvailability) {
         return availabilities.stream()
                 .filter(availability -> availability.getDayOfWeek() == newAvailability.getDayOfWeek()
