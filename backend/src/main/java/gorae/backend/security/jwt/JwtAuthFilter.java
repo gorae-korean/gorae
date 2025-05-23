@@ -1,4 +1,4 @@
-package gorae.backend.security;
+package gorae.backend.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

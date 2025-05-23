@@ -1,8 +1,10 @@
 package gorae.backend.config;
 
 import gorae.backend.common.ProfileUtils;
-import gorae.backend.security.JwtAuthFilter;
+import gorae.backend.security.jwt.JwtAuthFilter;
+import gorae.backend.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -24,6 +27,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final ProfileUtils profileUtils;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +47,8 @@ public class SecurityConfig {
                 mvc.pattern("/api/members/signup"),
                 mvc.pattern("/api/members/login"),
                 mvc.pattern("/api/checkouts/complete/**"),
-                mvc.pattern("/api/checkouts/cancel/**")
+                mvc.pattern("/api/checkouts/cancel/**"),
+                mvc.pattern("/oauth/**")
         };
 
         MvcRequestMatcher[] swaggerPaths = {
@@ -53,6 +58,11 @@ public class SecurityConfig {
                 mvc.pattern("/swagger-resources/**"),
                 mvc.pattern("/webjars/**")
         };
+
+        http.oauth2Login(oauth2 ->
+                oauth2.userInfoEndpoint(userInfo ->
+                        userInfo.userService(customOAuth2UserService))
+        );
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();

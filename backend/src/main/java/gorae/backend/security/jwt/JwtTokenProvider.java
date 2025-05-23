@@ -1,4 +1,4 @@
-package gorae.backend.security;
+package gorae.backend.security.jwt;
 
 import gorae.backend.entity.Member;
 import io.jsonwebtoken.Claims;
