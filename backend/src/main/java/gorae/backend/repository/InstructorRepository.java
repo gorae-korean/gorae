@@ -1,6 +1,6 @@
 package gorae.backend.repository;
 
-import gorae.backend.entity.Instructor;
+import gorae.backend.entity.instructor.Instructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

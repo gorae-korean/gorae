@@ -26,8 +26,8 @@ public class CourseController {
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(
             Authentication authentication,
             @RequestParam(required = false) Long textbookId,
-            @RequestParam(required = false) LocalDateTime startTime) {
-
+            @RequestParam(required = false) LocalDateTime startTime
+    ) {
         String userId = getUserId(authentication);
         log.info("[API] SearchCourses requested: {}", userId);
 

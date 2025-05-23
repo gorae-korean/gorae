@@ -1,7 +1,7 @@
 package gorae.backend.service;
 
 import gorae.backend.common.ProfileUtils;
-import gorae.backend.entity.Instructor;
+import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Member;
 import gorae.backend.dto.member.LoginRequestDto;
