@@ -1,6 +1,9 @@
 package gorae.backend.security.oauth;
 
-import gorae.backend.entity.Member;
+import gorae.backend.constant.AuthProvider;
+import gorae.backend.entity.Student;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,9 +17,14 @@ public class OAuthAttributes {
     private String name;
     private String email;
     private String picture;
+    private AuthProvider provider;
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        return ofGoogle(userNameAttributeName, attributes);
+        if (registrationId.equals("google")) {
+            return ofGoogle(userNameAttributeName, attributes);
+        } else {
+            throw new CustomException(ErrorStatus.WRONG_PROVIDER);
+        }
     }
 
     public static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
@@ -24,16 +32,19 @@ public class OAuthAttributes {
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .picture((String) attributes.get("picture"))
+                .provider(AuthProvider.GOOGLE)
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 
-    public Member toEntity() {
-        return Member.builder()
+    public Student toEntity() {
+        return Student.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
+                .provider(provider)
+                .isFirst(true)
                 .build();
     }
 }

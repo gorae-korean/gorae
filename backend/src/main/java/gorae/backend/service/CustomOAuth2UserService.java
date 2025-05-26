@@ -6,6 +6,7 @@ import gorae.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -25,9 +26,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        ClientRegistration clientRegistration = userRequest.getClientRegistration();
+        String registrationId = clientRegistration.getRegistrationId();
 
-        String userNameAttributeName = userRequest.getClientRegistration()
+        String userNameAttributeName = clientRegistration
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();

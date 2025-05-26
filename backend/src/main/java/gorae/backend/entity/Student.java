@@ -1,5 +1,6 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.MemberRole;
 import gorae.backend.constant.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@DiscriminatorValue("STUDENT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Student extends Member {
@@ -28,6 +28,11 @@ public class Student extends Member {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<CheckoutOrder> orders = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        super.setRole(MemberRole.STUDENT);
+    }
 
     public void addMonthlyTicket() {
         LocalDateTime now = LocalDateTime.now();
