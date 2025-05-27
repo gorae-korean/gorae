@@ -1,11 +1,9 @@
 package gorae.backend.entity.instructor;
 
+import gorae.backend.constant.MemberRole;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Member;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +18,6 @@ import static gorae.backend.common.TimeUtils.timeOverlaps;
 @Slf4j
 @Entity
 @Getter
-@DiscriminatorValue("INSTRUCTOR")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Instructor extends Member {
@@ -32,6 +29,11 @@ public class Instructor extends Member {
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<InstructorUnavailableDate> unavailableDates = new HashSet<>();
+
+    @PrePersist
+    public void prePersist() {
+        super.setRole(MemberRole.INSTRUCTOR);
+    }
 
     public boolean hasTimeConflict(InstructorAvailability newAvailability) {
         return availabilities.stream()

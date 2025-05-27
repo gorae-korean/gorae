@@ -1,5 +1,7 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.AuthProvider;
+import gorae.backend.constant.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DiscriminatorColumn(name = "member_type")
 @SuperBuilder
 public abstract class Member extends BaseEntity {
     @Column(nullable = false)
@@ -17,9 +18,25 @@ public abstract class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    private String picture;
+
     private String password;
 
-    @Column
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    public Member update(String name, String picture) {
+        this.name = name;
+        this.picture = picture;
+        return this;
+    }
+
+    protected void setRole(MemberRole role) {
+        this.role = role;
+    }
 }

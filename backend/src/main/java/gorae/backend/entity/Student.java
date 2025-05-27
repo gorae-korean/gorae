@@ -1,8 +1,10 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.MemberRole;
 import gorae.backend.constant.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -13,12 +15,12 @@ import java.util.List;
 
 @Entity
 @Getter
-@DiscriminatorValue("STUDENT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Student extends Member {
     @Column(nullable = false)
-    private boolean isFirst;
+    @Builder.Default
+    private boolean isFirst = true;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments = new ArrayList<>();
@@ -28,6 +30,11 @@ public class Student extends Member {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<CheckoutOrder> orders = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        super.setRole(MemberRole.STUDENT);
+    }
 
     public void addMonthlyTicket() {
         LocalDateTime now = LocalDateTime.now();

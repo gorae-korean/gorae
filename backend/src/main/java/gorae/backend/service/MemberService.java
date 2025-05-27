@@ -12,7 +12,7 @@ import gorae.backend.repository.StudentRepository;
 import gorae.backend.repository.MemberRepository;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
-import gorae.backend.security.JwtTokenProvider;
+import gorae.backend.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +49,6 @@ public class MemberService {
                         .email(dto.email())
                         .password(encodedPassword)
                         .phoneNumber(dto.phoneNumber())
-                        .isFirst(true)
                         .build();
                 savedMember = studentRepository.save(student);
                 roles = List.of("ROLE_STUDENT");

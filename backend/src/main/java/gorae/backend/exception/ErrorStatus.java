@@ -16,10 +16,12 @@ public enum ErrorStatus {
     COURSE_IS_FULL(HttpStatus.BAD_REQUEST, "해당 강좌 인원이 모두 찼습니다."),
     EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이메일이 이미 존재합니다."),
     INVALID_DROP(HttpStatus.BAD_REQUEST, "이미 취소되었거나 수강이 완료된 신청입니다."),
+    INVALID_USER_IDENTIFIER(HttpStatus.BAD_REQUEST, "잘못된 유저 식별자입니다."),
     MUST_BE_LONGER_THAN_60_MINUTES(HttpStatus.BAD_REQUEST, "두 시간의 차이가 60분 이상이어야 합니다."),
     TICKET_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 수강권입니다."),
     TICKET_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "유효하지 않은 수강권입니다."),
     WRONG_CREDENTIAL(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 잘못되었습니다."),
+    WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "잘못된 OAuth 공급자입니다."),
     WRONG_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),
 
     // 403 FORBIDDEN
