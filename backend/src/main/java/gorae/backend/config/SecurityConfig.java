@@ -2,6 +2,7 @@ package gorae.backend.config;
 
 import gorae.backend.common.ProfileUtils;
 import gorae.backend.security.jwt.JwtAuthFilter;
+import gorae.backend.security.oauth.OAuthLoginSuccessHandler;
 import gorae.backend.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final ProfileUtils profileUtils;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,9 +61,11 @@ public class SecurityConfig {
                 mvc.pattern("/webjars/**")
         };
 
-        http.oauth2Login(oauth2 ->
-                oauth2.userInfoEndpoint(userInfo ->
-                        userInfo.userService(customOAuth2UserService))
+        http.oauth2Login(oauth2 -> {
+                    oauth2.userInfoEndpoint(userInfo ->
+                            userInfo.userService(customOAuth2UserService));
+                    oauth2.successHandler(oAuthLoginSuccessHandler);
+                }
         );
 
         http.authorizeHttpRequests(auth -> {

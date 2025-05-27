@@ -1,8 +1,10 @@
 package gorae.backend.security.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gorae.backend.dto.ResponseDto;
+import gorae.backend.dto.ResponseStatus;
+import gorae.backend.dto.member.TokenDto;
 import gorae.backend.security.jwt.JwtTokenProvider;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        authentication.getPrincipal();
+                                        Authentication authentication) throws IOException {
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        TokenDto tokenDto = new TokenDto(token);
+
+        String jsonResponse = objectMapper.writeValueAsString(new ResponseDto<>(ResponseStatus.SUCCESS, tokenDto));
+        response.getWriter().write(jsonResponse);
     }
 }

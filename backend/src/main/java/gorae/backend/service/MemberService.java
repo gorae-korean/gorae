@@ -49,7 +49,6 @@ public class MemberService {
                         .email(dto.email())
                         .password(encodedPassword)
                         .phoneNumber(dto.phoneNumber())
-                        .isFirst(true)
                         .build();
                 savedMember = studentRepository.save(student);
                 roles = List.of("ROLE_STUDENT");

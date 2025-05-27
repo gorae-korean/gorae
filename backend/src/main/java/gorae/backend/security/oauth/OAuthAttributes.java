@@ -44,7 +44,6 @@ public class OAuthAttributes {
                 .email(email)
                 .picture(picture)
                 .provider(provider)
-                .isFirst(true)
                 .build();
     }
 }

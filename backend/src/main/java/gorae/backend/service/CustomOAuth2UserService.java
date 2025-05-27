@@ -15,6 +15,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,19 +37,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getUserNameAttributeName();
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-        saveOrUpdate(attributes);
+        Member member = saveOrUpdate(attributes);
+
+        Map<String, Object> attributesWithId = new HashMap<>(attributes.getAttributes());
+        attributesWithId.put("id", member.getId());
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_STUDENT")),
-                attributes.getAttributes(),
+                attributesWithId,
                 attributes.getNameAttributeKey());
     }
 
-    private void saveOrUpdate(OAuthAttributes attributes) {
+    private Member saveOrUpdate(OAuthAttributes attributes) {
         Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 }

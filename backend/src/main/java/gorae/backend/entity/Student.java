@@ -4,6 +4,7 @@ import gorae.backend.constant.MemberRole;
 import gorae.backend.constant.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,7 +19,8 @@ import java.util.List;
 @SuperBuilder
 public class Student extends Member {
     @Column(nullable = false)
-    private boolean isFirst;
+    @Builder.Default
+    private boolean isFirst = true;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments = new ArrayList<>();
