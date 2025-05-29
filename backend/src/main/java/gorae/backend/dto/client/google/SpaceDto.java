@@ -1,4 +1,4 @@
-package gorae.backend.dto.google;
+package gorae.backend.dto.client.google;
 
 import lombok.Builder;
 

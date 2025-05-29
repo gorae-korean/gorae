@@ -1,9 +1,9 @@
 package gorae.backend.common.paypal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gorae.backend.dto.paypal.PaypalAccessTokenDto;
-import gorae.backend.dto.paypal.CreateOrderDto;
-import gorae.backend.dto.paypal.CreateOrderRequestDto;
+import gorae.backend.dto.client.paypal.PaypalAccessTokenDto;
+import gorae.backend.dto.client.paypal.CreateOrderDto;
+import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

@@ -12,5 +12,5 @@ public record EnrollmentDto(
         LocalDateTime enrolledAt,
         CourseDto course,
         EnrollmentStatus status
-        ) {
+) {
 }

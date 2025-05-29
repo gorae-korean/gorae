@@ -3,7 +3,7 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
-import gorae.backend.dto.paypal.CreateOrderDto;
+import gorae.backend.dto.client.paypal.CreateOrderDto;
 import gorae.backend.service.CheckoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

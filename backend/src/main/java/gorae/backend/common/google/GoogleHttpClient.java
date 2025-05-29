@@ -2,8 +2,8 @@ package gorae.backend.common.google;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gorae.backend.constant.endpoint.GoogleEndpoint;
-import gorae.backend.dto.google.SpaceConfig;
-import gorae.backend.dto.google.SpaceDto;
+import gorae.backend.dto.client.google.SpaceConfig;
+import gorae.backend.dto.client.google.SpaceDto;
 import gorae.backend.service.OAuthTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

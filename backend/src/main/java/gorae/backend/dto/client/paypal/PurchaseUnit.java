@@ -1,4 +1,4 @@
-package gorae.backend.dto.paypal;
+package gorae.backend.dto.client.paypal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
