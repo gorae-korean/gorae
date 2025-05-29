@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gorae.backend.constant.endpoint.GoogleEndpoint;
 import gorae.backend.dto.google.SpaceConfig;
 import gorae.backend.dto.google.SpaceDto;
-import gorae.backend.service.OAuthService;
+import gorae.backend.service.OAuthTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,20 +25,20 @@ public class GoogleHttpClient {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final GoogleProperties googleProperties;
-    private final OAuthService oAuthService;
+    private final OAuthTokenService oAuthTokenService;
 
     private static final String BEARER = "Bearer ";
 
     @Autowired
-    public GoogleHttpClient(ObjectMapper objectMapper, GoogleProperties googleProperties, OAuthService oAuthService) {
+    public GoogleHttpClient(ObjectMapper objectMapper, GoogleProperties googleProperties, OAuthTokenService oAuthTokenService) {
         this.objectMapper = objectMapper;
         this.googleProperties = googleProperties;
-        this.oAuthService = oAuthService;
+        this.oAuthTokenService = oAuthTokenService;
         httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
     }
 
     public SpaceDto createSpace(Authentication authentication) throws Exception {
-        String accessToken = oAuthService.getAccessToken(authentication);
+        String accessToken = oAuthTokenService.getAccessToken(authentication);
         SpaceConfig spaceConfig = SpaceConfig.forLecture();
         SpaceDto spaceDto = SpaceDto.builder()
                 .config(spaceConfig)

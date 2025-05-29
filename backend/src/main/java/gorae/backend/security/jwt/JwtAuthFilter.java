@@ -87,6 +87,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String nameAttributeKey = claims.get("nameAttributeKey", String.class);
         attributes.put(nameAttributeKey, claims.getSubject());
+        attributes.put("id", claims.get("id"));
         attributes.put("email", claims.get("email"));
         attributes.put("name", claims.get("name"));
 
