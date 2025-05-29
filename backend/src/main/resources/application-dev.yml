@@ -23,9 +23,12 @@ spring:
           google:
             client-id: 812361353897-0o75jou9q7pl9jp590bhh8dd78qkmbll.apps.googleusercontent.com
             client-secret: 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
+            # 여기서 openid를 추가하면 문제가 생김
             scope:
               - email
               - profile
+              - https://www.googleapis.com/auth/meetings.space.created
+              - https://www.googleapis.com/auth/meetings.space.readonly
 
 paypal:
   baseUrl: https://api-m.sandbox.paypal.com
@@ -38,6 +41,12 @@ logging:
       backend: DEBUG
     web: DEBUG
     security: DEBUG
+
+google:
+  meet:
+    baseUrl: https://meet.googleapis.com
+  oauth:
+    baseUrl: https://accounts.google.com
 
 jwt:
   secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1

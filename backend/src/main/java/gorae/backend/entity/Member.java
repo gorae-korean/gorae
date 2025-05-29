@@ -1,6 +1,5 @@
 package gorae.backend.entity;
 
-import gorae.backend.constant.AuthProvider;
 import gorae.backend.constant.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +26,7 @@ public abstract class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
+    private String providerId;
 
     public Member update(String name, String picture) {
         this.name = name;

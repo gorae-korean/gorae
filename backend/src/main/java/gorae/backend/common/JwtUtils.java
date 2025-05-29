@@ -2,12 +2,14 @@ package gorae.backend.common;
 
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Objects;
 
+@Slf4j
 public class JwtUtils {
     private JwtUtils() {
         throw new IllegalStateException("Utility class");
@@ -19,6 +21,7 @@ public class JwtUtils {
         }
 
         Object principal = authentication.getPrincipal();
+        log.debug(principal.toString());
 
         if (principal instanceof OAuth2User oAuth2User) {
             return Objects.requireNonNull(oAuth2User.getAttribute("id")).toString();

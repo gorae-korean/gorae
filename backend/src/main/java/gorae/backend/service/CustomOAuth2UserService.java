@@ -26,6 +26,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.debug(userRequest.getClientRegistration().toString());
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
@@ -36,16 +37,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
 
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-        Member member = saveOrUpdate(attributes);
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        OAuthAttributes oAuthAttributes = OAuthAttributes.of(registrationId, userNameAttributeName, attributes);
+        Member member = saveOrUpdate(oAuthAttributes);
 
-        Map<String, Object> attributesWithId = new HashMap<>(attributes.getAttributes());
-        attributesWithId.put("id", member.getId());
+        Map<String, Object> newAttributes = new HashMap<>(attributes);
+        newAttributes.put("registrationId", registrationId);
+        newAttributes.put("nameAttributeKey", userNameAttributeName);
+        newAttributes.put("id", member.getId());
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_STUDENT")),
-                attributesWithId,
-                attributes.getNameAttributeKey());
+                newAttributes,
+                oAuthAttributes.getNameAttributeKey());
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes) {

@@ -1,7 +1,7 @@
 package gorae.backend.common.paypal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gorae.backend.dto.paypal.AccessTokenDto;
+import gorae.backend.dto.paypal.PaypalAccessTokenDto;
 import gorae.backend.dto.paypal.CreateOrderDto;
 import gorae.backend.dto.paypal.CreateOrderRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import static gorae.backend.constant.PaypalEndpoints.*;
+import static gorae.backend.constant.endpoint.Endpoint.createUrl;
+import static gorae.backend.constant.endpoint.PaypalEndpoint.*;
 
 @Slf4j
 @Component
@@ -35,7 +36,7 @@ public class PaypalHttpClient {
         httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
     }
 
-    public AccessTokenDto getAccessToken() throws Exception {
+    public PaypalAccessTokenDto getAccessToken() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), GET_ACCESS_TOKEN)))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -48,17 +49,17 @@ public class PaypalHttpClient {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
         log.info(content);
-        return objectMapper.readValue(content, AccessTokenDto.class);
+        return objectMapper.readValue(content, PaypalAccessTokenDto.class);
     }
 
     public CreateOrderDto createOrder(CreateOrderRequestDto orderRequestDto) throws Exception {
-        AccessTokenDto accessTokenDto = getAccessToken();
+        PaypalAccessTokenDto paypalAccessTokenDto = getAccessToken();
         String payload = objectMapper.writeValueAsString(orderRequestDto);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), ORDER_CHECKOUT)))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + accessTokenDto.accessToken())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + paypalAccessTokenDto.accessToken())
                 .POST(HttpRequest.BodyPublishers.ofString(payload))
                 .build();
 

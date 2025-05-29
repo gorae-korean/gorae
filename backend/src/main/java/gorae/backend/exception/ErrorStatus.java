@@ -24,6 +24,10 @@ public enum ErrorStatus {
     WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "잘못된 OAuth 공급자입니다."),
     WRONG_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),
 
+    // 401 UNAUTHORIZED
+    FAILED_TO_GET_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "토큰을 재생성하는 데 실패했습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다."),
+
     // 403 FORBIDDEN
     NO_PERMISSIONS(HttpStatus.FORBIDDEN, "해당 요청에 대한 권한이 없습니다."),
 

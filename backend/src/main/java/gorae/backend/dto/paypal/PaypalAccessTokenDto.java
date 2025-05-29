@@ -2,7 +2,7 @@ package gorae.backend.dto.paypal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record AccessTokenDto(
+public record PaypalAccessTokenDto(
         String scope,
         @JsonProperty("access_token") String accessToken,
         @JsonProperty("token_type") String tokenType,

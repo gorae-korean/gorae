@@ -1,5 +1,6 @@
 package gorae.backend.security.jwt;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,16 +9,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,24 +34,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = extractToken(request);
             if (token != null && jwtTokenProvider.validateToken(token)) {
-                String userId = jwtTokenProvider.getUserId(token);
-                List<String> roles = jwtTokenProvider.getUserRoles(token);
+                String authType = jwtTokenProvider.getAuthType(token);
 
-                UserDetails userDetails = createUserDetails(userId, roles);
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                Authentication authentication;
+                if (authType.equals("oauth")) {
+                    authentication = createOAuth2Authentication(token);
+                } else {
+                    authentication = createUserPasswordAuthentication(token);
+                }
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -64,11 +66,44 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private UserDetails createUserDetails(String userId, List<String> roles) {
-        List<GrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    private Authentication createUserPasswordAuthentication(String token) {
+        UserDetails userDetails = new User(
+                jwtTokenProvider.getEmail(token),
+                "",
+                getAuthorities(jwtTokenProvider.getUserRoles(token))
+        );
 
-        return new User(userId, "", authorities);
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+    }
+
+    private Authentication createOAuth2Authentication(String token) {
+        Map<String, Object> attributes = new HashMap<>();
+        Claims claims = jwtTokenProvider.extractClaims(token);
+        log.debug("Claims: {}", claims.toString());
+
+        String nameAttributeKey = claims.get("nameAttributeKey", String.class);
+        attributes.put(nameAttributeKey, claims.getSubject());
+        attributes.put("email", claims.get("email"));
+        attributes.put("name", claims.get("name"));
+
+        OAuth2User oAuth2User = new DefaultOAuth2User(
+                getAuthorities(jwtTokenProvider.getUserRoles(token)),
+                attributes,
+                nameAttributeKey
+        );
+
+        return new OAuth2AuthenticationToken(
+                oAuth2User,
+                oAuth2User.getAuthorities(),
+                claims.get("registrationId", String.class)
+        );
+    }
+
+    private List<GrantedAuthority> getAuthorities(List<String> roles) {
+        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }
