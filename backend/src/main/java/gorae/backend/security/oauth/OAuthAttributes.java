@@ -32,8 +32,8 @@ public class OAuthAttributes {
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .providerId(registrationId)
-                .oauthName((String) attributes.get(nameAttributeKey))
+                .provider(registrationId)
+                .oauthId((String) attributes.get(nameAttributeKey))
                 .build();
     }
 }

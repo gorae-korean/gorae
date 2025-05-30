@@ -1,12 +1,14 @@
 -- Member 테이블 (Instructor, Student의 부모 테이블)
+INSERT INTO member (name, email, role, created_at, updated_at, provider, oauth_id)
+VALUES ('김민형', 'kmh24631@gmail.com', 'INSTRUCTOR', CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, 'google', '114687843089321836407'),
+       ('김민형', 'pristo2463@gmail.com', 'INSTRUCTOR', CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, 'google', '103913072695475252937');
+
 -- 비밀번호: 모든 계정 'password123'
 -- OAuth 없는 계정
 INSERT INTO member (name, email, password, role, phone_number, created_at, updated_at)
-VALUES ('김교수', 'instructor1@example.com', 'password123', 'INSTRUCTOR',
-        '010-1234-5678', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('이강사', 'instructor2@example.com', 'password123', 'INSTRUCTOR',
-        '010-2345-6789', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('박선생', 'instructor3@example.com', 'password123', 'INSTRUCTOR',
+VALUES ('박선생', 'instructor3@example.com', 'password123', 'INSTRUCTOR',
         '010-3456-7890', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('최학생', 'student1@example.com', 'password123', 'STUDENT',
         '010-4567-8901', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -18,7 +20,7 @@ VALUES ('김교수', 'instructor1@example.com', 'password123', 'INSTRUCTOR',
         '010-7890-1234', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- OAuth 있는 계정
-INSERT INTO member (name, email, role, created_at, updated_at, provider_id, oauth_name)
+INSERT INTO member (name, email, role, created_at, updated_at, provider, oauth_id)
 VALUES ('김민형', 'pristo24631@gmail.com', 'STUDENT', CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP, 'google', '113499328422296948680');
 

@@ -26,9 +26,9 @@ public abstract class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    private String providerId;
+    private String provider;
 
-    private String oauthName;
+    private String oauthId;
 
     public Member update(String name, String picture) {
         this.name = name;

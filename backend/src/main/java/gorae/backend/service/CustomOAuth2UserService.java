@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         newAttributes.put("id", member.getId());
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_STUDENT")),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + member.getRole())),
                 newAttributes,
                 oAuthAttributes.getNameAttributeKey());
     }
