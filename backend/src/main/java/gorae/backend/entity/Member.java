@@ -28,6 +28,8 @@ public abstract class Member extends BaseEntity {
 
     private String providerId;
 
+    private String oauthName;
+
     public Member update(String name, String picture) {
         this.name = name;
         this.picture = picture;

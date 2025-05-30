@@ -33,6 +33,7 @@ public class OAuthAttributes {
                 .email(email)
                 .picture(picture)
                 .providerId(registrationId)
+                .oauthName((String) attributes.get(nameAttributeKey))
                 .build();
     }
 }

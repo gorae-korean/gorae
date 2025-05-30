@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -35,6 +36,7 @@ public class SecurityConfig {
     private final ProfileUtils profileUtils;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
+    private final OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -85,6 +87,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.oauth2Login(oauth2 -> {
+                    oauth2.authorizationEndpoint(auth ->
+                            auth.authorizationRequestResolver(customAuthorizationRequestResolver));
                     oauth2.userInfoEndpoint(userInfo ->
                             userInfo.userService(customOAuth2UserService));
                     oauth2.successHandler(oAuthLoginSuccessHandler);
