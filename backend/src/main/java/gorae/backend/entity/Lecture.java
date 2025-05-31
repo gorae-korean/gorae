@@ -44,6 +44,11 @@ public class Lecture extends BaseEntity {
     )
     private List<Student> students = new ArrayList<>();
 
+    @Column(nullable = false)
+    private LocalDateTime scheduledStartTime;
+
+    @Column(nullable = false)
+    private LocalDateTime scheduledEndTime;
 
     private LocalDateTime actualStartTime;
 
@@ -56,6 +61,8 @@ public class Lecture extends BaseEntity {
                 .course(course)
                 .instructor(course.getInstructor())
                 .students(course.getStudents())
+                .scheduledStartTime(course.getStartTime())
+                .scheduledEndTime(course.getEndTime())
                 .status(LectureStatus.SCHEDULED)
                 .build();
     }
@@ -65,19 +72,8 @@ public class Lecture extends BaseEntity {
         this.actualStartTime = LocalDateTime.now();
     }
 
-    public void end() {
-        this.status = LectureStatus.ENDED;
-        this.actualEndTime = LocalDateTime.now();
-    }
-
-    public void cancel() {
-        this.status = LectureStatus.CANCELLED;
-    }
-
     public LectureDto toDto() {
-        List<String> emails = course.getEnrollments().stream()
-                .map(enrollment -> enrollment.getStudent().getEmail())
-                .toList();
+        List<String> emails = students.stream().map(Student::getEmail).toList();
 
         return LectureDto.builder()
                 .code(code)

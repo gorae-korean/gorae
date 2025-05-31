@@ -20,6 +20,8 @@ import java.util.List;
 public class JwtTokenProvider {
     private static final String ROLES ="roles";
     private static final String EMAIL = "email";
+    private static final String AUTH_TYPE = "authType";
+    private static final String ID = "id";
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -44,11 +46,11 @@ public class JwtTokenProvider {
                 .subject(oAuth2User.getName())
                 .claim(ROLES, roles)
                 .claim(EMAIL, oAuth2User.getAttribute(EMAIL))
-                .claim("id", oAuth2User.getAttribute("id"))
+                .claim(ID, oAuth2User.getAttribute(ID))
                 .claim("name", oAuth2User.getAttribute("name"))
                 .claim("registrationId", oAuth2User.getAttribute("registrationId"))
                 .claim("nameAttributeKey", oAuth2User.getAttribute("nameAttributeKey"))
-                .claim("authType", "oauth")
+                .claim(AUTH_TYPE, "oauth")
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
@@ -60,7 +62,9 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + expiration);
         return Jwts.builder()
                 .subject(String.valueOf(member.getId()))
+                .claim(ID, String.valueOf(member.getId()))
                 .claim(ROLES, roles)
+                .claim(AUTH_TYPE, "login")
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
@@ -75,12 +79,12 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-    public String getAuthType(String token) {
-        return extractClaims(token).get("authType", String.class);
+    public String getUserId(String token) {
+        return extractClaims(token).get(ID, String.class);
     }
 
-    public String getEmail(String token) {
-        return extractClaims(token).get(EMAIL, String.class);
+    public String getAuthType(String token) {
+        return extractClaims(token).get(AUTH_TYPE, String.class);
     }
 
     @SuppressWarnings("unchecked")

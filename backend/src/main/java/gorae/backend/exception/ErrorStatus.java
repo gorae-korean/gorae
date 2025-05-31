@@ -20,6 +20,7 @@ public enum ErrorStatus {
     INVALID_USER_IDENTIFIER(HttpStatus.BAD_REQUEST, "잘못된 유저 식별자입니다."),
     LECTURE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "강의가 의미 생성되었습니다."),
     LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 생성될 수 있습니다."),
+    LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 참여할 수 있습니다."),
     MUST_BE_LONGER_THAN_60_MINUTES(HttpStatus.BAD_REQUEST, "두 시간의 차이가 60분 이상이어야 합니다."),
     START_TIME_HAS_PASSED(HttpStatus.BAD_REQUEST, "시작 시간이 이미 경과되어 강의를 생성할 수 없습니다."),
     TICKET_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 수강권입니다."),
@@ -38,6 +39,7 @@ public enum ErrorStatus {
     // 404 NOT_FOUND
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "강좌가 존재하지 않습니다."),
     ENROLLMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "수강신청이 존재하지 않습니다."),
+    LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "강의를 찾을 수 없습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문 내역이 존재하지 않습니다."),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품이 존재하지 않습니다."),
