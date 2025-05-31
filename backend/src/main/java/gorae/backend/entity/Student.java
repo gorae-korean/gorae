@@ -31,6 +31,9 @@ public class Student extends Member {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<CheckoutOrder> orders = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "students")
+    private List<Lecture> lectures;
+
     @PrePersist
     public void prePersist() {
         super.setRole(MemberRole.STUDENT);

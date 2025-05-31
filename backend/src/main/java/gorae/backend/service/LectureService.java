@@ -6,12 +6,15 @@ import gorae.backend.dto.client.google.SpaceDto;
 import gorae.backend.dto.lecture.LectureDto;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Lecture;
+import gorae.backend.entity.Member;
+import gorae.backend.entity.Student;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import gorae.backend.repository.CourseRepository;
 import gorae.backend.repository.InstructorRepository;
 import gorae.backend.repository.LectureRepository;
+import gorae.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +34,7 @@ public class LectureService {
     private final CourseRepository courseRepository;
     private final LectureRepository lectureRepository;
     private final InstructorRepository instructorRepository;
+    private final MemberRepository memberRepository;
 
     private static final int MAX_TIME_LIMIT = 20;
 
@@ -86,4 +90,16 @@ public class LectureService {
         lectureRepository.save(lecture);
         return lecture.toDto();
     }
+//
+//    @Transactional(readOnly = true)
+//    public LectureDto joinLecture(String userId) throws Exception {
+//        Long memberId = Long.valueOf(userId);
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+//
+//        Lecture lecture;
+//        if (member instanceof Student student) {
+//            member = student;
+//        }
+//    }
 }

@@ -50,4 +50,11 @@ public class Course extends BaseEntity {
                 .filter(enrollment -> enrollment.getStatus() == EnrollmentStatus.ENROLLED)
                 .count();
     }
+
+    public List<Student> getStudents() {
+        return enrollments.stream()
+                .filter(enrollment -> enrollment.getStatus() == EnrollmentStatus.ENROLLED)
+                .map(Enrollment::getStudent)
+                .toList();
+    }
 }

@@ -2,6 +2,7 @@ package gorae.backend.entity;
 
 import gorae.backend.constant.LectureStatus;
 import gorae.backend.dto.lecture.LectureDto;
+import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,6 +32,19 @@ public class Lecture extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LectureStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id", nullable = false)
+    private Instructor instructor;
+
+    @ManyToMany
+    @JoinTable(
+            name = "lecture_students",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<Student> students = new ArrayList<>();
+
+
     private LocalDateTime actualStartTime;
 
     private LocalDateTime actualEndTime;
@@ -39,6 +54,8 @@ public class Lecture extends BaseEntity {
                 .code(code)
                 .url(url)
                 .course(course)
+                .instructor(course.getInstructor())
+                .students(course.getStudents())
                 .status(LectureStatus.SCHEDULED)
                 .build();
     }
