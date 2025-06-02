@@ -72,13 +72,14 @@ public class Lecture extends BaseEntity {
         this.actualStartTime = Instant.now();
     }
 
-    public LectureDto toDto() {
+    public LectureDto toDto(boolean isInstructor) {
         List<String> emails = students.stream().map(Student::getEmail).toList();
 
         return LectureDto.builder()
+                .id(this.getPublicId())
                 .code(code)
                 .redirectUrl(url)
-                .studentEmails(emails)
+                .studentEmails(isInstructor ? emails : null)
                 .build();
     }
 }

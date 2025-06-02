@@ -1,5 +1,6 @@
 package gorae.backend.service;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.common.TimeUtils;
 import gorae.backend.common.google.GoogleHttpClient;
 import gorae.backend.dto.client.google.SpaceDto;
@@ -31,6 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LectureService {
     private final GoogleHttpClient googleHttpClient;
+    private final ProfileUtils profileUtils;
     private final CourseRepository courseRepository;
     private final LectureRepository lectureRepository;
     private final InstructorRepository instructorRepository;
@@ -81,7 +83,7 @@ public class LectureService {
             throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
         }
 
-        if (Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+        if (profileUtils.isProdMode() && Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
             throw new CustomException(ErrorStatus.LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES);
         }
 
@@ -89,7 +91,7 @@ public class LectureService {
         Lecture lecture = Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course);
         lecture.start();
         lectureRepository.save(lecture);
-        return lecture.toDto();
+        return lecture.toDto(true);
     }
 
     @Transactional
@@ -99,26 +101,30 @@ public class LectureService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
         Instant nextOnTime = TimeUtils.getNextHour();
-        if (Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+        if (profileUtils.isProdMode() && Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
             throw new CustomException(ErrorStatus.LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES);
         }
 
         Lecture lecture;
+        LectureDto lectureDto;
         switch (member) {
             case Instructor instructor -> {
                 lecture = lectureRepository.findByInstructorAndScheduledStartTime(instructor, nextOnTime)
                         .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
                 lecture.start();
                 lectureRepository.save(lecture);
+                lectureDto = lecture.toDto(true);
             }
 
-            case Student student ->
-                    lecture = lectureRepository.findByStudentsContainsAndScheduledStartTime(student, nextOnTime)
-                            .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
+            case Student student -> {
+                lecture = lectureRepository.findByStudentsContainsAndScheduledStartTime(student, nextOnTime)
+                        .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
+                lectureDto = lecture.toDto(false);
+            }
 
             default -> throw new IllegalStateException("잘못된 멤버 인스턴스입니다.");
         }
 
-        return lecture.toDto();
+        return lectureDto;
     }
 }

@@ -15,4 +15,9 @@ public class ProfileUtils {
         return Arrays.asList(environment.getActiveProfiles())
                 .contains("dev");
     }
+
+    public boolean isProdMode() {
+        return Arrays.asList(environment.getActiveProfiles())
+                .contains("prod");
+    }
 }

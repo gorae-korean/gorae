@@ -2,6 +2,7 @@ package gorae.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -23,6 +24,7 @@ public abstract class BaseEntity {
     private Long id;
 
     @Column(unique = true, updatable = false, nullable = false, columnDefinition = "uuid")
+    @Builder.Default
     private UUID publicId = UUID.randomUUID();
 
     @CreatedDate
