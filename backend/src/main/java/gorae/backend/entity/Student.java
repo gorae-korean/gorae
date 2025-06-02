@@ -9,7 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +41,11 @@ public class Student extends Member {
     }
 
     public void addMonthlyTicket() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         Ticket ticket = Ticket.builder()
                 .student(this)
                 .startTime(now)
-                .endTime(now.plusMonths(1))
+                .endTime(now.atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
                 .status(TicketStatus.ACTIVE)
                 .build();
         tickets.add(ticket);

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +17,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
             "AND l.status IN ('SCHEDULED', 'IN_PROGRESS')")
     boolean existsByCourse(Course course);
 
-    Optional<Lecture> findByInstructorAndScheduledStartTime(Instructor instructor, LocalDateTime scheduledStartTime);
+    Optional<Lecture> findByInstructorAndScheduledStartTime(Instructor instructor, Instant scheduledStartTime);
 
-    Optional<Lecture> findByStudentsContainsAndScheduledStartTime(Student student, LocalDateTime scheduledStartTime);
+    Optional<Lecture> findByStudentsContainsAndScheduledStartTime(Student student, Instant scheduledStartTime);
 }

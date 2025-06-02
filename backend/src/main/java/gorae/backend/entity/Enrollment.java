@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -32,7 +32,7 @@ public class Enrollment {
     private Ticket ticket;
 
     @Column(nullable = false)
-    private LocalDateTime enrolledAt;
+    private Instant enrolledAt;
 
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
@@ -50,7 +50,7 @@ public class Enrollment {
         Enrollment enrollment = new Enrollment();
         enrollment.student = student;
         enrollment.course = course;
-        enrollment.enrolledAt = LocalDateTime.now();
+        enrollment.enrolledAt = Instant.now();
         enrollment.status = EnrollmentStatus.ENROLLED;
         return enrollment;
     }
