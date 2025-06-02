@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class Student extends Member {
         Ticket ticket = Ticket.builder()
                 .student(this)
                 .startTime(now)
-                .endTime(now.atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
+                .endTime(now.plus(30, ChronoUnit.DAYS))
                 .status(TicketStatus.ACTIVE)
                 .build();
         tickets.add(ticket);
