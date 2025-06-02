@@ -1,49 +1,22 @@
 -- Ticket 테이블
-INSERT INTO ticket (student_id, start_time, end_time, status, created_at, updated_at)
+INSERT INTO ticket (public_id, student_id, start_time, end_time, status, used_at, created_at, updated_at)
 VALUES
 -- 지난 달 티켓 (USED)
-(4, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(5, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(6, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(7, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(8, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(4, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(5, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(6, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(7, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(8, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(gen_random_uuid(), 3, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED'
+, NOW() - interval '7 day', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(gen_random_uuid(), 3, date_trunc('month', NOW() - interval '1 month'), date_trunc('month', NOW()) - interval '1 second', 'USED'
+, NOW() - interval '7 day', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- 이번 달 티켓 (ACTIVE)
-(4, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(5, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(6, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(7, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(8, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE',
- CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(gen_random_uuid(), 3, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(gen_random_uuid(), 3, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(gen_random_uuid(), 3, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(gen_random_uuid(), 3, date_trunc('month', NOW()), date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- Enrollment 테이블은 그대로 유지
-INSERT INTO enrollment (student_id, course_id, ticket_id, enrolled_at, status)
-VALUES (4, 1, 1, '2025-04-15 10:30:00', 'ENROLLED'),
-       (5, 1, 2, '2025-04-16 11:45:00', 'ENROLLED'),
-       (6, 2, 3, '2025-04-20 09:15:00', 'ENROLLED'),
-       (7, 2, 4, '2025-04-21 14:20:00', 'ENROLLED'),
-       (8, 3, 5, '2025-05-01 16:10:00', 'ENROLLED'),
-       (4, 3, 6, '2025-05-02 13:25:00', 'ENROLLED'),
-       (5, 4, 7, '2025-04-25 10:05:00', 'ENROLLED'),
-       (6, 5, 8, '2025-06-10 11:30:00', 'ENROLLED'),
-       (7, 4, 9, '2025-04-28 15:40:00', 'ENROLLED'),
-       (8, 5, 10, '2025-06-12 09:50:00', 'ENROLLED');
+INSERT INTO enrollment (public_id, student_id, course_id, ticket_id, enrolled_at, status)
+VALUES (gen_random_uuid(), 3, 1, 1, NOW() - interval '7 day', 'ENROLLED'),
+       (gen_random_uuid(), 3, 2, 2, NOW() - interval '7 day', 'ENROLLED');

@@ -1,7 +1,9 @@
 package gorae.backend.dto.enrollment;
 
+import java.util.UUID;
+
 public record EnrollRequestDto(
-        Long courseId,
-        Long ticketId
+        UUID courseId,
+        UUID ticketId
 ) {
 }

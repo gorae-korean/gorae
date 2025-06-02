@@ -38,6 +38,7 @@ public class Course extends BaseEntity {
 
     public CourseDto toDto() {
         return CourseDto.builder()
+                .id(this.getPublicId())
                 .title(title)
                 .level(textbook.getLevel())
                 .startTime(startTime)

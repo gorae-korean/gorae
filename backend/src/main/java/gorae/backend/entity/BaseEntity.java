@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @MappedSuperclass
 @Getter
@@ -20,6 +21,9 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID publicId = UUID.randomUUID();
 
     @CreatedDate
     @Column(updatable = false)

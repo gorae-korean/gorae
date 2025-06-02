@@ -5,10 +5,11 @@ import gorae.backend.dto.course.CourseDto;
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 public record EnrollmentDto(
-        Long id,
+        UUID id,
         Instant enrolledAt,
         CourseDto course,
         EnrollmentStatus status

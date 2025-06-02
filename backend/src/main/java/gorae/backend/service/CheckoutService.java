@@ -33,7 +33,7 @@ public class CheckoutService {
 
     @Transactional
     public CreateOrderDto checkout(String userId, CheckoutRequestDto dto) throws Exception {
-        Product product = productRepository.findById(dto.productId())
+        Product product = productRepository.findByPublicId(dto.productId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
         Student student = studentRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));

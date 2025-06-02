@@ -48,6 +48,7 @@ public class InstructorAvailability extends BaseEntity {
 
     public AvailabilityDto toDto() {
         return AvailabilityDto.builder()
+                .id(this.getPublicId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .dayOfWeek(dayOfWeek)

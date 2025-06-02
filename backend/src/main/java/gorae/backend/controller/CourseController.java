@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static gorae.backend.common.JwtUtils.getUserId;
 
@@ -28,7 +29,7 @@ public class CourseController {
     @GetMapping
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(
             Authentication authentication,
-            @RequestParam(required = false) Long textbookId,
+            @RequestParam(required = false) UUID textbookId,
             @RequestParam(required = false) ZonedDateTime startTime
     ) {
         String userId = getUserId(authentication);

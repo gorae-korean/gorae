@@ -14,11 +14,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Enrollment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Enrollment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
@@ -61,7 +57,7 @@ public class Enrollment {
 
     public EnrollmentDto toDto() {
         return EnrollmentDto.builder()
-                .id(id)
+                .id(this.getPublicId())
                 .enrolledAt(enrolledAt)
                 .course(course.toDto())
                 .status(status)

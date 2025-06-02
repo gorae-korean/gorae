@@ -2,8 +2,10 @@ package gorae.backend.dto.checkout;
 
 import gorae.backend.constant.PaypalOrderIntent;
 
+import java.util.UUID;
+
 public record CheckoutRequestDto(
-        Long productId,
+        UUID productId,
         PaypalOrderIntent intent
 ) {
 }

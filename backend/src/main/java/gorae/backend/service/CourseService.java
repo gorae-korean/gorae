@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -18,16 +19,12 @@ import java.util.List;
 public class CourseService {
     private final CourseRepository courseRepository;
 
-    public List<CourseDto> searchCourses(Long textbookId, ZonedDateTime startTime) {
-        if (textbookId != null && textbookId <= 0) {
-            throw new IllegalArgumentException("교재의 ID 값은 양수여야 합니다.");
-        }
-
+    public List<CourseDto> searchCourses(UUID textbookId, ZonedDateTime startTime) {
         List<Course> courses;
         if (textbookId != null && startTime != null) {
-            courses = courseRepository.findByTextbook_IdAndStartTime(textbookId, startTime.toInstant());
+            courses = courseRepository.findByTextbook_PublicIdAndStartTime(textbookId, startTime.toInstant());
         } else if (textbookId != null) {
-            courses = courseRepository.findByTextbook_Id(textbookId);
+            courses = courseRepository.findByTextbook_PublicId(textbookId);
         } else {
             courses = courseRepository.findByStartTime(startTime.toInstant());
         }

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static gorae.backend.common.JwtUtils.getUserId;
 
@@ -50,7 +51,7 @@ public class EnrollmentController {
 
     @DeleteMapping("/{enrollmentId}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<ResponseDto<String>> drop(Authentication authentication, @PathVariable Long enrollmentId) {
+    public ResponseEntity<ResponseDto<String>> drop(Authentication authentication, @PathVariable UUID enrollmentId) {
         String userId = getUserId(authentication);
         log.info("[API] Drop requested: {}", userId);
 

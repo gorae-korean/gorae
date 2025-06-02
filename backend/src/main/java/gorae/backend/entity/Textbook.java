@@ -30,7 +30,7 @@ public class Textbook extends BaseEntity {
 
     public TextbookDto toDto() {
         return TextbookDto.builder()
-                .id(this.getId())
+                .id(this.getPublicId())
                 .tags(tags)
                 .title(title)
                 .level(level)

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,13 +35,13 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
-        Course course = courseRepository.findById(dto.courseId())
+        Course course = courseRepository.findByPublicId(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
         if (course.getStartTime().isBefore(Instant.now())) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
 
-        Ticket ticket = ticketRepository.findById(dto.ticketId())
+        Ticket ticket = ticketRepository.findByPublicId(dto.ticketId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
         if (ticket.getStatus() == TicketStatus.USED) {
             throw new CustomException(ErrorStatus.TICKET_ALREADY_USED);
@@ -75,11 +76,11 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public void drop(String userId, Long enrollmentId) {
+    public void drop(String userId, UUID enrollmentId) {
         Long studentId = Long.valueOf(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+        Enrollment enrollment = enrollmentRepository.findByPublicId(enrollmentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ENROLLMENT_NOT_FOUND));
         if (!enrollment.getStudent().equals(student)) {
             throw new CustomException(ErrorStatus.NO_PERMISSIONS);

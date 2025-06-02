@@ -1,22 +1,22 @@
 -- Course 테이블
-INSERT INTO course (title, start_time, end_time, instructor_id, textbook_id, created_at, updated_at)
-VALUES ('프로그래밍 기초',
+INSERT INTO course (public_id, title, start_time, end_time, instructor_id, textbook_id, created_at, updated_at)
+VALUES (gen_random_uuid(), '프로그래밍 기초',
         date_trunc('hour', NOW()) + interval '1 hour',
         date_trunc('hour', NOW()) + interval '2 hour',
         1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('웹 개발 중급',
+       (gen_random_uuid(), '웹 개발 중급',
         date_trunc('hour', NOW()) + interval '2 hour',
         date_trunc('hour', NOW()) + interval '3 hour',
         1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('알고리즘 고급',
+       (gen_random_uuid(), '알고리즘 고급',
         date_trunc('hour', NOW()) + interval '1 hour',
         date_trunc('hour', NOW()) + interval '2 hour',
         2, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('데이터베이스 입문',
+       (gen_random_uuid(), '데이터베이스 입문',
         date_trunc('hour', NOW()) + interval '2 hour',
         date_trunc('hour', NOW()) + interval '3 hour',
         2, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('모바일 앱 개발',
+       (gen_random_uuid(), '모바일 앱 개발',
         date_trunc('hour', NOW()) + interval '3 hour',
         date_trunc('hour', NOW()) + interval '4 hour',
         2, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
