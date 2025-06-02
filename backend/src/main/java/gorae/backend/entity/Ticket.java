@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -22,26 +22,26 @@ public class Ticket extends BaseEntity {
     private Enrollment enrollment;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private Instant endTime;
 
-    private LocalDateTime usedAt;
+    private Instant usedAt;
 
-    private LocalDateTime droppedAt;
+    private Instant droppedAt;
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
     public void useTicket() {
         status = TicketStatus.USED;
-        usedAt = LocalDateTime.now();
+        usedAt = Instant.now();
     }
 
     public void returnTicket() {
         status = TicketStatus.ACTIVE;
-        droppedAt = LocalDateTime.now();
+        droppedAt = Instant.now();
     }
 }
 

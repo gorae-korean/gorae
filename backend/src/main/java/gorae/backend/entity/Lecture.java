@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,14 +45,14 @@ public class Lecture extends BaseEntity {
     private List<Student> students = new ArrayList<>();
 
     @Column(nullable = false)
-    private LocalDateTime scheduledStartTime;
+    private Instant scheduledStartTime;
 
     @Column(nullable = false)
-    private LocalDateTime scheduledEndTime;
+    private Instant scheduledEndTime;
 
-    private LocalDateTime actualStartTime;
+    private Instant actualStartTime;
 
-    private LocalDateTime actualEndTime;
+    private Instant actualEndTime;
 
     public static Lecture schedule(String code, String url, Course course) {
         return Lecture.builder()
@@ -69,7 +69,7 @@ public class Lecture extends BaseEntity {
 
     public void start() {
         this.status = LectureStatus.IN_PROGRESS;
-        this.actualStartTime = LocalDateTime.now();
+        this.actualStartTime = Instant.now();
     }
 
     public LectureDto toDto() {

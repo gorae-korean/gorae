@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static gorae.backend.common.JwtUtils.getUserId;
@@ -26,7 +29,7 @@ public class CourseController {
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(
             Authentication authentication,
             @RequestParam(required = false) Long textbookId,
-            @RequestParam(required = false) LocalDateTime startTime
+            @RequestParam(required = false) ZonedDateTime startTime
     ) {
         String userId = getUserId(authentication);
         log.info("[API] SearchCourses requested: {}", userId);

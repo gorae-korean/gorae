@@ -4,12 +4,12 @@ import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.course.CourseDto;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Builder
 public record EnrollmentDto(
         Long id,
-        LocalDateTime enrolledAt,
+        Instant enrolledAt,
         CourseDto course,
         EnrollmentStatus status
 ) {

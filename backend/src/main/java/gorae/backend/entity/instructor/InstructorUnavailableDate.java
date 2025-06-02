@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -18,9 +18,9 @@ public class InstructorUnavailableDate extends BaseEntity {
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
-    private LocalDateTime startDateTime;
+    private Instant startDateTime;
 
-    private LocalDateTime endDateTime;
+    private Instant endDateTime;
 
     private String reason;
 

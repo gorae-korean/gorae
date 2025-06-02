@@ -1,26 +1,26 @@
 package gorae.backend.service;
 
+import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.constant.TicketStatus;
+import gorae.backend.dto.enrollment.EnrollRequestDto;
+import gorae.backend.dto.enrollment.EnrollmentDto;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Enrollment;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
-import gorae.backend.constant.EnrollmentStatus;
-import gorae.backend.dto.enrollment.EnrollRequestDto;
-import gorae.backend.dto.enrollment.EnrollmentDto;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import gorae.backend.repository.CourseRepository;
 import gorae.backend.repository.EnrollmentRepository;
 import gorae.backend.repository.StudentRepository;
 import gorae.backend.repository.TicketRepository;
-import gorae.backend.exception.CustomException;
-import gorae.backend.exception.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -36,7 +36,7 @@ public class EnrollmentService {
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
         Course course = courseRepository.findById(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
-        if (course.getStartTime().isBefore(LocalDateTime.now())) {
+        if (course.getStartTime().isBefore(Instant.now())) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
 
@@ -88,8 +88,8 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.INVALID_DROP);
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime courseStartTime = enrollment.getCourse().getStartTime();
+        Instant now = Instant.now();
+        Instant courseStartTime = enrollment.getCourse().getStartTime();
         if (courseStartTime.isBefore(now)) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }

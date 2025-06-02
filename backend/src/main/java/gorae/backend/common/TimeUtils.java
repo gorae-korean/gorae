@@ -1,6 +1,6 @@
 package gorae.backend.common;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
@@ -13,11 +13,11 @@ public class TimeUtils {
         return end1.isAfter(start2) && end2.isAfter(start1);
     }
 
-    public static LocalDateTime getCurrentHour() {
-        return LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
+    public static Instant getCurrentHour() {
+        return Instant.now().truncatedTo(ChronoUnit.HOURS);
     }
 
-    public static LocalDateTime getNextHour() {
-        return getCurrentHour().plusHours(1);
+    public static Instant getNextHour() {
+        return getCurrentHour().plus(1, ChronoUnit.HOURS);
     }
 }

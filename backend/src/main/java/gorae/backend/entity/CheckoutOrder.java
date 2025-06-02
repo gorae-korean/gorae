@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -29,10 +29,10 @@ public class CheckoutOrder extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private LocalDateTime paymentDate;
+    private Instant paymentDate;
 
     public void completeOrder() {
-        paymentDate = LocalDateTime.now();
+        paymentDate = Instant.now();
         status = OrderStatus.COMPLETED;
     }
 

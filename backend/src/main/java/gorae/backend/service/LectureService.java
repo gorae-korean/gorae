@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class LectureService {
     @Transactional
     public void createLecture() {
         log.info("[System] CreateLecture started");
-        LocalDateTime onTime = TimeUtils.getNextHour();
+        Instant onTime = TimeUtils.getNextHour();
         List<Lecture> lectures = courseRepository.findByStartTime(onTime)
                 .stream().map(this::getLectureFromCourse)
                 .filter(Optional::isPresent)
@@ -73,7 +73,7 @@ public class LectureService {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        LocalDateTime nextOnTime = TimeUtils.getNextHour();
+        Instant nextOnTime = TimeUtils.getNextHour();
         Course course = courseRepository.findByInstructor_IdAndStartTime(instructorId, nextOnTime)
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
 
@@ -81,7 +81,7 @@ public class LectureService {
             throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
         }
 
-        if (Duration.between(LocalDateTime.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+        if (Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
             throw new CustomException(ErrorStatus.LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES);
         }
 
@@ -98,8 +98,8 @@ public class LectureService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        LocalDateTime nextOnTime = TimeUtils.getNextHour();
-        if (Duration.between(LocalDateTime.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+        Instant nextOnTime = TimeUtils.getNextHour();
+        if (Duration.between(Instant.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
             throw new CustomException(ErrorStatus.LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES);
         }
 
