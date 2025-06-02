@@ -10,10 +10,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -21,11 +26,20 @@ import java.io.IOException;
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        String token = jwtTokenProvider.generateToken(authentication);
+        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String token = jwtTokenProvider.generateToken(oAuth2User);
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
+                oauth2Token.getAuthorizedClientRegistrationId(),
+                oauth2Token.getName()
+        );
+        log.debug("Access token: {}", client.getAccessToken().getTokenValue());
+        log.debug("Refresh token: {}", Objects.requireNonNull(client.getRefreshToken()).getTokenValue());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

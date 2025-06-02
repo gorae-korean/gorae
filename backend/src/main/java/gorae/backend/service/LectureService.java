@@ -1,0 +1,124 @@
+package gorae.backend.service;
+
+import gorae.backend.common.TimeUtils;
+import gorae.backend.common.google.GoogleHttpClient;
+import gorae.backend.dto.client.google.SpaceDto;
+import gorae.backend.dto.lecture.LectureDto;
+import gorae.backend.entity.Course;
+import gorae.backend.entity.Lecture;
+import gorae.backend.entity.Member;
+import gorae.backend.entity.Student;
+import gorae.backend.entity.instructor.Instructor;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
+import gorae.backend.repository.CourseRepository;
+import gorae.backend.repository.InstructorRepository;
+import gorae.backend.repository.LectureRepository;
+import gorae.backend.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class LectureService {
+    private final GoogleHttpClient googleHttpClient;
+    private final CourseRepository courseRepository;
+    private final LectureRepository lectureRepository;
+    private final InstructorRepository instructorRepository;
+    private final MemberRepository memberRepository;
+
+    private static final int MAX_TIME_LIMIT = 5;
+
+    @Scheduled(cron = "0 55 * * * *")
+    @Transactional
+    public void createLecture() {
+        log.info("[System] CreateLecture started");
+        LocalDateTime onTime = TimeUtils.getNextHour();
+        List<Lecture> lectures = courseRepository.findByStartTime(onTime)
+                .stream().map(this::getLectureFromCourse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+
+        lectureRepository.saveAll(lectures);
+        log.info("[System] CreateLecture ended");
+    }
+
+    private Optional<Lecture> getLectureFromCourse(Course course) {
+        try {
+            if (lectureRepository.existsByCourse(course)) {
+                throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
+            }
+            Instructor instructor = course.getInstructor();
+            SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
+            return Optional.of(Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course));
+        } catch (Exception e) {
+            log.error("Error creating lecture for course: {}", course.getId(), e);
+            return Optional.empty();
+        }
+    }
+
+    @Transactional
+    public LectureDto createLectureManually(String userId) throws Exception {
+        Long instructorId = Long.valueOf(userId);
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        LocalDateTime nextOnTime = TimeUtils.getNextHour();
+        Course course = courseRepository.findByInstructor_IdAndStartTime(instructorId, nextOnTime)
+                .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
+
+        if (lectureRepository.existsByCourse(course)) {
+            throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
+        }
+
+        if (Duration.between(LocalDateTime.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+            throw new CustomException(ErrorStatus.LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES);
+        }
+
+        SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
+        Lecture lecture = Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course);
+        lecture.start();
+        lectureRepository.save(lecture);
+        return lecture.toDto();
+    }
+
+    @Transactional
+    public LectureDto joinLecture(String userId) {
+        Long memberId = Long.valueOf(userId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        LocalDateTime nextOnTime = TimeUtils.getNextHour();
+        if (Duration.between(LocalDateTime.now(), nextOnTime).toMinutes() > MAX_TIME_LIMIT) {
+            throw new CustomException(ErrorStatus.LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES);
+        }
+
+        Lecture lecture;
+        switch (member) {
+            case Instructor instructor -> {
+                lecture = lectureRepository.findByInstructorAndScheduledStartTime(instructor, nextOnTime)
+                        .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
+                lecture.start();
+                lectureRepository.save(lecture);
+            }
+
+            case Student student ->
+                    lecture = lectureRepository.findByStudentsContainsAndScheduledStartTime(student, nextOnTime)
+                            .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
+
+            default -> throw new IllegalStateException("잘못된 멤버 인스턴스입니다.");
+        }
+
+        return lecture.toDto();
+    }
+}
