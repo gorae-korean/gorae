@@ -8,13 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -39,14 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String token = extractToken(request);
             if (token != null && jwtTokenProvider.validateToken(token)) {
-                String authType = jwtTokenProvider.getAuthType(token);
-
-                Authentication authentication;
-                if (authType.equals("oauth")) {
-                    authentication = createOAuth2Authentication(token);
-                } else {
-                    authentication = createUserPasswordAuthentication(token);
-                }
+                Authentication authentication = createOAuth2Authentication(token);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -64,20 +54,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
-    }
-
-    private Authentication createUserPasswordAuthentication(String token) {
-        UserDetails userDetails = new User(
-                jwtTokenProvider.getUserId(token),
-                "",
-                getAuthorities(jwtTokenProvider.getUserRoles(token))
-        );
-
-        return new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
     }
 
     private Authentication createOAuth2Authentication(String token) {

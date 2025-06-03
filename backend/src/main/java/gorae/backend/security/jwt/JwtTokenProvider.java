@@ -1,6 +1,5 @@
 package gorae.backend.security.jwt;
 
-import gorae.backend.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +19,6 @@ import java.util.List;
 public class JwtTokenProvider {
     private static final String ROLES ="roles";
     private static final String EMAIL = "email";
-    private static final String AUTH_TYPE = "authType";
     private static final String ID = "id";
 
     @Value("${jwt.secret}")
@@ -50,21 +48,6 @@ public class JwtTokenProvider {
                 .claim("name", oAuth2User.getAttribute("name"))
                 .claim("registrationId", oAuth2User.getAttribute("registrationId"))
                 .claim("nameAttributeKey", oAuth2User.getAttribute("nameAttributeKey"))
-                .claim(AUTH_TYPE, "oauth")
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    public String generateToken(Member member, List<String> roles) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
-        return Jwts.builder()
-                .subject(String.valueOf(member.getId()))
-                .claim(ID, String.valueOf(member.getId()))
-                .claim(ROLES, roles)
-                .claim(AUTH_TYPE, "login")
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
@@ -77,14 +60,6 @@ public class JwtTokenProvider {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public String getUserId(String token) {
-        return extractClaims(token).get(ID, String.class);
-    }
-
-    public String getAuthType(String token) {
-        return extractClaims(token).get(AUTH_TYPE, String.class);
     }
 
     @SuppressWarnings("unchecked")
