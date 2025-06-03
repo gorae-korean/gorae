@@ -19,8 +19,6 @@ public abstract class Member extends BaseEntity {
 
     private String picture;
 
-    private String password;
-
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
