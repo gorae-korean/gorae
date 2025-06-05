@@ -18,14 +18,11 @@ import gorae.backend.repository.LectureRepository;
 import gorae.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,35 +36,6 @@ public class LectureService {
     private final MemberRepository memberRepository;
 
     private static final int MAX_TIME_LIMIT = 5;
-
-    @Scheduled(cron = "0 55 * * * *")
-    @Transactional
-    public void createLecture() {
-        log.info("[System] CreateLecture started");
-        Instant onTime = TimeUtils.getNextHour();
-        List<Lecture> lectures = courseRepository.findByStartTime(onTime)
-                .stream().map(this::getLectureFromCourse)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
-
-        lectureRepository.saveAll(lectures);
-        log.info("[System] CreateLecture ended");
-    }
-
-    private Optional<Lecture> getLectureFromCourse(Course course) {
-        try {
-            if (lectureRepository.existsByCourse(course)) {
-                throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
-            }
-            Instructor instructor = course.getInstructor();
-            SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
-            return Optional.of(Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course));
-        } catch (Exception e) {
-            log.error("Error creating lecture for course: {}", course.getId(), e);
-            return Optional.empty();
-        }
-    }
 
     @Transactional
     public LectureDto createLectureManually(String userId) throws Exception {

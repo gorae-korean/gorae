@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 public class Course extends BaseEntity {
     @Column(nullable = false)
     private String title;
