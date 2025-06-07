@@ -5,6 +5,7 @@ import gorae.backend.dto.lecture.LectureDto;
 import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -42,6 +43,7 @@ public class Lecture extends BaseEntity {
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
+    @Builder.Default
     private List<Student> students = new ArrayList<>();
 
     @Column(nullable = false)

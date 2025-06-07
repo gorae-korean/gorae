@@ -5,6 +5,7 @@ import gorae.backend.dto.course.CourseDto;
 import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -28,6 +29,7 @@ public class Course extends BaseEntity {
     private Instant endTime;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
