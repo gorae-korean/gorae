@@ -15,16 +15,16 @@ VALUES
 
 -- 강사의 불가능 날짜 샘플 데이터
 INSERT INTO instructor_unavailable_date
-(public_id, created_at, updated_at, instructor_id, start_date_time, end_date_time, reason)
+(public_id, created_at, updated_at, instructor_id, start_date, end_date, reason)
 VALUES
 -- 강사1의 불가능 날짜
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1,
- '2025-06-01 00:00:00', '2025-06-07 23:59:59', '여름 휴가'),
+ '2025-06-01', '2025-06-09', '여름 휴가'),
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1,
- '2025-05-25 09:00:00', '2025-05-25 18:00:00', '개인 일정'),
+ '2025-05-25', '2025-05-25', '개인 일정'),
 
 -- 강사2의 불가능 날짜
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2,
- '2025-05-30 00:00:00', '2025-06-02 23:59:59', '가족 여행'),
+ '2025-05-30', '2025-06-02', '가족 여행'),
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2,
- '2025-05-28 13:00:00', '2025-05-28 18:00:00', '병원 예약');
+ '2025-05-28', '2025-05-28', '병원 예약');

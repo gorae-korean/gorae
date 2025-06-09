@@ -74,7 +74,6 @@ public class ScheduledTaskService {
         }
     }
 
-    // TODO: 시간표 갱신 메소드 개선 필요
     @Scheduled(cron = "0 0 * * * Sun")
     @Transactional
     public void updateTimeTable() {
@@ -122,10 +121,7 @@ public class ScheduledTaskService {
         ZonedDateTime startDateTime = ZonedDateTime.of(courseDate, startTime, SEOUL_ZONE_ID);
         ZonedDateTime endDateTime = ZonedDateTime.of(courseDate, endTime, SEOUL_ZONE_ID);
 
-        Instant courseStartTime = startDateTime.toInstant();
-        Instant courseEndTime = endDateTime.toInstant();
-
-        if (!isTimeUnavailable(courseStartTime, courseEndTime, unavailableDates)) {
+        if (!isTimeUnavailable(courseDate, unavailableDates)) {
             createCoursesForTimeSlot(instructor, startDateTime, endDateTime, newCourses);
         }
     }
@@ -177,8 +173,9 @@ public class ScheduledTaskService {
         }
     }
 
-    private boolean isTimeUnavailable(Instant startTime, Instant endTime, Set<InstructorUnavailableDate> unavailableDates) {
-        // TODO: 함수 구현 필요
-        return false;
+    private boolean isTimeUnavailable(LocalDate courseDate, Set<InstructorUnavailableDate> unavailableDates) {
+        return unavailableDates.stream()
+                .anyMatch(unavailableDate -> TimeUtils.isDateBetween(courseDate,
+                        unavailableDate.getStartDate(), unavailableDate.getEndDate()));
     }
 }
