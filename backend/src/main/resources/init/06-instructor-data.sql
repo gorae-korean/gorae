@@ -4,7 +4,7 @@ INSERT INTO instructor_availability
 VALUES
 -- 강사1의 가능 시간
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 'MONDAY', '09:00:00', '12:00:00', true),
-(gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 'MONDAY', '14:00:00', '18:00:00', true),
+(gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 'MONDAY', '19:00:00', '23:00:00', true),
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 'WEDNESDAY', '10:00:00', '16:00:00', true),
 (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 'FRIDAY', '13:00:00', '19:00:00', true),
 

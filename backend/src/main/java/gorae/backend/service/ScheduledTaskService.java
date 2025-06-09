@@ -40,6 +40,10 @@ public class ScheduledTaskService {
     private final TextbookRepository textbookRepository;
 
     private static final ZoneId SEOUL_ZONE_ID = ZoneId.of("Asia/Seoul");
+    private static final ZoneId INDONESIA_ZONE_ID = ZoneId.of("Asia/Jakarta");
+
+    private static final LocalTime INDONESIA_EVENING_START = LocalTime.of(19, 0);
+    private static final LocalTime INDONESIA_EVENING_END = LocalTime.of(22, 0);
 
     @Scheduled(cron = "0 55 * * * *")
     @Transactional
@@ -81,59 +85,96 @@ public class ScheduledTaskService {
         // Java.time 패키지는 일주일의 시작을 월요일, 끝을 일요일로 정의함
         LocalDate nextMonday = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
         try {
-            instructors.forEach(
-                    instructor -> {
-                        Set<InstructorAvailability> availabilities = instructor.getAvailabilities()
-                                .stream().filter(InstructorAvailability::isActive).collect(Collectors.toSet());
-                        Set<InstructorUnavailableDate> unavailableDates = instructor.getUnavailableDates();
-
-                        availabilities.forEach(availability ->
-                        {
-                            DayOfWeek dayOfWeek = availability.getDayOfWeek();
-                            LocalTime startTime = availability.getStartTime();
-                            LocalTime endTime = availability.getEndTime();
-                            LocalDate courseDate = nextMonday.with(dayOfWeek);
-
-                            ZonedDateTime startDateTime = ZonedDateTime.of(courseDate, startTime, SEOUL_ZONE_ID);
-                            ZonedDateTime endDateTime = ZonedDateTime.of(courseDate, endTime, SEOUL_ZONE_ID);
-                            Instant courseStartTime = startDateTime.toInstant();
-                            Instant courseEndTime = endDateTime.toInstant();
-
-                            boolean isUnavailable = isTimeUnavailable(courseStartTime, courseEndTime, unavailableDates);
-                            if (!isUnavailable) {
-                                for (ZonedDateTime currentTime = startDateTime;
-                                     currentTime.isBefore(endDateTime);
-                                     currentTime = currentTime.plusHours(1)) {
-                                    boolean hasExistingCourse = courseRepository.existsByInstructorAndStartTime(
-                                            instructor, currentTime.toInstant());
-
-                                    if (!hasExistingCourse) {
-                                        Textbook textbook = textbookRepository.findFirstByLevel(TextbookLevel.BEGINNER);
-                                        Course course = Course.builder()
-                                                .title("자동 생성된 강좌")
-                                                .startTime(currentTime.toInstant())
-                                                .endTime(currentTime.plusHours(1).toInstant())
-                                                .instructor(instructor)
-                                                .textbook(textbook)
-                                                .build();
-
-                                        newCourses.add(course);
-                                    }
-                                }
-                            }
-                        });
-                    }
-            );
+            instructors.forEach(instructor ->
+                    processInstructorAvailability(instructor, nextMonday, newCourses));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+
+        saveNewCoursesIfExist(newCourses);
+        log.info("[System] UpdateTimeTable ended");
+    }
+
+    private void processInstructorAvailability(Instructor instructor, LocalDate nextMonday, List<Course> newCourses) {
+        Set<InstructorAvailability> availabilities = instructor.getAvailabilities()
+                .stream()
+                .filter(InstructorAvailability::isActive)
+                .collect(Collectors.toSet());
+        Set<InstructorUnavailableDate> unavailableDates = instructor.getUnavailableDates();
+
+        availabilities.forEach(availability ->
+                processAvailabilitySlot(instructor, availability, nextMonday, unavailableDates, newCourses)
+        );
+    }
+
+    private void processAvailabilitySlot(
+            Instructor instructor,
+            InstructorAvailability availability,
+            LocalDate nextMonday,
+            Set<InstructorUnavailableDate> unavailableDates,
+            List<Course> newCourses) {
+
+        DayOfWeek dayOfWeek = availability.getDayOfWeek();
+        LocalTime startTime = availability.getStartTime();
+        LocalTime endTime = availability.getEndTime();
+        LocalDate courseDate = nextMonday.with(dayOfWeek);
+
+        ZonedDateTime startDateTime = ZonedDateTime.of(courseDate, startTime, SEOUL_ZONE_ID);
+        ZonedDateTime endDateTime = ZonedDateTime.of(courseDate, endTime, SEOUL_ZONE_ID);
+
+        Instant courseStartTime = startDateTime.toInstant();
+        Instant courseEndTime = endDateTime.toInstant();
+
+        if (!isTimeUnavailable(courseStartTime, courseEndTime, unavailableDates)) {
+            createCoursesForTimeSlot(instructor, startDateTime, endDateTime, newCourses);
+        }
+    }
+
+    private void createCoursesForTimeSlot(
+            Instructor instructor,
+            ZonedDateTime startDateTime,
+            ZonedDateTime endDateTime,
+            List<Course> newCourses) {
+
+        for (ZonedDateTime currentTime = startDateTime;
+             currentTime.isBefore(endDateTime);
+             currentTime = currentTime.plusHours(1)) {
+
+            ZonedDateTime indonesiaCurrentTime = currentTime.withZoneSameInstant(INDONESIA_ZONE_ID);
+            LocalTime indonesiaLocalTime = indonesiaCurrentTime.toLocalTime();
+
+            boolean isIndonesiaEveningTime = !indonesiaLocalTime.isBefore(INDONESIA_EVENING_START) &&
+                    indonesiaLocalTime.isBefore(INDONESIA_EVENING_END);
+
+            boolean hasExistingCourse = courseRepository.existsByInstructorAndStartTime(
+                    instructor, currentTime.toInstant());
+
+            if (isIndonesiaEveningTime && !hasExistingCourse) {
+                Course course = createNewCourse(instructor, currentTime);
+                newCourses.add(course);
+            }
+        }
+    }
+
+    private Course createNewCourse(Instructor instructor, ZonedDateTime startTime) {
+        // TODO: 교재 선택 알고리즘 수정 필요
+        Textbook textbook = textbookRepository.findFirstByLevel(TextbookLevel.BEGINNER);
+        return Course.builder()
+                .title("자동 생성된 강좌")
+                .startTime(startTime.toInstant())
+                .endTime(startTime.plusHours(1).toInstant())
+                .instructor(instructor)
+                .textbook(textbook)
+                .build();
+    }
+
+    private void saveNewCoursesIfExist(List<Course> newCourses) {
         if (newCourses.isEmpty()) {
             log.info("[System] No new courses generated for next week");
         } else {
             courseRepository.saveAll(newCourses);
             log.info("[System] Generated {} new courses for next week", newCourses.size());
         }
-        log.info("[System] UpdateTimeTable ended");
     }
 
     private boolean isTimeUnavailable(Instant startTime, Instant endTime, Set<InstructorUnavailableDate> unavailableDates) {
