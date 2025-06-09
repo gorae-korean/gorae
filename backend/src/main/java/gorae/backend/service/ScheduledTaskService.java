@@ -65,6 +65,9 @@ public class ScheduledTaskService {
             if (lectureRepository.existsByCourse(course)) {
                 throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
             }
+            if (course.getEnrollmentsSize() == 0) {
+                throw new CustomException(ErrorStatus.NO_STUDENTS_IN_COURSE);
+            }
             Instructor instructor = course.getInstructor();
             SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
             return Optional.of(Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course));
