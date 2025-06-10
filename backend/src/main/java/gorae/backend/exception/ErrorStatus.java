@@ -22,6 +22,7 @@ public enum ErrorStatus {
     LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 생성될 수 있습니다."),
     LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 참여할 수 있습니다."),
     MUST_BE_LONGER_THAN_60_MINUTES(HttpStatus.BAD_REQUEST, "두 시간의 차이가 60분 이상이어야 합니다."),
+    NO_STUDENTS_IN_COURSE(HttpStatus.BAD_REQUEST, "해당 강의에 학생이 아무도 신청하지 않았습니다."),
     START_TIME_HAS_PASSED(HttpStatus.BAD_REQUEST, "시작 시간이 이미 경과되어 강의를 생성할 수 없습니다."),
     TICKET_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 수강권입니다."),
     TICKET_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "유효하지 않은 수강권입니다."),

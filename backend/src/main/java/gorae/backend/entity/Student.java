@@ -24,16 +24,20 @@ public class Student extends Member {
     private boolean isFirst = true;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Ticket> tickets = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<CheckoutOrder> orders = new ArrayList<>();
 
     @ManyToMany(mappedBy = "students")
-    private List<Lecture> lectures;
+    @Builder.Default
+    private List<Lecture> lectures = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

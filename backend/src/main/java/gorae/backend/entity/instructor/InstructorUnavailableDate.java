@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -18,9 +18,9 @@ public class InstructorUnavailableDate extends BaseEntity {
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
-    private Instant startDateTime;
+    private LocalDate startDate;
 
-    private Instant endDateTime;
+    private LocalDate endDate;
 
     private String reason;
 
@@ -29,12 +29,12 @@ public class InstructorUnavailableDate extends BaseEntity {
         if (this == o) return true;
         if (!(o instanceof InstructorUnavailableDate that)) return false;
         return Objects.equals(instructor, that.instructor) &&
-                Objects.equals(startDateTime, that.startDateTime) &&
-                Objects.equals(endDateTime, that.endDateTime);
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instructor, startDateTime, endDateTime);
+        return Objects.hash(instructor, startDate, endDate);
     }
 }

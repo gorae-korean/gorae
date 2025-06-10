@@ -6,6 +6,7 @@ import gorae.backend.entity.Lecture;
 import gorae.backend.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -24,12 +25,15 @@ import static gorae.backend.common.TimeUtils.timeOverlaps;
 @SuperBuilder
 public class Instructor extends Member {
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<Course> courses = new HashSet<>();
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<InstructorAvailability> availabilities = new HashSet<>();
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<InstructorUnavailableDate> unavailableDates = new HashSet<>();
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true)

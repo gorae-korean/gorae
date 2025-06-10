@@ -12,3 +12,24 @@ services:
       - "5433:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  spring-app:
+    container_name: gorae-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/gorae
+      SPRING_DATASOURCE_USERNAME: gorae
+      SPRING_DATASOURCE_PASSWORD: gorae123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
