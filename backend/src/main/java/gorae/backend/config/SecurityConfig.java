@@ -97,6 +97,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();
+            auth.requestMatchers("/health").permitAll();
             if (!profileUtils.isDevMode()) {
                 auth.requestMatchers(swaggerPaths).permitAll();
             }
