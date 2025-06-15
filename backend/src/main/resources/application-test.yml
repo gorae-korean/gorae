@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${ SPRING_DATASOURCE_URL }
-    username: ${ SPRING_DATASOURCE_USERNAME }
-    password: ${ SPRING_DATASOURCE_PASSWORD }
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -21,8 +21,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${ GOOGLE_CLIENT_ID }
-            client-secret: ${ GOOGLE_CLIENT_SECRET }
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             # 여기서 openid를 추가하면 문제가 생김
             scope:
               - email
