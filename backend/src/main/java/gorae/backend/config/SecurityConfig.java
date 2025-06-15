@@ -97,7 +97,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();
-            if (profileUtils.isDevMode()) {
+            if (!profileUtils.isDevMode()) {
                 auth.requestMatchers(swaggerPaths).permitAll();
             }
             auth.anyRequest().authenticated();
