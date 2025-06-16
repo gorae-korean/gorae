@@ -39,7 +39,6 @@ logging:
   level:
     gorae:
       backend: DEBUG
-    web: DEBUG
     security: DEBUG
 
 jwt:

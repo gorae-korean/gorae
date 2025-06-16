@@ -86,6 +86,10 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf(AbstractHttpConfigurer::disable);
 
+        if (!profileUtils.isDevMode()) {
+            http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
+        }
+
         http.oauth2Login(oauth2 -> {
                     oauth2.authorizationEndpoint(auth ->
                             auth.authorizationRequestResolver(customAuthorizationRequestResolver));
