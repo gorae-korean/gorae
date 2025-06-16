@@ -15,8 +15,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 @Configuration
 @RequiredArgsConstructor
 public class OAuth2Config {
-    private final ProfileUtils profileUtils;
-
     @Bean
     public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver(
             ClientRegistrationRepository clientRegistrationRepository
@@ -37,7 +35,7 @@ public class OAuth2Config {
                 return OAuth2AuthorizationRequest.from(defaultRequest)
                         .additionalParameters(params -> {
                             params.put("access_type", "offline");
-                            if (profileUtils.isDevMode()) params.put("prompt", "consent");
+                            params.put("prompt", "consent");
                         })
                         .build();
             }
@@ -53,7 +51,7 @@ public class OAuth2Config {
                     return OAuth2AuthorizationRequest.from(defaultRequest)
                             .additionalParameters(params -> {
                                 params.put("access_type", "offline");
-                                if (profileUtils.isDevMode()) params.put("prompt", "consent");
+                                params.put("prompt", "consent");
                             })
                             .build();
                 }
