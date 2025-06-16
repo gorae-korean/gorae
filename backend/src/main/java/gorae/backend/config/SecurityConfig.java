@@ -53,10 +53,13 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         if (profileUtils.isDevMode()) {
             configuration.setAllowedOrigins(List.of("*"));
-            configuration.setAllowedMethods(List.of("*"));
-            configuration.setAllowedHeaders(List.of("*"));
-            configuration.setExposedHeaders(List.of("*"));
+        } else {
+            configuration.setAllowedOrigins(List.of("https://goraekorean.site"));
         }
+
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -98,9 +101,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();
             auth.requestMatchers("/health").permitAll();
-            if (!profileUtils.isDevMode()) {
-                auth.requestMatchers(swaggerPaths).permitAll();
-            }
+            auth.requestMatchers(swaggerPaths).permitAll();
             auth.anyRequest().authenticated();
         });
 
