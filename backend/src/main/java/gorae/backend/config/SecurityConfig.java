@@ -50,7 +50,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
 
@@ -64,8 +64,6 @@ public class SecurityConfig {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
 
         MvcRequestMatcher[] permitAllWhiteList = {
-                mvc.pattern("/api/members/signup"),
-                mvc.pattern("/api/members/login"),
                 mvc.pattern("/api/checkouts/complete/**"),
                 mvc.pattern("/api/checkouts/cancel/**"),
                 mvc.pattern("/oauth/**")
@@ -73,10 +71,7 @@ public class SecurityConfig {
 
         MvcRequestMatcher[] swaggerPaths = {
                 mvc.pattern("/v3/api-docs/**"),
-                mvc.pattern("/swagger-ui/**"),
-                mvc.pattern("/swagger-ui.html"),
-                mvc.pattern("/swagger-resources/**"),
-                mvc.pattern("/webjars/**")
+                mvc.pattern("/swagger-ui/**")
         };
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
@@ -92,6 +87,8 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll();
+            auth.requestMatchers("/", "/error", "/public/**").permitAll();
             auth.requestMatchers(permitAllWhiteList).permitAll();
             auth.requestMatchers("/health").permitAll();
             auth.requestMatchers(swaggerPaths).permitAll();

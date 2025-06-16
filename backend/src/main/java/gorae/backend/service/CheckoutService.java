@@ -17,6 +17,7 @@ import gorae.backend.repository.ProductRepository;
 import gorae.backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CheckoutService {
+    @Value("${spring.baseurl}")
+    private String baseUrl;
+
     private final PaypalHttpClient paypalHttpClient;
     private final CheckoutOrderRepository checkoutOrderRepository;
     private final StudentRepository studentRepository;
@@ -43,8 +47,8 @@ public class CheckoutService {
 
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
-                        .returnUrl("http://localhost:8080/api/checkouts/complete")
-                        .cancelUrl("http://localhost:8080/api/checkouts/cancel")
+                        .returnUrl(baseUrl + "/api/checkouts/complete")
+                        .cancelUrl(baseUrl + "/api/checkouts/cancel")
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
                         .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
                         .build()

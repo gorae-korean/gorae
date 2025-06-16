@@ -5,6 +5,8 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+  baseurl: ${SPRING_BASEURL:http://localhost:8080}
+
 google:
   meet:
     baseUrl: https://meet.googleapis.com
