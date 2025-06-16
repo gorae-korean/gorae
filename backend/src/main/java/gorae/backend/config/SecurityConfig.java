@@ -1,6 +1,5 @@
 package gorae.backend.config;
 
-import gorae.backend.common.ProfileUtils;
 import gorae.backend.security.jwt.JwtAuthFilter;
 import gorae.backend.security.oauth.OAuthLoginSuccessHandler;
 import gorae.backend.service.CustomOAuth2UserService;
@@ -33,7 +32,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
-    private final ProfileUtils profileUtils;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
     private final OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver;
@@ -51,15 +49,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        if (profileUtils.isDevMode()) {
-            configuration.setAllowedOrigins(List.of("*"));
-        } else {
-            configuration.setAllowedOrigins(List.of("https://goraekorean.site"));
-        }
-
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
