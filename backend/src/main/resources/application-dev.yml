@@ -38,9 +38,9 @@ paypal:
 
 logging:
   level:
-    gorae:
-      backend: DEBUG
+    gorae.backend: DEBUG
     security: DEBUG
+    web: debug
 
 jwt:
   secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1
