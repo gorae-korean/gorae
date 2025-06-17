@@ -17,7 +17,7 @@ import static gorae.backend.common.JwtUtils.getUserId;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/checkouts")
+@RequestMapping("/checkouts")
 public class CheckoutController {
     private final CheckoutService checkoutService;
 

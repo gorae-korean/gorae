@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -33,13 +32,18 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                                         Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
         String token = jwtTokenProvider.generateToken(oAuth2User);
+
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
                 oauth2Token.getAuthorizedClientRegistrationId(),
                 oauth2Token.getName()
         );
+
         log.debug("Access token: {}", client.getAccessToken().getTokenValue());
-        log.debug("Refresh token: {}", Objects.requireNonNull(client.getRefreshToken()).getTokenValue());
+        if (client.getRefreshToken() != null) {
+            log.debug("Refresh token: {}", client.getRefreshToken().getTokenValue());
+        }
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

@@ -22,7 +22,7 @@ import static gorae.backend.common.JwtUtils.getUserId;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/courses")
+@RequestMapping("/courses")
 public class CourseController {
     private final CourseService courseService;
 

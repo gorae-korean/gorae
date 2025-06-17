@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -35,7 +36,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseDto<String>> handleException() {
+    public ResponseEntity<ResponseDto<String>> handleException(Exception e) throws NoResourceFoundException {
+        if (e instanceof NoResourceFoundException e1) {
+            throw e1;
+        }
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ResponseDto<>(ResponseStatus.ERROR, "서버에서 에러가 발생했습니다."));

@@ -16,7 +16,7 @@ import static gorae.backend.common.JwtUtils.getUserId;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/lectures")
+@RequestMapping("/lectures")
 public class LectureController {
     private final LectureService lectureService;
 

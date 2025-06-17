@@ -23,6 +23,7 @@ spring:
           google:
             client-id: 812361353897-0o75jou9q7pl9jp590bhh8dd78qkmbll.apps.googleusercontent.com
             client-secret: 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
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
             # 여기서 openid를 추가하면 문제가 생김
             scope:
               - email

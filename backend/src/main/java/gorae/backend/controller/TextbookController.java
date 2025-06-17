@@ -18,7 +18,7 @@ import static gorae.backend.common.JwtUtils.getUserId;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/textbooks")
+@RequestMapping("/textbooks")
 public class TextbookController {
     private final TextbookService textbookService;
 

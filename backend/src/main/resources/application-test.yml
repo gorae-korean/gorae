@@ -23,7 +23,7 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: https://goraekorean.site/login/oauth2/code/google
+            redirect-uri: "${SPRING_BASEURL}/login/oauth2/code/google"
             # 여기서 openid를 추가하면 문제가 생김
             scope:
               - email
@@ -39,10 +39,11 @@ paypal:
 logging:
   level:
     gorae:
-      backend: DEBUG
-    security: DEBUG
+      backend: debug
+    security: debug
+    web: debug
 
 jwt:
   secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1
-  # 2400 hours
-  expiration: 8640000000
+  # 24 hours
+  expiration: 86400000

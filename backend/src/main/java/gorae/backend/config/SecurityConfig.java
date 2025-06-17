@@ -87,10 +87,8 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll();
-            auth.requestMatchers("/", "/error", "/public/**").permitAll();
             auth.requestMatchers(permitAllWhiteList).permitAll();
-            auth.requestMatchers("/health").permitAll();
+            auth.requestMatchers("/actuator/health").permitAll();
             auth.requestMatchers(swaggerPaths).permitAll();
             auth.anyRequest().authenticated();
         });

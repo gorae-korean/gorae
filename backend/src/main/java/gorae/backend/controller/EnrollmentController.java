@@ -20,7 +20,7 @@ import static gorae.backend.common.JwtUtils.getUserId;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/enrollments")
+@RequestMapping("/enrollments")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
