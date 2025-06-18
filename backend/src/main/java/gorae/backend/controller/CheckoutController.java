@@ -3,7 +3,6 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
-import gorae.backend.dto.client.paypal.CreateOrderDto;
 import gorae.backend.service.CheckoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getId;
 
 @Slf4j
 @RestController
@@ -22,15 +22,15 @@ public class CheckoutController {
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<CreateOrderDto>> checkout(
+    public ResponseEntity<ResponseDto<String>> checkout(
             Authentication authentication,
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
-        String userId = getUserId(authentication);
-        log.info("[API] Checkout requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] Checkout requested: {}", getSubject(authentication));
 
-        CreateOrderDto createOrderDto = checkoutService.checkout(userId, dto);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, createOrderDto));
+        String redirectUrl = checkoutService.checkout(userId, dto);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));
     }
 
     @GetMapping("/complete")

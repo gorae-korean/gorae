@@ -10,22 +10,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Map;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ResponseDto<String>> handleCustomException(CustomException e) {
+    public ResponseEntity<ResponseDto<Map<String, String>>> handleCustomException(CustomException e) {
         return ResponseEntity
                 .status(e.getErrorStatus().getStatus())
-                .body(new ResponseDto<>(ResponseStatus.ERROR, e.getMessage()));
+                .body(new ResponseDto<>(ResponseStatus.ERROR, Map.of(
+                        "code", e.getErrorStatus().name(),
+                        "message", e.getMessage()
+                )));
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ResponseDto<String>> handleAuthorizationDeniedException() {
+    public ResponseEntity<ResponseDto<Map<String, String>>> handleAuthorizationDeniedException() {
         CustomException exception = new CustomException(ErrorStatus.NO_PERMISSIONS);
-        return ResponseEntity
-                .status(exception.getErrorStatus().getStatus())
-                .body(new ResponseDto<>(ResponseStatus.ERROR, exception.getMessage()));
+        return handleCustomException(exception);
     }
 
     @ExceptionHandler(RuntimeException.class)

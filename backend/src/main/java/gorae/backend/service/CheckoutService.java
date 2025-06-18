@@ -1,6 +1,7 @@
 package gorae.backend.service;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
+import gorae.backend.constant.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.client.paypal.PaymentSource;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,8 +37,10 @@ public class CheckoutService {
     private final StudentRepository studentRepository;
     private final ProductRepository productRepository;
 
-    @Transactional
-    public CreateOrderDto checkout(String userId, CheckoutRequestDto dto) throws Exception {
+    private static final String PAYER_ACTION_REL = "payer-action";
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public String checkout(String userId, CheckoutRequestDto dto) throws Exception {
         Product product = productRepository.findByPublicId(dto.productId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
         Student student = studentRepository.findById(Long.valueOf(userId))
@@ -45,23 +49,7 @@ public class CheckoutService {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
-        PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
-                PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
-                        .returnUrl(baseUrl + "/api/checkouts/complete")
-                        .cancelUrl(baseUrl + "/api/checkouts/cancel")
-                        .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
-                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
-                        .build()
-        );
-
-        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
-        PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
-        CreateOrderRequestDto createOrderRequestDto = CreateOrderRequestDto.builder()
-                .intent(dto.intent())
-                .purchaseUnits(List.of(purchaseUnit))
-                .paymentSource(new PaymentSource(paymentSource))
-                .build();
-
+        CreateOrderRequestDto createOrderRequestDto = getCreateOrderRequestDto(product);
         CreateOrderDto response = paypalHttpClient.createOrder(createOrderRequestDto);
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
                 .orderId(response.id())
@@ -71,10 +59,30 @@ public class CheckoutService {
                 .build();
 
         checkoutOrderRepository.save(checkoutOrder);
-        return response;
+        return response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
+                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
     }
 
-    @Transactional
+    private CreateOrderRequestDto getCreateOrderRequestDto(Product product) {
+        PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
+                PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
+                        .returnUrl(baseUrl + "/checkouts/complete")
+                        .cancelUrl(baseUrl + "/checkouts/cancel")
+                        .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
+                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
+                        .build()
+        );
+
+        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
+        PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
+        return CreateOrderRequestDto.builder()
+                .intent(PaypalOrderIntent.CAPTURE)
+                .purchaseUnits(List.of(purchaseUnit))
+                .paymentSource(new PaymentSource(paymentSource))
+                .build();
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void completeCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
@@ -97,7 +105,7 @@ public class CheckoutService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void cancelCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));

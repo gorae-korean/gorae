@@ -11,7 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getId;
 
 @Slf4j
 @RestController
@@ -23,8 +24,8 @@ public class LectureController {
     @PostMapping("/manual")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(Authentication authentication) throws Exception {
-        String userId = getUserId(authentication);
-        log.info("[API] CreateLectureManually requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] CreateLectureManually requested: {}", getSubject(authentication));
         LectureDto lectureDto = lectureService.createLectureManually(userId);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
@@ -32,8 +33,8 @@ public class LectureController {
 
     @GetMapping("/join")
     public ResponseEntity<ResponseDto<LectureDto>> joinLecture(Authentication authentication) {
-        String userId = getUserId(authentication);
-        log.info("[API] JoinLecture requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] JoinLecture requested: {}", getSubject(authentication));
         LectureDto lectureDto = lectureService.joinLecture(userId);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
