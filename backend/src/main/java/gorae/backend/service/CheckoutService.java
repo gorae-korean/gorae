@@ -48,6 +48,21 @@ public class CheckoutService {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
+        CreateOrderRequestDto createOrderRequestDto = getCreateOrderRequestDto(product);
+        CreateOrderDto response = paypalHttpClient.createOrder(createOrderRequestDto);
+        CheckoutOrder checkoutOrder = CheckoutOrder.builder()
+                .orderId(response.id())
+                .status(response.status())
+                .product(product)
+                .student(student)
+                .build();
+
+        checkoutOrderRepository.save(checkoutOrder);
+        return response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
+                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
+    }
+
+    private CreateOrderRequestDto getCreateOrderRequestDto(Product product) {
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
                         .returnUrl(baseUrl + "/checkouts/complete")
@@ -59,23 +74,11 @@ public class CheckoutService {
 
         PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
         PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
-        CreateOrderRequestDto createOrderRequestDto = CreateOrderRequestDto.builder()
+        return CreateOrderRequestDto.builder()
                 .intent(PaypalOrderIntent.CAPTURE)
                 .purchaseUnits(List.of(purchaseUnit))
                 .paymentSource(new PaymentSource(paymentSource))
                 .build();
-
-        CreateOrderDto response = paypalHttpClient.createOrder(createOrderRequestDto);
-        CheckoutOrder checkoutOrder = CheckoutOrder.builder()
-                .orderId(response.id())
-                .status(response.status())
-                .product(product)
-                .student(student)
-                .build();
-
-        checkoutOrderRepository.save(checkoutOrder);
-        return response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
-                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FOUND_REDIRECTION_LINK)).href();
     }
 
     @Transactional
