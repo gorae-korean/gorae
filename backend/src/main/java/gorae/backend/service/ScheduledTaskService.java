@@ -72,7 +72,7 @@ public class ScheduledTaskService {
             SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
             return Optional.of(Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course));
         } catch (Exception e) {
-            log.error("Error creating lecture for course: {}", course.getId(), e);
+            log.warn("Error creating lecture for course: {}", course.getId(), e);
             return Optional.empty();
         }
     }

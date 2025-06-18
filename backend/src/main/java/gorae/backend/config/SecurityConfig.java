@@ -1,5 +1,6 @@
 package gorae.backend.config;
 
+import gorae.backend.security.CustomAuthenticationEntryPoint;
 import gorae.backend.security.jwt.JwtAuthFilter;
 import gorae.backend.security.oauth.OAuthLoginSuccessHandler;
 import gorae.backend.service.CustomOAuth2UserService;
@@ -35,6 +36,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
     private final OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,10 +51,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://goraekorean.site"));
+        configuration.setAllowedOrigins(List.of("https://goraekorean.site", "https://www.goraekorean.site"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -94,13 +97,15 @@ public class SecurityConfig {
             auth.anyRequest().authenticated();
         });
 
+        http.exceptionHandling(exception ->
+                exception.authenticationEntryPoint(customAuthenticationEntryPoint));
+
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
