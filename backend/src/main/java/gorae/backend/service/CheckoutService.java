@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class CheckoutService {
 
     private static final String PAYER_ACTION_REL = "payer-action";
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public String checkout(String userId, CheckoutRequestDto dto) throws Exception {
         Product product = productRepository.findByPublicId(dto.productId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
@@ -81,7 +82,7 @@ public class CheckoutService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void completeCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
@@ -104,7 +105,7 @@ public class CheckoutService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void cancelCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));

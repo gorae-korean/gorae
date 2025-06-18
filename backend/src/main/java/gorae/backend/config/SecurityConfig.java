@@ -49,9 +49,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PATCH"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedOrigins(List.of("https://goraekorean.site"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -67,6 +67,8 @@ public class SecurityConfig {
                 mvc.pattern("/checkouts/complete/**"),
                 mvc.pattern("/checkouts/cancel/**"),
                 mvc.pattern("/oauth/**"),
+                mvc.pattern("/favicon.ico"),
+                mvc.pattern("/actuator/health")
         };
 
         MvcRequestMatcher[] swaggerPaths = {
@@ -88,7 +90,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(permitAllWhiteList).permitAll();
-            auth.requestMatchers("/actuator/health").permitAll();
             auth.requestMatchers(swaggerPaths).permitAll();
             auth.anyRequest().authenticated();
         });
