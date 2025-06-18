@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getId;
 
 @Slf4j
 @RestController
@@ -26,8 +27,8 @@ public class InstructorController {
     @GetMapping("/availabilities")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<List<AvailabilityDto>>> getAvailabilities(Authentication authentication) {
-        String userId = getUserId(authentication);
-        log.info("[API] GetAvailabilities requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] GetAvailabilities requested: {}", getSubject(authentication));
         List<AvailabilityDto> availabilities = instructorService.getAvailabilities(userId);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, availabilities));
@@ -39,8 +40,8 @@ public class InstructorController {
             Authentication authentication,
             @RequestBody AvailabilityAddRequestDto dto
     ) {
-        String userId = getUserId(authentication);
-        log.info("[API] AddAvailability requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] AddAvailability requested: {}", getSubject(authentication));
         instructorService.addAvailability(userId, dto);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, "일정이 정상적으로 추가되었습니다."));

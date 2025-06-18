@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
 
 @Slf4j
 @RestController
@@ -32,8 +32,7 @@ public class CourseController {
             @RequestParam(required = false) UUID textbookId,
             @RequestParam(required = false) ZonedDateTime startTime
     ) {
-        String userId = getUserId(authentication);
-        log.info("[API] SearchCourses requested: {}", userId);
+        log.info("[API] SearchCourses requested: {}", getSubject(authentication));
 
         if (textbookId == null && startTime == null) {
             throw new IllegalArgumentException("한 개 이상의 매개변수가 필요합니다.");

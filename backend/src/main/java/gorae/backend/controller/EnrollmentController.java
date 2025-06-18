@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getId;
 
 @Slf4j
 @RestController
@@ -29,8 +30,8 @@ public class EnrollmentController {
     public ResponseEntity<ResponseDto<EnrollmentDto>> enroll(
             Authentication authentication, @RequestBody EnrollRequestDto dto) {
 
-        String userId = getUserId(authentication);
-        log.info("[API] Enroll requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] Enroll requested: {}", getSubject(authentication));
 
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
         return ResponseEntity.ok()
@@ -40,8 +41,8 @@ public class EnrollmentController {
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<EnrollmentDto>>> getEnrollments(Authentication authentication) {
-        String userId = getUserId(authentication);
-        log.info("[API] GetEnrollments requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] GetEnrollments requested: {}", getSubject(authentication));
         log.debug("Role: {}", authentication.getAuthorities());
 
         List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
@@ -52,8 +53,8 @@ public class EnrollmentController {
     @DeleteMapping("/{enrollmentId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<String>> drop(Authentication authentication, @PathVariable UUID enrollmentId) {
-        String userId = getUserId(authentication);
-        log.info("[API] Drop requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] Drop requested: {}", getSubject(authentication));
 
         enrollmentService.drop(userId, enrollmentId);
         return ResponseEntity.ok()

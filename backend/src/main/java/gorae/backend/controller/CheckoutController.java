@@ -11,7 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static gorae.backend.common.JwtUtils.getUserId;
+import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getId;
 
 @Slf4j
 @RestController
@@ -25,8 +26,8 @@ public class CheckoutController {
             Authentication authentication,
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
-        String userId = getUserId(authentication);
-        log.info("[API] Checkout requested: {}", userId);
+        String userId = getId(authentication);
+        log.info("[API] Checkout requested: {}", getSubject(authentication));
 
         String redirectUrl = checkoutService.checkout(userId, dto);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));

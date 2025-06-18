@@ -12,12 +12,21 @@ public class JwtUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String getUserId(Authentication authentication) {
+    public static String getId(Authentication authentication) {
         if (authentication == null) {
             throw new IllegalStateException("Authentication cannot be null");
         }
 
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
         return Objects.requireNonNull(oauthUser.getAttribute("id")).toString();
+    }
+
+    public static String getSubject(Authentication authentication) {
+        if (authentication == null) {
+            throw new IllegalStateException("Authentication cannot be null");
+        }
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        return Objects.requireNonNull(oAuth2User.getName());
     }
 }
