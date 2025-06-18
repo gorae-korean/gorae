@@ -64,9 +64,9 @@ public class SecurityConfig {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
 
         MvcRequestMatcher[] permitAllWhiteList = {
-                mvc.pattern("/api/checkouts/complete/**"),
-                mvc.pattern("/api/checkouts/cancel/**"),
-                mvc.pattern("/oauth/**")
+                mvc.pattern("/checkouts/complete/**"),
+                mvc.pattern("/checkouts/cancel/**"),
+                mvc.pattern("/oauth/**"),
         };
 
         MvcRequestMatcher[] swaggerPaths = {

@@ -3,7 +3,6 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
-import gorae.backend.dto.client.paypal.CreateOrderDto;
 import gorae.backend.service.CheckoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +21,15 @@ public class CheckoutController {
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<CreateOrderDto>> checkout(
+    public ResponseEntity<ResponseDto<String>> checkout(
             Authentication authentication,
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
         String userId = getUserId(authentication);
         log.info("[API] Checkout requested: {}", userId);
 
-        CreateOrderDto createOrderDto = checkoutService.checkout(userId, dto);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, createOrderDto));
+        String redirectUrl = checkoutService.checkout(userId, dto);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));
     }
 
     @GetMapping("/complete")

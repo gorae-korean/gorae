@@ -1,6 +1,7 @@
 package gorae.backend.service;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
+import gorae.backend.constant.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.client.paypal.PaymentSource;
@@ -35,8 +36,10 @@ public class CheckoutService {
     private final StudentRepository studentRepository;
     private final ProductRepository productRepository;
 
+    private static final String PAYER_ACTION_REL = "payer-action";
+
     @Transactional
-    public CreateOrderDto checkout(String userId, CheckoutRequestDto dto) throws Exception {
+    public String checkout(String userId, CheckoutRequestDto dto) throws Exception {
         Product product = productRepository.findByPublicId(dto.productId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
         Student student = studentRepository.findById(Long.valueOf(userId))
@@ -47,8 +50,8 @@ public class CheckoutService {
 
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
-                        .returnUrl(baseUrl + "/api/checkouts/complete")
-                        .cancelUrl(baseUrl + "/api/checkouts/cancel")
+                        .returnUrl(baseUrl + "/checkouts/complete")
+                        .cancelUrl(baseUrl + "/checkouts/cancel")
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
                         .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
                         .build()
@@ -57,7 +60,7 @@ public class CheckoutService {
         PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
         PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
         CreateOrderRequestDto createOrderRequestDto = CreateOrderRequestDto.builder()
-                .intent(dto.intent())
+                .intent(PaypalOrderIntent.CAPTURE)
                 .purchaseUnits(List.of(purchaseUnit))
                 .paymentSource(new PaymentSource(paymentSource))
                 .build();
@@ -71,7 +74,8 @@ public class CheckoutService {
                 .build();
 
         checkoutOrderRepository.save(checkoutOrder);
-        return response;
+        return response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
+                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FOUND_REDIRECTION_LINK)).href();
     }
 
     @Transactional

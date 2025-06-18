@@ -11,6 +11,7 @@ public enum ErrorStatus {
     ALREADY_ENROLLED(HttpStatus.BAD_REQUEST, "이미 신청되어 있습니다."),
     AVAILABILITY_OVERLAPPED(HttpStatus.BAD_REQUEST, "기존 일정과 겹칩니다."),
     CANNOT_BUY_THE_FIRST_PRODUCT(HttpStatus.BAD_REQUEST, "첫 구매 혜택이 이미 사용되었습니다."),
+    CANNOT_FOUND_REDIRECTION_LINK(HttpStatus.BAD_REQUEST, "리다이렉션 링크를 찾을 수 없습니다."),
     CANNOT_DROP_COURSE_NEAR_START_TIME(HttpStatus.BAD_REQUEST, "강의 시작 시간이 얼마 남지 않아 취소가 불가능합니다."),
     CLIENT_IS_NULL(HttpStatus.BAD_REQUEST, "구글에 다시 로그인이 필요합니다."),
     COURSE_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "이미 시작된 강좌입니다."),
