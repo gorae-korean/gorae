@@ -11,11 +11,6 @@ import java.util.Arrays;
 public class ProfileUtils {
     private final Environment environment;
 
-    public boolean isDevMode() {
-        return Arrays.asList(environment.getActiveProfiles())
-                .contains("dev");
-    }
-
     public boolean isProdMode() {
         return Arrays.asList(environment.getActiveProfiles())
                 .contains("prod");

@@ -20,12 +20,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-
-import java.util.List;
 
 @Slf4j
 @Configuration
@@ -50,20 +45,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://goraekorean.site"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
-        configuration.setExposedHeaders(List.of("Authorization"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
 
@@ -80,7 +61,7 @@ public class SecurityConfig {
                 mvc.pattern("/swagger-ui/**")
         };
 
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        http.cors(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.oauth2Login(oauth2 -> {

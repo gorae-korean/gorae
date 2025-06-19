@@ -1,12 +1,12 @@
 package gorae.backend.repository;
 
-import gorae.backend.entity.Student;
+import gorae.backend.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
-    Optional<Student> findByEmail(String email);
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByEmail(String email);
 }

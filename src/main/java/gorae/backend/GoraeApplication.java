@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableScheduling
-public class BackendApplication {
+public class GoraeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BackendApplication.class, args);
+        SpringApplication.run(GoraeApplication.class, args);
     }
 
 }

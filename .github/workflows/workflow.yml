@@ -30,7 +30,6 @@ jobs:
           aws ecr create-repository --repository-name ${{ secrets.ECR_REPOSITORY_NAME }}
 
       - name: Build, tag, and push image to Amazon ECR
-        working-directory: backend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
@@ -46,7 +45,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Tag and push image to Docker Hub
-        working-directory: backend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}

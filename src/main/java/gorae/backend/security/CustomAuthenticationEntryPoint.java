@@ -25,8 +25,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 
-        addCorsHeaders(response);
-
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
@@ -43,13 +41,5 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         ));
 
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
-    }
-
-    private void addCorsHeaders(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "https://goraekorean.site");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
     }
 }
