@@ -82,41 +82,6 @@ jobs:
           }
           EOF
 
-      - name: Create nginx configuration for HTTPS redirection
-        run: |
-          mkdir -p .ebextensions
-          cat > .ebextensions/01_nginx_https.config << 'EOF'
-          files:
-            "/etc/nginx/conf.d/https_redirect.conf":
-              mode: "000644"
-              owner: root
-              group: root
-              content: |
-                server {
-                  listen 80;
-          
-                  if ($http_x_forwarded_proto != 'https') {
-                    return 301 https://$host$request_uri;
-                  }
-          
-                  # 기존 설정은 그대로 유지
-                  location / {
-                    proxy_pass http://docker;
-                    proxy_http_version 1.1;
-          
-                    proxy_set_header Connection "";
-                    proxy_set_header Host $host;
-                    proxy_set_header X-Real-IP $remote_addr;
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto $scheme;
-                  }
-                }
-          
-          container_commands:
-            01_reload_nginx:
-              command: "service nginx reload"
-          EOF
-
       - name: Generate deployment package
         run: |
           mkdir -p deploy
