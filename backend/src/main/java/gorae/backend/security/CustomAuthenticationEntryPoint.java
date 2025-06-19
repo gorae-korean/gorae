@@ -43,7 +43,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setHeader("Access-Control-Allow-Origin", "https://goraekorean.site");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");
     }
 }
