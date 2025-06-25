@@ -39,7 +39,12 @@ public class SwaggerConfig {
     private static Info info() {
         return new Info()
                 .title("Gorae API")
-                .description("Gorae 백엔드 API 문서")
+                .description("""
+                        Gorae Korean 백엔드 API 문서<br>\
+                        구글로 로그인 할 때의 링크는 <a href="https://api.goraekorean.site/oauth2/authorization/google">
+                        https://api.goraekorean.site/oauth2/authorization/google</a><br>\
+                        로그인 완료 시 인증 토큰이 파라미터에 추가된 채로 프론트엔드 메인 화면으로 리다이렉트 됨
+                        """)
                 .version("1.0")
                 .contact(new Contact().name("김민형").email("pristo24631@gmail.com"));
     }

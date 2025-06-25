@@ -18,6 +18,7 @@ import gorae.backend.repository.LectureRepository;
 import gorae.backend.repository.TextbookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Profile("prod")
 @Service
 public class ScheduledTaskService {
     private final GoogleHttpClient googleHttpClient;

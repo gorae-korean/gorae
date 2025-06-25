@@ -30,7 +30,7 @@ import static gorae.backend.common.JwtUtils.getSubject;
 public class CourseController {
     private final CourseService courseService;
 
-    @CommonApiResponses(summary = "강좌 검색")
+    @CommonApiResponses(summary = "강좌 검색", description = "하나 이상의 매개변수를 사용해야 함")
     @ApiResponse(responseCode = "200", description = "강좌 검색 성공")
     @GetMapping
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(

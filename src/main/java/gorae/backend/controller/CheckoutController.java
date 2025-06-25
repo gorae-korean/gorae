@@ -4,6 +4,7 @@ import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.service.CheckoutService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +27,7 @@ import static gorae.backend.common.JwtUtils.getSubject;
 public class CheckoutController {
     private final CheckoutService checkoutService;
 
-    @CommonApiResponses(summary = "결제 링크 생성")
+    @CommonApiResponses(summary = "결제 링크 생성", description = "프론트엔드에서 반환된 링크로 리다이렉트 시켜야 함")
     @ApiResponse(
             responseCode = "200",
             description = "결제 요청 성공",
@@ -102,38 +103,7 @@ public class CheckoutController {
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));
     }
 
-    @CommonApiResponses(summary = "결제 완료")
-    @ApiResponse(
-            responseCode = "200",
-            description = "결제 완료 성공",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "SUCCESS",
-                                        "data": "구매가 정상적으로 완료되었습니다."
-                                    }
-                                    """
-                    )
-            )
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "주문을 찾을 수 없음",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "ERROR",
-                                        "data": {
-                                            "message": "주문 내역이 존재하지 않습니다.",
-                                            "code": "ORDER_NOT_FOUND"
-                                        }
-                                    }
-                                    """
-                    )
-            )
-    )
+    @Hidden
     @GetMapping("/complete")
     public ResponseEntity<ResponseDto<String>> completeCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
@@ -142,38 +112,7 @@ public class CheckoutController {
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "구매가 정상적으로 완료되었습니다."));
     }
 
-    @CommonApiResponses(summary = "결제 취소")
-    @ApiResponse(
-            responseCode = "200",
-            description = "결제 취소 성공",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "SUCCESS",
-                                        "data": "주문이 취소되었습니다."
-                                    }
-                                    """
-                    )
-            )
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "주문을 찾을 수 없음",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "ERROR",
-                                        "data": {
-                                            "message": "주문 내역이 존재하지 않습니다.",
-                                            "code": "ORDER_NOT_FOUND"
-                                        }
-                                    }
-                                    """
-                    )
-            )
-    )
+    @Hidden
     @GetMapping("/cancel")
     public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");

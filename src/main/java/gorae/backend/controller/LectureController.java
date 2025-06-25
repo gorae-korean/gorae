@@ -39,7 +39,7 @@ public class LectureController {
     @CommonApiResponses(
             summary = "화상 강의 참여",
             description = """
-                    강사가 실수로 나갔거나 학생들이 참여해야 하는 경우에 요청함.
+                    강사가 실수로 나갔거나 학생들이 참여해야 하는 경우에 요청함<br>\
                     학생이 요청했을 경우 학생들의 이메일은 표시되지 않음
                     """
     )
