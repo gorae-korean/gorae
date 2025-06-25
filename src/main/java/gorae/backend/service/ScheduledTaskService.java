@@ -1,24 +1,17 @@
 package gorae.backend.service;
 
 import gorae.backend.common.TimeUtils;
-import gorae.backend.common.google.GoogleHttpClient;
 import gorae.backend.constant.TextbookLevel;
-import gorae.backend.dto.client.google.SpaceDto;
 import gorae.backend.entity.Course;
-import gorae.backend.entity.Lecture;
 import gorae.backend.entity.Textbook;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.entity.instructor.InstructorUnavailableDate;
-import gorae.backend.exception.CustomException;
-import gorae.backend.exception.ErrorStatus;
 import gorae.backend.repository.CourseRepository;
 import gorae.backend.repository.InstructorRepository;
-import gorae.backend.repository.LectureRepository;
 import gorae.backend.repository.TextbookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,18 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-@Profile("prod")
 @Service
 public class ScheduledTaskService {
-    private final GoogleHttpClient googleHttpClient;
     private final CourseRepository courseRepository;
-    private final LectureRepository lectureRepository;
     private final InstructorRepository instructorRepository;
     private final TextbookRepository textbookRepository;
 
@@ -46,38 +35,6 @@ public class ScheduledTaskService {
 
     private static final LocalTime INDONESIA_EVENING_START = LocalTime.of(19, 0);
     private static final LocalTime INDONESIA_EVENING_END = LocalTime.of(22, 0);
-
-    @Scheduled(cron = "0 55 * * * *")
-    @Transactional
-    public void createLecture() {
-        log.info("[System] CreateLecture started");
-        Instant onTime = TimeUtils.getNextHour();
-        List<Lecture> lectures = courseRepository.findByStartTime(onTime)
-                .stream().map(this::getLectureFromCourse)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
-
-        lectureRepository.saveAll(lectures);
-        log.info("[System] CreateLecture ended");
-    }
-
-    private Optional<Lecture> getLectureFromCourse(Course course) {
-        try {
-            if (lectureRepository.existsByCourse(course)) {
-                throw new CustomException(ErrorStatus.LECTURE_ALREADY_EXISTS);
-            }
-            if (course.getEnrollmentsSize() == 0) {
-                throw new CustomException(ErrorStatus.NO_STUDENTS_IN_COURSE);
-            }
-            Instructor instructor = course.getInstructor();
-            SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
-            return Optional.of(Lecture.schedule(spaceDto.meetingCode(), spaceDto.meetingUri(), course));
-        } catch (Exception e) {
-            log.warn("Error creating lecture for course: {}", course.getId(), e);
-            return Optional.empty();
-        }
-    }
 
     @Scheduled(cron = "0 0 * * * Sun")
     @Transactional
