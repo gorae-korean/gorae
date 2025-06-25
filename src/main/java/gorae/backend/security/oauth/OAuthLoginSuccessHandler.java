@@ -1,14 +1,11 @@
 package gorae.backend.security.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
-import gorae.backend.dto.member.TokenDto;
 import gorae.backend.security.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -24,8 +21,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final ObjectMapper objectMapper;
     private final OAuth2AuthorizedClientService authorizedClientService;
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -45,12 +44,6 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             log.debug("Refresh token: {}", client.getRefreshToken().getTokenValue());
         }
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        TokenDto tokenDto = new TokenDto(token);
-
-        String jsonResponse = objectMapper.writeValueAsString(new ResponseDto<>(ResponseStatus.SUCCESS, tokenDto));
-        response.getWriter().write(jsonResponse);
+        response.sendRedirect(frontendUrl + "?token=" + token);
     }
 }
