@@ -26,7 +26,7 @@ public class LectureController {
 
     @CommonApiResponses(summary = "화상 강의 생성", description = "강사만 이용 가능")
     @ApiResponse(responseCode = "200", description = "화상 강의 생성 성공")
-    @PostMapping("/manual")
+    @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(Authentication authentication) throws Exception {
         String userId = getId(authentication);

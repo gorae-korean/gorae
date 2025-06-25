@@ -1,6 +1,7 @@
 package gorae.backend.entity;
 
 import gorae.backend.constant.TicketStatus;
+import gorae.backend.dto.ticket.TicketDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,6 +43,15 @@ public class Ticket extends BaseEntity {
     public void returnTicket() {
         status = TicketStatus.ACTIVE;
         droppedAt = Instant.now();
+    }
+
+    public TicketDto toDto() {
+        return TicketDto.builder()
+                .id(getPublicId())
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .build();
     }
 }
 
