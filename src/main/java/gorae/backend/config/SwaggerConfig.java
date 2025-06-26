@@ -43,7 +43,9 @@ public class SwaggerConfig {
                         Gorae Korean 백엔드 API 문서<br><br>\
                         구글로 로그인 할 때의 링크 <a href="https://api.goraekorean.site/oauth2/authorization/google">
                         https://api.goraekorean.site/oauth2/authorization/google</a><br>\
-                        로그인 완료 시 인증 토큰이 파라미터에 추가된 채로 프론트엔드 메인 화면으로 리다이렉트 됩니다.
+                        로그인 완료 시 인증 토큰이 파라미터에 추가된 채로 프론트엔드 메인 화면으로 리다이렉트 됩니다.<br><br>\
+                        URL에 추가된 토큰을 불러와서 API 요청의 "Authorization" 헤더에 "Bearer 토큰"으로 입력해 사용합니다.<br>\
+                        예를 들어 토큰 값이 "4d3"이라면, "Authorization" 헤더에 "Bearer 4d3"을 입력하면 됩니다.
                         """)
                 .version("1.0")
                 .contact(new Contact().name("김민형").email("realminbros@gmail.com"));

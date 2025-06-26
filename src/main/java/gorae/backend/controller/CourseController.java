@@ -5,6 +5,8 @@ import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.service.CourseService;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +55,28 @@ public class CourseController {
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, courses));
     }
 
-    @CommonApiResponses(summary = "강좌가 있는 시간대 검색", description = "검색 날짜의 시간은 자정으로 고정해야 합니다.")
-    @ApiResponse(responseCode = "200", description = "시간대 검색 성공")
+    @CommonApiResponses(
+            summary = "강좌가 있는 시간대 검색",
+            description = "검색 날짜의 시간은 자정으로 고정해야 합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "시간대 검색 성공",
+            content = @Content(
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                        "status": "SUCCESS",
+                                        "data": [
+                                            "12:00+09:00",
+                                            "15:00+09:00",
+                                            "16:00+09:00"
+                                        ]
+                                    }
+                                    """
+                    )
+            )
+    )
     @GetMapping("/timetable")
     public ResponseEntity<ResponseDto<List<OffsetTime>>> getTimetable(
             Authentication authentication,
