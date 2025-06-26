@@ -40,7 +40,7 @@ public class Enrollment extends BaseEntity {
         if (alreadyEnrolled) {
             throw new CustomException(ErrorStatus.ALREADY_ENROLLED);
         }
-        if (course.getEnrollmentsSize() >= 4) {
+        if (course.getCurrentCount() >= course.getMaxCount()) {
             throw new CustomException(ErrorStatus.COURSE_IS_FULL);
         }
         Enrollment enrollment = new Enrollment();

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -48,5 +49,17 @@ public class CourseController {
         List<CourseDto> courses = courseService.searchCourses(textbookId, startTime);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, courses));
+    }
+
+    @CommonApiResponses(summary = "강좌가 있는 시간대 검색", description = "검색 날짜의 시간은 자정으로 고정해야 함")
+    @ApiResponse(responseCode = "200", description = "시간대 검색 성공")
+    @GetMapping("/timetable")
+    public ResponseEntity<ResponseDto<List<OffsetTime>>> getTimetable(
+            Authentication authentication,
+            @Parameter(description = "검색 날짜 ") @RequestParam ZonedDateTime dateTime) {
+
+        log.info("[API] GetTimetable requested: {}", getSubject(authentication));
+        List<OffsetTime> timetable = courseService.getTimetable(dateTime);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, timetable));
     }
 }

@@ -118,7 +118,6 @@ public class ScheduledTaskService {
         // TODO: 교재 선택 알고리즘 수정 필요
         Textbook textbook = textbookRepository.findFirstByLevel(TextbookLevel.BEGINNER);
         return Course.builder()
-                .title("자동 생성된 강좌")
                 .startTime(startTime.toInstant())
                 .endTime(startTime.plusHours(1).toInstant())
                 .instructor(instructor)
