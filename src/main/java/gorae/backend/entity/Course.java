@@ -46,6 +46,7 @@ public class Course extends BaseEntity {
                 .level(textbook.getLevel())
                 .startTime(startTime)
                 .endTime(endTime)
+                .maxCount(maxCount)
                 .build();
     }
 

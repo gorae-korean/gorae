@@ -20,6 +20,9 @@ public record CourseDto(
         Instant endTime,
 
         @Schema(description = "교재 레벨")
-        TextbookLevel level
+        TextbookLevel level,
+
+        @Schema(description = "최대 수업 인원", example = "4")
+        int maxCount
 ) {
 }
