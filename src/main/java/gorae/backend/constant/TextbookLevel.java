@@ -1,7 +1,7 @@
 package gorae.backend.constant;
 
 public enum TextbookLevel {
-    BEGINNER,
+    BASIC,
     INTERMEDIATE,
     ADVANCED
 }

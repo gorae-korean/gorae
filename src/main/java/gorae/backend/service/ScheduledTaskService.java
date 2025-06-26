@@ -116,7 +116,7 @@ public class ScheduledTaskService {
 
     private Course createNewCourse(Instructor instructor, ZonedDateTime startTime) {
         // TODO: 교재 선택 알고리즘 수정 필요
-        Textbook textbook = textbookRepository.findFirstByLevel(TextbookLevel.BEGINNER);
+        Textbook textbook = textbookRepository.findFirstByLevel(TextbookLevel.BASIC);
         return Course.builder()
                 .startTime(startTime.toInstant())
                 .endTime(startTime.plusHours(1).toInstant())
