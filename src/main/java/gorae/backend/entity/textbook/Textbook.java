@@ -27,7 +27,8 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Textbook extends BaseEntity {
     @NotBlank
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String article;
 
     @NotNull

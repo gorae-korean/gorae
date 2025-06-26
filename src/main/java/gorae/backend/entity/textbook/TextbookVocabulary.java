@@ -1,9 +1,6 @@
 package gorae.backend.entity.textbook;
 
-import gorae.backend.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +10,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "vocabulary")
-public class TextbookVocabulary extends BaseEntity {
+public class TextbookVocabulary {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank
     @Column(nullable = false)
     private String englishExampleSentence1;
@@ -37,4 +38,8 @@ public class TextbookVocabulary extends BaseEntity {
     @NotBlank
     @Column(nullable = false)
     private String koreanVocabulary;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String pronunciation;
 }

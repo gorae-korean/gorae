@@ -1,6 +1,5 @@
 package gorae.backend.entity.textbook;
 
-import gorae.backend.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +15,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "lets_talk_about")
-public class TextbookLetsTalkAbout extends BaseEntity {
+public class TextbookLetsTalkAbout {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotEmpty
     @ElementCollection
     @CollectionTable(

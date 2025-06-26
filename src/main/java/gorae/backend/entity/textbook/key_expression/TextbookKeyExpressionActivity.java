@@ -1,6 +1,5 @@
 package gorae.backend.entity.textbook.key_expression;
 
-import gorae.backend.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -14,7 +13,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "key_expression_activity")
-public class TextbookKeyExpressionActivity extends BaseEntity {
+public class TextbookKeyExpressionActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ElementCollection
     @CollectionTable(
             name = "key_expression_activity_example",
