@@ -27,7 +27,7 @@ import static gorae.backend.common.JwtUtils.getSubject;
 public class CheckoutController {
     private final CheckoutService checkoutService;
 
-    @CommonApiResponses(summary = "결제 링크 생성", description = "프론트엔드에서 반환된 링크로 리다이렉트 시켜야 함")
+    @CommonApiResponses(summary = "결제 링크 생성", description = "반환된 링크를 프론트엔드에서 리다이렉트 시켜야 합니다.")
     @ApiResponse(
             responseCode = "200",
             description = "결제 요청 성공",

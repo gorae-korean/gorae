@@ -31,13 +31,15 @@ import static gorae.backend.common.JwtUtils.getSubject;
 public class CourseController {
     private final CourseService courseService;
 
-    @CommonApiResponses(summary = "강좌 검색", description = "하나 이상의 매개변수를 사용해야 함")
+    @CommonApiResponses(summary = "강좌 검색", description = "하나 이상의 매개변수를 사용해야 합니다.")
     @ApiResponse(responseCode = "200", description = "강좌 검색 성공")
     @GetMapping
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(
             Authentication authentication,
-            @Parameter(description = "교재 ID") @RequestParam(required = false) UUID textbookId,
-            @Parameter(description = "시작 시간") @RequestParam(required = false) ZonedDateTime startTime
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @RequestParam(required = false) UUID textbookId,
+            @Parameter(description = "시작 시간", example = "2025-01-01T13:00:00+09:00")
+            @RequestParam(required = false) ZonedDateTime startTime
     ) {
 
         log.info("[API] SearchCourses requested: {}", getSubject(authentication));
@@ -51,12 +53,13 @@ public class CourseController {
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, courses));
     }
 
-    @CommonApiResponses(summary = "강좌가 있는 시간대 검색", description = "검색 날짜의 시간은 자정으로 고정해야 함")
+    @CommonApiResponses(summary = "강좌가 있는 시간대 검색", description = "검색 날짜의 시간은 자정으로 고정해야 합니다.")
     @ApiResponse(responseCode = "200", description = "시간대 검색 성공")
     @GetMapping("/timetable")
     public ResponseEntity<ResponseDto<List<OffsetTime>>> getTimetable(
             Authentication authentication,
-            @Parameter(description = "검색 날짜 ") @RequestParam ZonedDateTime dateTime) {
+            @Parameter(description = "검색 날짜 (시간은 자정으로 고정 필요)", example = "2025-01-01T00:00:00+09:00")
+            @RequestParam ZonedDateTime dateTime) {
 
         log.info("[API] GetTimetable requested: {}", getSubject(authentication));
         List<OffsetTime> timetable = courseService.getTimetable(dateTime);
