@@ -1,6 +1,6 @@
 package gorae.backend.dto.textbook;
 
-import gorae.backend.constant.TextbookLevel;
+import gorae.backend.constant.textbook.TextbookLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Set;

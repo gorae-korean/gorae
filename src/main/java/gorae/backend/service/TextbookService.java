@@ -2,7 +2,7 @@ package gorae.backend.service;
 
 import gorae.backend.dto.textbook.TextbookDto;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
-import gorae.backend.entity.Textbook;
+import gorae.backend.entity.textbook.Textbook;
 import gorae.backend.repository.TextbookRepository;
 import gorae.backend.specification.TextbookSpecification;
 import lombok.RequiredArgsConstructor;

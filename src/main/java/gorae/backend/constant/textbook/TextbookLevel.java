@@ -1,4 +1,4 @@
-package gorae.backend.constant;
+package gorae.backend.constant.textbook;
 
 public enum TextbookLevel {
     BASIC,

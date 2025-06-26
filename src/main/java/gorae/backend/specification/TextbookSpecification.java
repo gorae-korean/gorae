@@ -1,8 +1,8 @@
 package gorae.backend.specification;
 
-import gorae.backend.constant.TextbookLevel;
+import gorae.backend.constant.textbook.TextbookLevel;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
-import gorae.backend.entity.Textbook;
+import gorae.backend.entity.textbook.Textbook;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;

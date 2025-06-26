@@ -3,6 +3,7 @@ package gorae.backend.entity;
 import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.entity.instructor.Instructor;
+import gorae.backend.entity.textbook.Textbook;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

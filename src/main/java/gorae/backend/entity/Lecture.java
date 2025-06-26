@@ -39,7 +39,7 @@ public class Lecture extends BaseEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "lecture_students",
+            name = "lecture_student",
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )

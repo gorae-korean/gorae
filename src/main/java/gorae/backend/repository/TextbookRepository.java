@@ -1,7 +1,7 @@
 package gorae.backend.repository;
 
-import gorae.backend.constant.TextbookLevel;
-import gorae.backend.entity.Textbook;
+import gorae.backend.constant.textbook.TextbookLevel;
+import gorae.backend.entity.textbook.Textbook;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
