@@ -19,13 +19,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Course extends BaseEntity {
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Instant startTime;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Instant endTime;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
@@ -37,20 +34,22 @@ public class Course extends BaseEntity {
     private Instructor instructor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "textbook_id", nullable = false)
+    @JoinColumn(name = "textbook_id")
     private Textbook textbook;
+
+    @Column(nullable = false, updatable = false)
+    private int maxCount;
 
     public CourseDto toDto() {
         return CourseDto.builder()
                 .id(this.getPublicId())
-                .title(title)
                 .level(textbook.getLevel())
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
     }
 
-    public int getEnrollmentsSize() {
+    public int getCurrentCount() {
         return (int) enrollments.stream()
                 .filter(enrollment -> enrollment.getStatus() == EnrollmentStatus.ENROLLED)
                 .count();

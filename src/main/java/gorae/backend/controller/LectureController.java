@@ -24,7 +24,7 @@ import static gorae.backend.common.JwtUtils.getId;
 public class LectureController {
     private final LectureService lectureService;
 
-    @CommonApiResponses(summary = "화상 강의 생성", description = "강사만 이용 가능")
+    @CommonApiResponses(summary = "화상 강의 생성", description = "강사만 이용 가능한 기능입니다.")
     @ApiResponse(responseCode = "200", description = "화상 강의 생성 성공")
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -39,8 +39,8 @@ public class LectureController {
     @CommonApiResponses(
             summary = "화상 강의 참여",
             description = """
-                    강사가 실수로 나갔거나 학생들이 참여해야 하는 경우에 요청함<br>\
-                    학생이 요청했을 경우 학생들의 이메일은 표시되지 않음
+                    강사가 실수로 나갔거나 학생들이 참여해야 하는 경우에 요청합니다.<br>\
+                    학생이 요청했을 경우 학생들의 이메일은 표시되지 않습니다.
                     """
     )
     @ApiResponse(responseCode = "200", description = "화상 강의 참여 성공")

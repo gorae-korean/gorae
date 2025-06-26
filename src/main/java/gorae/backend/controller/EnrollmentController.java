@@ -85,7 +85,8 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<String>> drop(
             Authentication authentication,
-            @PathVariable @Parameter(description = "수강 신청 내역 ID") UUID enrollmentId) {
+            @Parameter(description = "수강 신청 내역 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID enrollmentId) {
         String userId = getId(authentication);
         log.info("[API] Drop requested: {}", getSubject(authentication));
 

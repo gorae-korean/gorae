@@ -4,6 +4,7 @@ import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -25,4 +26,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     Optional<Course> findByInstructor_IdAndStartTime(Long instructorId, Instant startTime);
 
     boolean existsByInstructorAndStartTime(Instructor instructor, Instant startTimeAfter);
+
+    @Query("SELECT c FROM Course c WHERE c.startTime BETWEEN :startTime AND :endTime " +
+            "ORDER BY c.startTime")
+    @EntityGraph(attributePaths = {"enrollments.student"})
+    List<Course> findTimeTable(Instant startTime, Instant endTime);
 }

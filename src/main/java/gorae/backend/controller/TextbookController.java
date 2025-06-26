@@ -31,8 +31,9 @@ public class TextbookController {
     @CommonApiResponses(
             summary = "교재 검색",
             description = """
-                    다양한 조건으로 교재 필터링 가능
-                    필요 없는 검색 조건은 제외하면 됨
+                    다양한 조건으로 교재 필터링이 가능합니다.<br>\
+                    필요 없는 검색 조건은 제외할 수 있습니다.<br>\
+                    아무런 조건을 넣지 않은 빈 객체를 제출하면, 모든 교재가 나타납니다.
                     """
     )
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
