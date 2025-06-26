@@ -1,8 +1,8 @@
 INSERT INTO textbook (public_id, created_at, updated_at, title, level)
-VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Java 기초 마스터', 'BEGINNER'),
+VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Java 기초 마스터', 'BASIC'),
        (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Spring Boot 실전 가이드', 'INTERMEDIATE'),
        (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'JPA 프로그래밍', 'ADVANCED'),
-       (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '파이썬으로 배우는 알고리즘', 'BEGINNER'),
+       (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '파이썬으로 배우는 알고리즘', 'BASIC'),
        (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '스프링 시큐리티 인 액션', 'ADVANCED');
 
 -- 샘플 태그 데이터 추가
