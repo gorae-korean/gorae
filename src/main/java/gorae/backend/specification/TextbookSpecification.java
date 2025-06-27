@@ -16,6 +16,11 @@ public class TextbookSpecification {
     public static Specification<Textbook> searchByCondition(TextbookSearchRequestDto dto) {
         return ((root, query, criteriaBuilder) -> {
             Objects.requireNonNull(query).distinct(true);
+
+            if (query.getResultType() != Long.class && query.getResultType() != long.class) {
+                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+            }
+
             return Specification.where(withWord(dto.title()))
                     .and(withTags(dto.category()))
                     .and(withLevel(dto.level()))
