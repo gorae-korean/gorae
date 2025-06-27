@@ -3,7 +3,9 @@ package gorae.backend.service;
 import gorae.backend.dto.textbook.TextbookArticleDto;
 import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
+import gorae.backend.dto.textbook.TextbookVocabularyDto;
 import gorae.backend.entity.textbook.Textbook;
+import gorae.backend.entity.textbook.TextbookVocabulary;
 import gorae.backend.repository.TextbookRepository;
 import gorae.backend.specification.TextbookSpecification;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,11 @@ public class TextbookService {
 
     public TextbookArticleDto getArticle(UUID publicId) {
         return textbookRepository.findByPublicId(publicId).toArticleDto();
+    }
+
+    public List<TextbookVocabularyDto> getVocabularies(UUID publicId) {
+        return textbookRepository.findByPublicId(publicId).getVocabularies()
+                .stream().map(TextbookVocabulary::toDto)
+                .toList();
     }
 }

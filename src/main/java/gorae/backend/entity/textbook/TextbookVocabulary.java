@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.dto.textbook.TextbookVocabularyDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -42,4 +43,16 @@ public class TextbookVocabulary {
     @NotBlank
     @Column(nullable = false)
     private String pronunciation;
+
+    public TextbookVocabularyDto toDto() {
+        return TextbookVocabularyDto.builder()
+                .koreanVocabulary(koreanVocabulary)
+                .pronunciation(pronunciation)
+                .englishVocabulary(englishVocabulary)
+                .koreanExampleSentence1(koreanExampleSentence1)
+                .englishExampleSentence1(englishExampleSentence1)
+                .koreanExampleSentence2(koreanExampleSentence2)
+                .englishExampleSentence2(englishExampleSentence2)
+                .build();
+    }
 }

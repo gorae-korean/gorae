@@ -93,6 +93,10 @@ public class Textbook extends BaseEntity {
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
 
+    public boolean isNew() {
+        return Duration.between(getCreatedAt(), Instant.now()).toDays() <= 14;
+    }
+
     public TextbookSearchDto toDto() {
         return TextbookSearchDto.builder()
                 .id(this.getPublicId())
@@ -108,13 +112,9 @@ public class Textbook extends BaseEntity {
 
     public TextbookArticleDto toArticleDto() {
         return TextbookArticleDto.builder()
-                .title(koreanTitle)
-                .subtitle(koreanSubtitle)
+                .koreanTitle(koreanTitle)
+                .koreanSubtitle(koreanSubtitle)
                 .article(article)
                 .build();
-    }
-
-    public boolean isNew() {
-        return Duration.between(getCreatedAt(), Instant.now()).toDays() <= 14;
     }
 }

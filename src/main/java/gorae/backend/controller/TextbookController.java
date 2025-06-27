@@ -5,6 +5,7 @@ import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.textbook.TextbookArticleDto;
 import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
+import gorae.backend.dto.textbook.TextbookVocabularyDto;
 import gorae.backend.service.TextbookService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -62,5 +63,21 @@ public class TextbookController {
         log.info("[API] GetArticle requested: {}", getSubject(authentication));
         TextbookArticleDto article = textbookService.getArticle(id);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, article));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 핵심 단어 조회",
+            description = "교재의 'Key Vocabulary' 를 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 핵심 단어 조회 성공")
+    @GetMapping("/{id}/vocabularies")
+    public ResponseEntity<ResponseDto<List<TextbookVocabularyDto>>> getVocabularies(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetVocabularies requested: {}", getSubject(authentication));
+        List<TextbookVocabularyDto> vocabularies = textbookService.getVocabularies(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, vocabularies));
     }
 }
