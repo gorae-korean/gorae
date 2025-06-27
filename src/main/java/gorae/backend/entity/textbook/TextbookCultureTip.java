@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.dto.textbook.TextbookCultureTipDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ public class TextbookCultureTip {
 
     private String subtitle;
 
+    @NotBlank
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
@@ -29,4 +31,14 @@ public class TextbookCultureTip {
     @URL(message = "이미지 URL이 유효하지 않습니다.")
     @Column(nullable = false)
     private String imageUrl;
+
+    public TextbookCultureTipDto toDto(int sequence) {
+        return TextbookCultureTipDto.builder()
+                .sequence(sequence)
+                .title(title)
+                .subtitle(subtitle)
+                .imageUrl(imageUrl)
+                .text(text)
+                .build();
+    }
 }

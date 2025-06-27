@@ -2,6 +2,7 @@ package gorae.backend.service;
 
 import gorae.backend.dto.textbook.*;
 import gorae.backend.entity.textbook.Textbook;
+import gorae.backend.entity.textbook.TextbookCultureTip;
 import gorae.backend.entity.textbook.TextbookLessonQuestion;
 import gorae.backend.entity.textbook.TextbookVocabulary;
 import gorae.backend.entity.textbook.key_expression.TextbookKeyExpression;
@@ -63,6 +64,16 @@ public class TextbookService {
 
         return IntStream.range(0, questions.size())
                 .mapToObj(i -> questions.get(i).toDto(i + 1))
+                .toList();
+    }
+
+    public List<TextbookCultureTipDto> getCultureTips(UUID publicId) {
+        List<TextbookCultureTip> cultureTips = textbookRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.TEXTBOOK_NOT_FOUND))
+                .getCultureTips();
+
+        return IntStream.range(0, cultureTips.size())
+                .mapToObj(i -> cultureTips.get(i).toDto(i + 1))
                 .toList();
     }
 }

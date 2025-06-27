@@ -109,4 +109,20 @@ public class TextbookController {
         List<TextbookLessonQuestionDto> lessonQuestions = textbookService.getLessonQuestions(id);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, lessonQuestions));
     }
+
+    @CommonApiResponses(
+            summary = "교재 문화 팁 조회",
+            description = "교재의 'Culture' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 문화 팁 조회 성공")
+    @GetMapping("/{id}/culture")
+    public ResponseEntity<ResponseDto<List<TextbookCultureTipDto>>> getCultureTips(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetCultureTips requested: {}", getSubject(authentication));
+        List<TextbookCultureTipDto> cultureTips = textbookService.getCultureTips(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, cultureTips));
+    }
 }
