@@ -2,21 +2,21 @@ package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
-import gorae.backend.dto.textbook.TextbookDto;
+import gorae.backend.dto.textbook.TextbookArticleDto;
+import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.dto.textbook.TextbookSearchRequestDto;
 import gorae.backend.service.TextbookService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static gorae.backend.common.JwtUtils.getSubject;
 
@@ -38,13 +38,29 @@ public class TextbookController {
     )
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
     @GetMapping
-    public ResponseEntity<ResponseDto<List<TextbookDto>>> searchTextbooks(
+    public ResponseEntity<ResponseDto<List<TextbookSearchDto>>> searchTextbooks(
             Authentication authentication,
             @ModelAttribute TextbookSearchRequestDto searchRequest
     ) {
         log.info("[API] GetTextbooks requested: {}", getSubject(authentication));
         log.debug(searchRequest.toString());
-        List<TextbookDto> textbooks = textbookService.searchTextbooks(searchRequest);
+        List<TextbookSearchDto> textbooks = textbookService.searchTextbooks(searchRequest);
         return ResponseEntity.ok().body(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 본문 조회",
+            description = "교재의 'Article' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 본문 조회 성공")
+    @GetMapping("/{id}/article")
+    public ResponseEntity<ResponseDto<TextbookArticleDto>> getArticle(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetArticle requested: {}", getSubject(authentication));
+        TextbookArticleDto article = textbookService.getArticle(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, article));
     }
 }

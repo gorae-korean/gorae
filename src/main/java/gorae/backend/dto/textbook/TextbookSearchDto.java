@@ -8,16 +8,16 @@ import java.util.Set;
 import java.util.UUID;
 
 @Builder
-@Schema(description = "수업 교재")
-public record TextbookDto(
+@Schema(description = "검색 시 수업 교재 정보")
+public record TextbookSearchDto(
         @Schema(description = "수업 교재 ID")
         UUID id,
 
         @Schema(description = "수업 교재 제목", example = "Why Taxis Won't Stop in Korea")
-        String englishTitle,
+        String title,
 
         @Schema(description = "수업 교재 부제", example = "How Korean taxis actually work")
-        String englishSubtitle,
+        String subtitle,
 
         @Schema(description = "썸네일 주소", example = "https://example.com/static/thumbnail.png")
         String thumbnailUrl,

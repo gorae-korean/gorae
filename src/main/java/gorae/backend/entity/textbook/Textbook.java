@@ -2,7 +2,8 @@ package gorae.backend.entity.textbook;
 
 import gorae.backend.constant.textbook.TextbookCategory;
 import gorae.backend.constant.textbook.TextbookLevel;
-import gorae.backend.dto.textbook.TextbookDto;
+import gorae.backend.dto.textbook.TextbookArticleDto;
+import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.entity.BaseEntity;
 import gorae.backend.entity.textbook.key_expression.TextbookKeyExpression;
 import gorae.backend.entity.textbook.play_a_role.TextbookPlayARoleScene;
@@ -92,16 +93,24 @@ public class Textbook extends BaseEntity {
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
 
-    public TextbookDto toDto() {
-        return TextbookDto.builder()
+    public TextbookSearchDto toDto() {
+        return TextbookSearchDto.builder()
                 .id(this.getPublicId())
-                .englishTitle(englishTitle)
-                .englishSubtitle(englishSubtitle)
+                .title(englishTitle)
+                .subtitle(englishSubtitle)
                 .thumbnailUrl(thumbnailUrl)
                 .isNew(isNew())
                 .readTime(readTime)
                 .tags(tags)
                 .level(level)
+                .build();
+    }
+
+    public TextbookArticleDto toArticleDto() {
+        return TextbookArticleDto.builder()
+                .title(koreanTitle)
+                .subtitle(koreanSubtitle)
+                .article(article)
                 .build();
     }
 
