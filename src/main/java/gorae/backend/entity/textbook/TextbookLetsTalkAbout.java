@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.dto.textbook.TextbookLetsTalkAboutDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -36,4 +37,12 @@ public class TextbookLetsTalkAbout {
     @NotBlank
     @Column(nullable = false)
     private String title;
+
+    public TextbookLetsTalkAboutDto toDto() {
+        return TextbookLetsTalkAboutDto.builder()
+                .title(title)
+                .imageUrl(imageUrl)
+                .discussionPoints(discussionPoints)
+                .build();
+    }
 }

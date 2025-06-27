@@ -12,7 +12,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
       data-locations: classpath:init/*.sql
       encoding: UTF-8
 

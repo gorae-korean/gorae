@@ -125,4 +125,20 @@ public class TextbookController {
         List<TextbookCultureTipDto> cultureTips = textbookService.getCultureTips(id);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, cultureTips));
     }
+
+    @CommonApiResponses(
+            summary = "교재 회화 조회",
+            description = "교재의 'Real Talk' 를 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 회화 조회 성공")
+    @GetMapping("/{id}/real-talk")
+    public ResponseEntity<ResponseDto<TextbookRealTalkDto>> getRealTalk(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetRealTalk requested: {}", getSubject(authentication));
+        TextbookRealTalkDto realTalk = textbookService.getRealTalk(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, realTalk));
+    }
 }

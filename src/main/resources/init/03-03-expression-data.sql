@@ -1,6 +1,6 @@
 INSERT INTO key_expression(id, textbook_id, is_published, english_key_expression, korean_key_expression)
 VALUES (1, 1, true, 'Go to __', '__에 가요.'),
-       (2, 2, true, '''While + verb\''', '-(으)면서 -해요');
+       (2, 2, true, '''While + verb''', '-(으)면서 -해요');
 
 INSERT INTO key_expression_example(key_expression_id, example)
 VALUES (1, '인사동에 가요.'),

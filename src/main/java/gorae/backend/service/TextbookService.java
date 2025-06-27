@@ -1,11 +1,9 @@
 package gorae.backend.service;
 
 import gorae.backend.dto.textbook.*;
-import gorae.backend.entity.textbook.Textbook;
-import gorae.backend.entity.textbook.TextbookCultureTip;
-import gorae.backend.entity.textbook.TextbookLessonQuestion;
-import gorae.backend.entity.textbook.TextbookVocabulary;
+import gorae.backend.entity.textbook.*;
 import gorae.backend.entity.textbook.key_expression.TextbookKeyExpression;
+import gorae.backend.entity.textbook.play_a_role.TextbookPlayARoleScene;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import gorae.backend.repository.TextbookRepository;
@@ -75,5 +73,20 @@ public class TextbookService {
         return IntStream.range(0, cultureTips.size())
                 .mapToObj(i -> cultureTips.get(i).toDto(i + 1))
                 .toList();
+    }
+
+    public TextbookRealTalkDto getRealTalk(UUID publicId) {
+        Textbook textbook = textbookRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.TEXTBOOK_NOT_FOUND));
+
+        List<TextbookPlayARoleSceneDto> playARoleScenes = textbook.getPlayARoles()
+                .stream().map(TextbookPlayARoleScene::toDto)
+                .toList();
+
+        List<TextbookLetsTalkAboutDto> letsTalkAbouts = textbook.getLetsTalkAbouts()
+                .stream().map(TextbookLetsTalkAbout::toDto)
+                .toList();
+
+        return new TextbookRealTalkDto(playARoleScenes, letsTalkAbouts);
     }
 }
