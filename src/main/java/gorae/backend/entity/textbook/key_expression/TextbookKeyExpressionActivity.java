@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook.key_expression;
 
+import gorae.backend.dto.textbook.TextbookKeyExpressionActivityDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -28,4 +29,11 @@ public class TextbookKeyExpressionActivity {
     @NotBlank
     @Column(nullable = false)
     private String question;
+
+    public TextbookKeyExpressionActivityDto toDto() {
+        return TextbookKeyExpressionActivityDto.builder()
+                .question(question)
+                .examples(examples)
+                .build();
+    }
 }

@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook.key_expression;
 
+import gorae.backend.dto.textbook.TextbookKeyExpressionDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -45,4 +46,14 @@ public class TextbookKeyExpression {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "key_expression_id")
     private List<TextbookKeyExpressionActivity> keyExpressionActivities = new ArrayList<>();
+
+    public TextbookKeyExpressionDto toDto() {
+        return TextbookKeyExpressionDto.builder()
+                .koreanExpression(koreanKeyExpression)
+                .englishExpression(englishKeyExpression)
+                .examples(examples)
+                .isPublished(isPublished)
+                .activities(keyExpressionActivities.stream().map(TextbookKeyExpressionActivity::toDto).toList())
+                .build();
+    }
 }
