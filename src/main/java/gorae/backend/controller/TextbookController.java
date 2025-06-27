@@ -93,4 +93,20 @@ public class TextbookController {
         List<TextbookKeyExpressionDto> keyExpressions = textbookService.getKeyExpressions(id);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, keyExpressions));
     }
+
+    @CommonApiResponses(
+            summary = "교재 질문 목록 조회",
+            description = "교재의 'Discussion' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 질문 목록 조회 성공")
+    @GetMapping("/{id}/discussion")
+    public ResponseEntity<ResponseDto<List<TextbookLessonQuestionDto>>> getLessonQuestions(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetLessonQuestions requested: {}", getSubject(authentication));
+        List<TextbookLessonQuestionDto> lessonQuestions = textbookService.getLessonQuestions(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, lessonQuestions));
+    }
 }

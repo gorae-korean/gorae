@@ -1,7 +1,9 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.dto.textbook.TextbookLessonQuestionDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,10 @@ public class TextbookLessonQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
+    private int sequence;
+
     @NotBlank
     @Column(nullable = false)
     private String koreanQuestion;
@@ -22,4 +28,12 @@ public class TextbookLessonQuestion {
     @NotBlank
     @Column(nullable = false)
     private String englishQuestion;
+
+    public TextbookLessonQuestionDto toDto() {
+        return TextbookLessonQuestionDto.builder()
+                .sequence(sequence)
+                .koreanQuestion(koreanQuestion)
+                .englishQuestion(englishQuestion)
+                .build();
+    }
 }
