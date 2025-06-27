@@ -2,7 +2,6 @@ package gorae.backend.entity.textbook.key_expression;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,7 +22,6 @@ public class ImageAndText {
     private String imageUrl;
 
     @NotBlank
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 

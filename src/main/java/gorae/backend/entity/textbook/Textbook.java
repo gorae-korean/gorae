@@ -27,7 +27,6 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Textbook extends BaseEntity {
     @NotBlank
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String article;
 
@@ -96,6 +95,11 @@ public class Textbook extends BaseEntity {
     public TextbookDto toDto() {
         return TextbookDto.builder()
                 .id(this.getPublicId())
+                .englishTitle(englishTitle)
+                .englishSubtitle(englishSubtitle)
+                .thumbnailUrl(thumbnailUrl)
+                .isNew(isNew())
+                .readTime(readTime)
                 .tags(tags)
                 .level(level)
                 .build();

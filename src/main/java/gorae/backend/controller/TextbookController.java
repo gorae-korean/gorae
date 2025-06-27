@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,14 +37,14 @@ public class TextbookController {
                     """
     )
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
-    @PostMapping("/search")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<TextbookDto>>> searchTextbooks(
             Authentication authentication,
-            @RequestBody TextbookSearchRequestDto requestDto
+            @ModelAttribute TextbookSearchRequestDto searchRequest
     ) {
         log.info("[API] GetTextbooks requested: {}", getSubject(authentication));
-        log.debug("Received Tags: {}", requestDto.tags());
-        List<TextbookDto> textbooks = textbookService.searchTextbooks(requestDto);
+        log.debug(searchRequest.toString());
+        List<TextbookDto> textbooks = textbookService.searchTextbooks(searchRequest);
         return ResponseEntity.ok().body(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
     }
 }

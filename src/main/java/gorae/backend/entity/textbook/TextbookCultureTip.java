@@ -22,7 +22,6 @@ public class TextbookCultureTip {
 
     private String subtitle;
 
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
