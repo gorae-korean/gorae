@@ -20,7 +20,7 @@ import java.util.Objects;
 public class ImageAndText {
     @NotBlank
     @URL
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2048)
     @Schema(description = "사진 URL", example = "https://example.com/static/image.png")
     private String imageUrl;
 

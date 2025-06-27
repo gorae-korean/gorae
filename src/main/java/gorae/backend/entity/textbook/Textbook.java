@@ -112,9 +112,12 @@ public class Textbook extends BaseEntity {
 
     public TextbookArticleDto toArticleDto() {
         return TextbookArticleDto.builder()
-                .koreanTitle(koreanTitle)
-                .koreanSubtitle(koreanSubtitle)
-                .article(article.replace("\n", "<br>"))
+                .title(koreanTitle)
+                .subtitle(koreanSubtitle)
+                .article(article)
+                .tags(tags)
+                .level(level)
+                .readTime(readTime)
                 .build();
     }
 }

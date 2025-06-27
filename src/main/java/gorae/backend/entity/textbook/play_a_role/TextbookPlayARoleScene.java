@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook.play_a_role;
 
+import gorae.backend.dto.textbook.TextbookPlayARoleSceneDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Entity
 @Getter
@@ -27,9 +29,8 @@ public class TextbookPlayARoleScene {
     )
     private List<Character> characters = new ArrayList<>();
 
-    @NotBlank
     @URL
-    @Column(nullable = false)
+    @Column(length = 2048)
     private String imageUrl;
 
     @NotBlank
@@ -40,4 +41,15 @@ public class TextbookPlayARoleScene {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "scene_id")
     List<TextbookPlayARoleScript> scripts = new ArrayList<>();
+
+    public TextbookPlayARoleSceneDto toDto() {
+        return TextbookPlayARoleSceneDto.builder()
+                .title(title)
+                .imageUrl(imageUrl)
+                .scripts(IntStream.range(0, scripts.size())
+                        .mapToObj(i -> scripts.get(i).toDto(i + 1))
+                        .toList())
+                .characters(characters)
+                .build();
+    }
 }

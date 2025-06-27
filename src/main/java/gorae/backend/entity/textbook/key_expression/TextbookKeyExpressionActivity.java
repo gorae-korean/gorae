@@ -27,7 +27,7 @@ public class TextbookKeyExpressionActivity {
     private List<ImageAndText> examples = new ArrayList<>();
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String question;
 
     public TextbookKeyExpressionActivityDto toDto() {
