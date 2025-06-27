@@ -2,21 +2,19 @@ package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
-import gorae.backend.dto.textbook.TextbookDto;
-import gorae.backend.dto.textbook.TextbookSearchRequestDto;
+import gorae.backend.dto.textbook.*;
 import gorae.backend.service.TextbookService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static gorae.backend.common.JwtUtils.getSubject;
 
@@ -37,14 +35,94 @@ public class TextbookController {
                     """
     )
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
-    @PostMapping("/search")
-    public ResponseEntity<ResponseDto<List<TextbookDto>>> searchTextbooks(
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<TextbookSearchDto>>> searchTextbooks(
             Authentication authentication,
-            @RequestBody TextbookSearchRequestDto requestDto
+            @ModelAttribute TextbookSearchRequestDto searchRequest
     ) {
         log.info("[API] GetTextbooks requested: {}", getSubject(authentication));
-        log.debug("Received Tags: {}", requestDto.tags());
-        List<TextbookDto> textbooks = textbookService.searchTextbooks(requestDto);
+        log.debug(searchRequest.toString());
+        List<TextbookSearchDto> textbooks = textbookService.searchTextbooks(searchRequest);
         return ResponseEntity.ok().body(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 본문 조회",
+            description = "교재의 'Article' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 본문 조회 성공")
+    @GetMapping("/{id}/article")
+    public ResponseEntity<ResponseDto<TextbookArticleDto>> getArticle(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetArticle requested: {}", getSubject(authentication));
+        TextbookArticleDto article = textbookService.getArticle(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, article));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 핵심 단어 조회",
+            description = "교재의 'Key Vocabulary' 를 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 핵심 단어 조회 성공")
+    @GetMapping("/{id}/vocabularies")
+    public ResponseEntity<ResponseDto<List<TextbookVocabularyDto>>> getVocabularies(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetVocabularies requested: {}", getSubject(authentication));
+        List<TextbookVocabularyDto> vocabularies = textbookService.getVocabularies(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, vocabularies));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 핵심 표현 조회",
+            description = "교재의 'Key Expressions' 를 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 핵심 표현 조회 성공")
+    @GetMapping("/{id}/expressions")
+    public ResponseEntity<ResponseDto<List<TextbookKeyExpressionDto>>> getKeyExpressions(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetKeyExpressions requested: {}", getSubject(authentication));
+        List<TextbookKeyExpressionDto> keyExpressions = textbookService.getKeyExpressions(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, keyExpressions));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 질문 목록 조회",
+            description = "교재의 'Discussion' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 질문 목록 조회 성공")
+    @GetMapping("/{id}/discussion")
+    public ResponseEntity<ResponseDto<List<TextbookLessonQuestionDto>>> getLessonQuestions(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetLessonQuestions requested: {}", getSubject(authentication));
+        List<TextbookLessonQuestionDto> lessonQuestions = textbookService.getLessonQuestions(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, lessonQuestions));
+    }
+
+    @CommonApiResponses(
+            summary = "교재 문화 팁 조회",
+            description = "교재의 'Culture' 을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "교재 문화 팁 조회 성공")
+    @GetMapping("/{id}/culture")
+    public ResponseEntity<ResponseDto<List<TextbookCultureTipDto>>> getCultureTips(
+            Authentication authentication,
+            @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            @PathVariable UUID id
+    ) {
+        log.info("[API] GetCultureTips requested: {}", getSubject(authentication));
+        List<TextbookCultureTipDto> cultureTips = textbookService.getCultureTips(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, cultureTips));
     }
 }

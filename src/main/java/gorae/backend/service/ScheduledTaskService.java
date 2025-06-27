@@ -1,9 +1,9 @@
 package gorae.backend.service;
 
 import gorae.backend.common.TimeUtils;
-import gorae.backend.constant.TextbookLevel;
+import gorae.backend.constant.textbook.TextbookLevel;
 import gorae.backend.entity.Course;
-import gorae.backend.entity.Textbook;
+import gorae.backend.entity.textbook.Textbook;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.entity.instructor.InstructorUnavailableDate;
