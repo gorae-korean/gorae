@@ -27,9 +27,8 @@ public class TextbookPlayARoleScene {
     )
     private List<Character> characters = new ArrayList<>();
 
-    @NotBlank
     @URL
-    @Column(nullable = false)
+    @Column(length = 2048)
     private String imageUrl;
 
     @NotBlank

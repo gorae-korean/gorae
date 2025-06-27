@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Character {
-    @Column(nullable = false)
+    @URL
     private String imageUrl;
 
     @Column(nullable = false)

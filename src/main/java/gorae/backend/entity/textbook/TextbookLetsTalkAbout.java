@@ -30,6 +30,7 @@ public class TextbookLetsTalkAbout {
     private List<String> discussionPoints = new ArrayList<>();
 
     @URL
+    @Column(length = 2048)
     private String imageUrl;
 
     @NotBlank

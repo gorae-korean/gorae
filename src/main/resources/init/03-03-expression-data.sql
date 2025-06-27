@@ -1,5 +1,6 @@
 INSERT INTO key_expression(id, textbook_id, is_published, english_key_expression, korean_key_expression)
-VALUES (1, 1, true, 'Go to __', '__에 가요.');
+VALUES (1, 1, true, 'Go to __', '__에 가요.'),
+       (2, 2, true, '''While + verb\''', '-(으)면서 -해요');
 
 INSERT INTO key_expression_example(key_expression_id, example)
 VALUES (1, '인사동에 가요.'),
@@ -9,12 +10,18 @@ VALUES (1, '인사동에 가요.'),
        (1, '친구랑 도서관에 가요.'),
        (1, '동생이랑 콘서트에 가요.'),
        (1, '자전거를 타고 한강에 가요.'),
-       (1, '비행기를 타고 제주도에 가요.');
+       (1, '비행기를 타고 제주도에 가요.'),
+       (2, 'TV를 보면서 저녁을 먹어요.'),
+       (2, '커피를 마시면서 친구와 대화해요.'),
+       (2, '강아지와 산책하면서 노래를 들어요.'),
+       (2, '자기 전에 음악을 들으면서 일기를 써요.'),
+       (2, '주말마다 자전거를 타면서 꽃구경을 해요.');
 
 INSERT INTO key_expression_activity(id, key_expression_id, question)
 VALUES (1, 1, '아래의 장소 그림을 보고 ''___에 가요.''를 활용하여 문장을 완성해보세요.'),
        (2, 1, '아래의 인물과 장소 그림을 보고 ''____(이)랑 ____에 가요.''를 활용하여 문장을 완성해보세요.'),
-       (3, 1, '아래의 교통 수단과 장소 그림을 보고 ‘____(으)로 ____에 가요.’를 활용하여 문장을 완성해보세요.');
+       (3, 1, '아래의 교통 수단과 장소 그림을 보고 ‘____(으)로 ____에 가요.’를 활용하여 문장을 완성해보세요.'),
+       (4, 2, '아래의 그림을 보고 ''__(으)면서 __해요.''를 활용하여 문장을 완성해보세요.');
 
 INSERT INTO key_expression_activity_example(activity_id, image_url, text)
 VALUES (1,
@@ -76,5 +83,46 @@ VALUES (1,
         '택시'),
        (3,
         'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750773594458x886900148266098600/image%20%287%29.png',
-        '집');
-
+        '집'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750922599700x261458018658579970/%EC%98%81%ED%99%94%EB%A5%BC%20%EB%B3%B4%EB%8B%A4.png',
+        '영화를 보다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750922619891x239946092066159800/%EC%82%B0%EC%B1%85%EC%9D%84%20%ED%95%98%EB%8B%A4.png',
+        '산책을 하다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923044013x329853703342196700/%ED%9A%8C%EC%9D%98%EB%A5%BC%20%ED%95%98%EB%8B%A4.png',
+        '회의를 하다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923071564x584934112994281100/%EB%B0%A5%EC%9D%84%20%EB%A8%B9%EB%8B%A4.png',
+        '밥을 먹다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923091009x394720189564066800/%EB%85%B8%EB%9E%98%EB%A5%BC%20%EB%93%A3%EB%8B%A4.png',
+        '노래를 듣다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923111782x197219073053273020/%EA%B1%B0%EC%9A%B8%EC%9D%84%20%EB%B3%B4%EB%8B%A4.png',
+        '거울을 보다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923131180x610091484727056400/%EB%84%A4%EB%B9%84%EA%B2%8C%EC%9D%B4%EC%85%98%EC%9D%84%20%EB%B3%B4%EB%8B%A4.png',
+        '내비게이션을 보다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923527056x429754177313072450/%EA%B8%B8%EC%9D%84%20%EA%B1%B7%EB%8B%A4.png',
+        '길을 걷다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750922611274x635943614761899300/%ED%8C%9D%EC%BD%98%EC%9D%84%20%EB%A8%B9%EB%8B%A4.png',
+        '팝콘을 먹다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923081138x514325053898945000/%EC%9D%B4%EC%95%BC%EA%B8%B0%ED%95%98%EB%8B%A4.png',
+        '이야기하다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923100100x281536521218285440/%EC%9A%B4%EB%8F%99%EC%9D%84%20%ED%95%98%EB%8B%A4.png',
+        '운동을 하다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923121955x716913787023886500/%EC%98%B7%EC%9D%84%20%EC%9E%85%EB%8B%A4.png',
+        '옷을 입다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923145220x410343631076638660/%EC%9A%B4%EC%A0%84%EC%9D%84%20%ED%95%98%EB%8B%A4.png',
+        '운전을 하다'),
+       (4,
+        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750923640813x121444622718802620/%EC%A0%84%ED%99%94%EB%A5%BC%20%ED%95%98%EB%8B%A4.png',
+        '전화를 하다');

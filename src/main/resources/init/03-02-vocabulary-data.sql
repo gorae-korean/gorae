@@ -23,4 +23,55 @@ VALUES (1,
        (1,
         'There is a store across the street.', '길 건너에 가게가 있다.',
         'There is a lot of trash on the road.', '길에 쓰레기가 많다.',
-        'Street / Road', '길', 'Gil');
+        'Street / Road', '길', 'Gil'),
+
+       (2,
+        'In the past, the lunar calendar was used more than the solar calendar.', '옛날에는 양력보다 음력이 더 많이 쓰였다.',
+        'My dad celebrates his birthday according to the lunar calendar.', '우리 아빠는 음력으로 생일을 지낸다.',
+        'Lunar Calendar', '음력', 'Eumnyeok'),
+
+       (2,
+        'We must be polite when dealing with adults.', '어른을 대할 때에는 예절을 갖추어야 한다.',
+        'Korea values etiquette.', '한국은 예절을 중요하게 생각한다.',
+        'Etiquette / Manners', '예절', 'Yejeol'),
+
+       (2,
+        'To prepare dinner.', '저녁밥을 준비하다.',
+        'I prepared an umbrella because it was raining.', '비가 와서 우산을 준비하다.',
+        'To prepare', '준비하다', 'Junbihada'),
+
+       (2,
+        'Because it''s cold, I want to eat a hot soup dish.', '추워서 따뜻한 국물 요리를 먹고 싶다.',
+        'While eating, the soup splashed onto my clothes.', '밥을 먹다가 국물이 옷에 튀었다.',
+        'Soup / Broth', '국물', 'Gungmul'),
+
+       (2,
+        'Cultural characteristics vary by country.', '나라에 따라 문화적 특징은 다양하게 나타난다.',
+        'King Sejong left various achievements in the field of culture.', '세종대왕은 문화적으로 다양한 업적을 남겼다.',
+        'Cultural', '문화적', 'Munhwajeok'),
+
+       (2,
+        'Koreans like kimchi.', '한국인은 김치를 좋아한다.',
+        'He came to study in Korea and takes classes with Korean friends.', '그는 한국으로 유학 와서 한국인 친구들과 함께 수업을 듣는다.',
+        'Korean (person)', '한국인', 'Hangugin'),
+
+       (2,
+        'Korea has various traditional foods.', '한국에는 다양한 전통 음식이 있다.',
+        'She saw traditional Korean songs and dances at Gyeongbokgung Palace.', '그녀는 경복궁에서 한국의 전통 노래와 춤을 보았다.',
+        'Tradition', '전통', 'Jeontong'),
+
+       (2,
+        'There are many unique customs in other countries.', '다른 나라에는 특이한 풍습이 많다.',
+        'Koreans share the same experiences, language, history, and customs.', '한국인들은 동일한 경험, 언어, 역사, 풍습을 공유한다.',
+        'Custom / Practice', '풍습', 'Pungseup'),
+
+       (2,
+        'A dove symbolizes peace.', '비둘기는 평화를 상징한다.',
+        'Red usually symbolizes passion.', '빨간색은 주로 열정을 상징한다.',
+        'To symbolize', '상징하다', 'Sangjinghada'),
+
+       (2,
+        'My wish is for my whole family to be healthy.', '가족 모두가 건강한 것이 나의 소망이다.',
+        'He studied hard and fulfilled his wish to become a doctor.', '그는 열심히 공부하여 의사가 되고 싶다는 소망을 이루었다.',
+        'Hope / Wish', '소망', 'Somang');
+

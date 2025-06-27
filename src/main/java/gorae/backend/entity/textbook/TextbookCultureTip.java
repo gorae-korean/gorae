@@ -27,9 +27,8 @@ public class TextbookCultureTip {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
-    @NotBlank
     @URL(message = "이미지 URL이 유효하지 않습니다.")
-    @Column(nullable = false)
+    @Column(length = 2048)
     private String imageUrl;
 
     public TextbookCultureTipDto toDto(int sequence) {
