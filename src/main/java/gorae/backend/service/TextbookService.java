@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -38,10 +39,12 @@ public class TextbookService {
     }
 
     public List<TextbookVocabularyDto> getVocabularies(UUID publicId) {
-        return textbookRepository.findByPublicId(publicId)
+        List<TextbookVocabulary> vocabularies = textbookRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.TEXTBOOK_NOT_FOUND))
-                .getVocabularies()
-                .stream().map(TextbookVocabulary::toDto)
+                .getVocabularies();
+
+        return IntStream.range(0, vocabularies.size())
+                .mapToObj(i -> vocabularies.get(i).toDto(i + 1))
                 .toList();
     }
 
@@ -54,10 +57,12 @@ public class TextbookService {
     }
 
     public List<TextbookLessonQuestionDto> getLessonQuestions(UUID publicId) {
-        return textbookRepository.findByPublicId(publicId)
+        List<TextbookLessonQuestion> questions = textbookRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.TEXTBOOK_NOT_FOUND))
-                .getLessonQuestions()
-                .stream().map(TextbookLessonQuestion::toDto)
+                .getLessonQuestions();
+
+        return IntStream.range(0, questions.size())
+                .mapToObj(i -> questions.get(i).toDto(i + 1))
                 .toList();
     }
 }

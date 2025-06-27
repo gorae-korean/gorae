@@ -44,8 +44,9 @@ public class TextbookVocabulary {
     @Column(nullable = false)
     private String pronunciation;
 
-    public TextbookVocabularyDto toDto() {
+    public TextbookVocabularyDto toDto(int sequence) {
         return TextbookVocabularyDto.builder()
+                .sequence(sequence)
                 .koreanVocabulary(koreanVocabulary)
                 .pronunciation(pronunciation)
                 .englishVocabulary(englishVocabulary)

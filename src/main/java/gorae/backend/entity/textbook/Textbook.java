@@ -114,7 +114,7 @@ public class Textbook extends BaseEntity {
         return TextbookArticleDto.builder()
                 .koreanTitle(koreanTitle)
                 .koreanSubtitle(koreanSubtitle)
-                .article(article)
+                .article(article.replace("\n", "<br>"))
                 .build();
     }
 }

@@ -6,6 +6,9 @@ import lombok.Builder;
 @Builder
 @Schema(description = "교재 핵심 단어 조회 시 정보")
 public record TextbookVocabularyDto(
+        @Schema(description = "단어 순서", example = "1")
+        int sequence,
+
         @Schema(description = "한국어 단어", example = "운전하다")
         String koreanVocabulary,
 
