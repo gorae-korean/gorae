@@ -1,6 +1,8 @@
 package gorae.backend.security.oauth;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.security.jwt.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.io.IOException;
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final ProfileUtils profileUtils;
 
     @Value("${frontend.url}")
     private String frontendUrl;
@@ -44,6 +47,17 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             log.debug("Refresh token: {}", client.getRefreshToken().getTokenValue());
         }
 
-        response.sendRedirect(frontendUrl + "?token=" + token);
+        Cookie cookie = new Cookie("auth_token", token);
+        cookie.setMaxAge(86400 * 7);
+        cookie.setSecure(profileUtils.isProdMode());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        if (profileUtils.isProdMode()) {
+            cookie.setDomain("goraekorean.site");
+        }
+
+        response.addCookie(cookie);
+        response.sendRedirect(frontendUrl);
     }
 }

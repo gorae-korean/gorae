@@ -48,4 +48,4 @@ jwt:
   expiration: 8640000000
 
 frontend:
-  url: https://goraekorean.site/version-test
+  url: http://localhost:8080/enrollments
