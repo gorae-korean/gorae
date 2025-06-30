@@ -76,8 +76,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String nameAttributeKey = claims.get("nameAttributeKey", String.class);
         attributes.put(nameAttributeKey, claims.getSubject());
         attributes.put("id", claims.get("id"));
+        attributes.put("picture", claims.get("picture"));
         attributes.put("email", claims.get("email"));
         attributes.put("name", claims.get("name"));
+        attributes.put("roles", claims.get("roles"));
 
         OAuth2User oAuth2User = new DefaultOAuth2User(
                 getAuthorities(jwtTokenProvider.getUserRoles(token)),
