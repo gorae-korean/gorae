@@ -21,16 +21,15 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.COOKIE)
+                .name("auth_token")
+                .description("구글 로그인 인증을 완료하면 토큰 키를 담은 쿠키가 저장되어 있습니다.");
 
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("cookieAuth");
 
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+                .components(new Components().addSecuritySchemes("cookieAuth", securityScheme))
                 .servers(List.of(new Server().url(baseUrl)))
                 .security(List.of(securityRequirement))
                 .info(info());

@@ -45,6 +45,7 @@ public class JwtTokenProvider {
                 .claim(ROLES, roles)
                 .claim(EMAIL, oAuth2User.getAttribute(EMAIL))
                 .claim(ID, oAuth2User.getAttribute(ID))
+                .claim("picture", oAuth2User.getAttribute("picture"))
                 .claim("name", oAuth2User.getAttribute("name"))
                 .claim("registrationId", oAuth2User.getAttribute("registrationId"))
                 .claim("nameAttributeKey", oAuth2User.getAttribute("nameAttributeKey"))

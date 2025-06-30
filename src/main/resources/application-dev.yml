@@ -29,7 +29,6 @@ spring:
               - email
               - profile
               - https://www.googleapis.com/auth/meetings.space.created
-              - https://www.googleapis.com/auth/meetings.space.readonly
 
 paypal:
   baseUrl: https://api-m.sandbox.paypal.com
@@ -48,4 +47,4 @@ jwt:
   expiration: 8640000000
 
 frontend:
-  url: https://goraekorean.site/version-test
+  url: http://localhost:8080/swagger-ui/index.html
