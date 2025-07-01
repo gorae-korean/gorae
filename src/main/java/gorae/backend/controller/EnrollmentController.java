@@ -42,9 +42,11 @@ public class EnrollmentController {
             Authentication authentication, @RequestBody EnrollRequestDto dto) {
 
         String userId = getId(authentication);
-        log.info("[API] Enroll requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] Enroll requested from sub: {}", subject);
 
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
+        log.info("[API] Enroll responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDto));
     }
@@ -58,10 +60,12 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<EnrollmentDto>>> getEnrollments(Authentication authentication) {
         String userId = getId(authentication);
-        log.info("[API] GetEnrollments requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] GetEnrollments requested from sub: {}", subject);
         log.debug("Role: {}", authentication.getAuthorities());
 
         List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
+        log.info("[API] GetEnrollments responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDtoList));
     }
@@ -88,9 +92,11 @@ public class EnrollmentController {
             @Parameter(description = "수강 신청 내역 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID enrollmentId) {
         String userId = getId(authentication);
-        log.info("[API] Drop requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] Drop requested from sub: {}", subject);
 
         enrollmentService.drop(userId, enrollmentId);
+        log.info("[API] Drop responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, "정상적으로 취소되었습니다."));
     }

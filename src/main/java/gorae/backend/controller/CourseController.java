@@ -44,13 +44,15 @@ public class CourseController {
             @RequestParam(required = false) ZonedDateTime startTime
     ) {
 
-        log.info("[API] SearchCourses requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] SearchCourses requested from sub: {}", subject);
 
         if (textbookId == null && startTime == null) {
             throw new IllegalArgumentException("한 개 이상의 매개변수가 필요합니다.");
         }
 
         List<CourseDto> courses = courseService.searchCourses(textbookId, startTime);
+        log.info("[API] SearchCourses responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, courses));
     }
@@ -83,8 +85,10 @@ public class CourseController {
             @Parameter(description = "검색 날짜 (시간은 자정으로 고정 필요)", example = "2025-01-01T00:00:00+09:00")
             @RequestParam ZonedDateTime dateTime) {
 
-        log.info("[API] GetTimetable requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] GetTimetable requested from sub: {}", subject);
         List<OffsetTime> timetable = courseService.getTimetable(dateTime);
+        log.info("[API] GetTimeTable responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, timetable));
     }
 }

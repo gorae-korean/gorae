@@ -97,9 +97,11 @@ public class CheckoutController {
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
         String userId = getId(authentication);
-        log.info("[API] Checkout requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] Checkout requested from sub: {}", subject);
 
         String redirectUrl = checkoutService.checkout(userId, dto);
+        log.info("[API] Checkout responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));
     }
 
@@ -107,8 +109,9 @@ public class CheckoutController {
     @GetMapping("/complete")
     public ResponseEntity<ResponseDto<String>> completeCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
-        log.info("[API] CheckoutSuccess requested, orderId: {}", orderId);
+        log.info("[API] CompleteCheckout requested from orderId: {}", orderId);
         checkoutService.completeCheckout(orderId);
+        log.info("[API] CompleteCheckout responded to orderId: {}", orderId);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "구매가 정상적으로 완료되었습니다."));
     }
 
@@ -116,8 +119,9 @@ public class CheckoutController {
     @GetMapping("/cancel")
     public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
-        log.info("[API] CancelCheckout requested, orderId: {}", orderId);
+        log.info("[API] CancelCheckout requested from orderId: {}", orderId);
         checkoutService.cancelCheckout(orderId);
+        log.info("[API] CancelCheckout responded to orderId: {}", orderId);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "주문이 취소되었습니다."));
     }
 }

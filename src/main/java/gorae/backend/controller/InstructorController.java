@@ -38,8 +38,11 @@ public class InstructorController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<List<AvailabilityDto>>> getAvailabilities(Authentication authentication) {
         String userId = getId(authentication);
-        log.info("[API] GetAvailabilities requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] GetAvailabilities requested from sub: {}", subject);
+
         List<AvailabilityDto> availabilities = instructorService.getAvailabilities(userId);
+        log.info("[API] GetAvailabilities responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, availabilities));
     }
@@ -66,8 +69,11 @@ public class InstructorController {
             @RequestBody AvailabilityAddRequestDto dto
     ) {
         String userId = getId(authentication);
-        log.info("[API] AddAvailability requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] AddAvailability requested from sub: {}", subject);
+
         instructorService.addAvailability(userId, dto);
+        log.info("[API] AddAvailability responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, "일정이 정상적으로 추가되었습니다."));
     }

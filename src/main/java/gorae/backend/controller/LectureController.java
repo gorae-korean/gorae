@@ -30,8 +30,11 @@ public class LectureController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(Authentication authentication) throws Exception {
         String userId = getId(authentication);
-        log.info("[API] CreateLectureManually requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] CreateLectureManually requested from sub: {}", subject);
+
         LectureDto lectureDto = lectureService.createLectureManually(userId);
+        log.info("[API] CreateLectureManually responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
     }
@@ -47,8 +50,11 @@ public class LectureController {
     @GetMapping("/join")
     public ResponseEntity<ResponseDto<LectureDto>> joinLecture(Authentication authentication) {
         String userId = getId(authentication);
-        log.info("[API] JoinLecture requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] JoinLecture requested from sub: {}", subject);
+
         LectureDto lectureDto = lectureService.joinLecture(userId);
+        log.info("[API] JoinLecture responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
     }

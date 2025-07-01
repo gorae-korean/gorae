@@ -29,8 +29,11 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     @GetMapping
     public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts(Authentication authentication) {
-        log.info("[API] GetProducts requested: {}", JwtUtils.getSubject(authentication));
+        String subject = JwtUtils.getSubject(authentication);
+        log.info("[API] GetProducts requested from sub: {}", subject);
+
         List<ProductDto> products = productService.getProducts();
+        log.info("[API] GetProducts responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, products));
     }
 }

@@ -33,8 +33,11 @@ public class TicketController {
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<TicketDto>>> getTickets(Authentication authentication) {
-        log.info("[API] GetTickets requested: {}", getSubject(authentication));
+        String subject = getSubject(authentication);
+        log.info("[API] GetTickets requested from sub: {}", subject);
+
         List<TicketDto> tickets = ticketService.getTickets(getId(authentication));
+        log.info("[API] GetTickets responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, tickets));
     }
 }
