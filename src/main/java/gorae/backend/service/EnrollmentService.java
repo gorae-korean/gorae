@@ -35,8 +35,17 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
+        Long studentId = Long.valueOf(userId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
         Course course = courseRepository.findByPublicId(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
+
+        UUID studentPublicId = student.getPublicId();
+        UUID coursePublicId = course.getPublicId();
+        log.info("[Service] Enroll started for member: {}, course: {}", studentPublicId, coursePublicId);
+
         if (course.getStartTime().isBefore(Instant.now())) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
@@ -47,9 +56,6 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.TICKET_ALREADY_USED);
         }
 
-        Long studentId = Long.valueOf(userId);
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         if (!student.getTickets().contains(ticket)) {
             throw new CustomException(ErrorStatus.TICKET_NOT_FOUND);
         }
@@ -60,7 +66,9 @@ public class EnrollmentService {
         ticket.useTicket();
         ticketRepository.save(ticket);
 
-        return enrollment.toDto();
+        EnrollmentDto enrollmentDto = enrollment.toDto();
+        log.info("[Service] Enroll succeeded for member: {}, enrollment: {}", studentPublicId, enrollment.getPublicId());
+        return enrollmentDto;
     }
 
     @Transactional(readOnly = true)
@@ -82,6 +90,11 @@ public class EnrollmentService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         Enrollment enrollment = enrollmentRepository.findByPublicId(enrollmentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ENROLLMENT_NOT_FOUND));
+
+        UUID studentPublicId = student.getPublicId();
+        UUID enrollmentPublicId = enrollment.getPublicId();
+        log.info("[Service] Drop started for member: {}, enrollment: {}", studentPublicId, enrollmentPublicId);
+
         if (!enrollment.getStudent().equals(student)) {
             throw new CustomException(ErrorStatus.NO_PERMISSIONS);
         }
@@ -105,5 +118,6 @@ public class EnrollmentService {
         Ticket ticket = enrollment.getTicket();
         ticket.returnTicket();
         ticketRepository.save(ticket);
+        log.info("[Service] Drop succeeded for member: {}, enrollment: {}", studentPublicId, enrollmentPublicId);
     }
 }

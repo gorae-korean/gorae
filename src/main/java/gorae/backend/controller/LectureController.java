@@ -33,7 +33,7 @@ public class LectureController {
         String subject = getSubject(authentication);
         log.info("[API] CreateLectureManually requested from sub: {}", subject);
 
-        LectureDto lectureDto = lectureService.createLectureManually(userId);
+        LectureDto lectureDto = lectureService.createLecture(userId);
         log.info("[API] CreateLectureManually responded to sub: {}", subject);
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));

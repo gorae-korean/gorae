@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -45,6 +46,10 @@ public class CheckoutService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
         Student student = studentRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        UUID publicId = student.getPublicId();
+        log.info("[Service] Checkout started for member: {}", publicId);
+
         if (!student.isFirst() && product.getName() == ProductName.FIRST_TICKET) {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
@@ -59,8 +64,10 @@ public class CheckoutService {
                 .build();
 
         checkoutOrderRepository.save(checkoutOrder);
-        return response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
+        String href = response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
                 .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
+        log.info("[Service] Checkout succeeded for member: {}, checkout: {}", publicId, checkoutOrder.getPublicId());
+        return href;
     }
 
     private CreateOrderRequestDto getCreateOrderRequestDto(Product product) {
@@ -86,6 +93,7 @@ public class CheckoutService {
     public void completeCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
+        log.info("[Service] CompleteCheckout started for order: {}", orderId);
 
         order.completeOrder();
         checkoutOrderRepository.save(order);
@@ -103,14 +111,17 @@ public class CheckoutService {
             }
             default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
+        log.info("[Service] CompleteCheckout succeeded for order: {}", orderId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void cancelCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
+        log.info("[Service] CancelCheckout started for order: {}", orderId);
 
         order.cancelOrder();
         checkoutOrderRepository.save(order);
+        log.info("[Service] CancelCheckout succeeded for order: {}", orderId);
     }
 }

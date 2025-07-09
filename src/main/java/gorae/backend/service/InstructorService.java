@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -40,6 +41,9 @@ public class InstructorService {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
+        UUID instructorPublicId = instructor.getPublicId();
+        log.info("[Service] AddAvailability started for member: {}", instructorPublicId);
+
         InstructorAvailability availability = InstructorAvailability.builder()
                 .instructor(instructor)
                 .startTime(startTime)
@@ -54,6 +58,7 @@ public class InstructorService {
 
         instructor.getAvailabilities().add(availability);
         instructorRepository.save(instructor);
+        log.info("[Service] AddAvailability succeeded for member: {}", instructorPublicId);
     }
 
     public List<AvailabilityDto> getAvailabilities(String userId) {
