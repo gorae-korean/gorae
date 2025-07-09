@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.UUID;
 
 import static gorae.backend.constant.endpoint.Endpoint.createUrl;
 import static gorae.backend.constant.endpoint.PaypalEndpoint.*;
@@ -37,6 +38,7 @@ public class PaypalHttpClient {
     }
 
     public PaypalAccessTokenDto getAccessToken() throws Exception {
+        log.info("[Paypal] GetAccessToken started");
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), GET_ACCESS_TOKEN)))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -49,12 +51,22 @@ public class PaypalHttpClient {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
         log.debug(content);
+
+        int statusCode = response.statusCode();
+        if (statusCode == 200) {
+            log.info("[Paypal] GetAccessToken succeeded");
+        } else {
+            log.warn("[Paypal] GetAccessToken failed for code: {}", statusCode);
+        }
+
         return objectMapper.readValue(content, PaypalAccessTokenDto.class);
     }
 
-    public CreateOrderDto createOrder(CreateOrderRequestDto orderRequestDto) throws Exception {
+    public CreateOrderDto createOrder(UUID memberId, CreateOrderRequestDto orderRequestDto) throws Exception {
         PaypalAccessTokenDto paypalAccessTokenDto = getAccessToken();
         String payload = objectMapper.writeValueAsString(orderRequestDto);
+
+        log.info("[Paypal] CreateOrder started for member: {}", memberId);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), ORDER_CHECKOUT)))
@@ -66,6 +78,14 @@ public class PaypalHttpClient {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
         log.debug(content);
+
+        int statusCode = response.statusCode();
+        if (statusCode == 200) {
+            log.info("[Paypal] CreateOrder succeeded for member: {}", memberId);
+        } else {
+            log.warn("[Paypal] CreateOrder failed for member: {}, code: {}", memberId, statusCode);
+        }
+
         return objectMapper.readValue(content, CreateOrderDto.class);
     }
 

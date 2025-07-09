@@ -47,15 +47,15 @@ public class CheckoutService {
         Student student = studentRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        UUID publicId = student.getPublicId();
-        log.info("[Service] Checkout started for member: {}", publicId);
+        UUID studentPublicId = student.getPublicId();
+        log.info("[Service] Checkout started for member: {}", studentPublicId);
 
         if (!student.isFirst() && product.getName() == ProductName.FIRST_TICKET) {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
         CreateOrderRequestDto createOrderRequestDto = getCreateOrderRequestDto(product);
-        CreateOrderDto response = paypalHttpClient.createOrder(createOrderRequestDto);
+        CreateOrderDto response = paypalHttpClient.createOrder(studentPublicId, createOrderRequestDto);
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
                 .orderId(response.id())
                 .status(response.status())
@@ -66,7 +66,7 @@ public class CheckoutService {
         checkoutOrderRepository.save(checkoutOrder);
         String href = response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
                 .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
-        log.info("[Service] Checkout succeeded for member: {}, checkout: {}", publicId, checkoutOrder.getPublicId());
+        log.info("[Service] Checkout succeeded for member: {}, checkout: {}", studentPublicId, checkoutOrder.getPublicId());
         return href;
     }
 

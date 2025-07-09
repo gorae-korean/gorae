@@ -60,10 +60,11 @@ public class GoogleHttpClient {
         String content = response.body();
         log.debug(content);
 
-        if (response.statusCode() == 200) {
+        int statusCode = response.statusCode();
+        if (statusCode == 200) {
             log.info("[Google] CreateSpace succeeded for member: {}", instructorPublicId);
         } else {
-            log.warn("[Google] CreateSpace failed for member: {}", instructorPublicId);
+            log.warn("[Google] CreateSpace failed for member: {}, code: {}", instructorPublicId, statusCode);
         }
 
         return objectMapper.readValue(content, SpaceDto.class);
