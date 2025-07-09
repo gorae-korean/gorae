@@ -16,6 +16,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
 
 import static gorae.backend.constant.endpoint.Endpoint.createUrl;
 
@@ -45,6 +46,9 @@ public class GoogleHttpClient {
                 .build();
         String payload = objectMapper.writeValueAsString(spaceDto);
 
+        UUID instructorPublicId = instructor.getPublicId();
+        log.info("[Google] CreateSpace started for member: {}", instructorPublicId);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(createUrl(googleProperties.getMeetBaseUrl(), GoogleEndpoint.CREATE_SPACE)))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -55,6 +59,13 @@ public class GoogleHttpClient {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
         log.debug(content);
+
+        if (response.statusCode() == 200) {
+            log.info("[Google] CreateSpace succeeded for member: {}", instructorPublicId);
+        } else {
+            log.warn("[Google] CreateSpace failed for member: {}", instructorPublicId);
+        }
+
         return objectMapper.readValue(content, SpaceDto.class);
     }
 }
