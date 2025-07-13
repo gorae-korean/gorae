@@ -1,4 +1,4 @@
-# 🐋 Gorae Korean v1.0
+# 🐋 Gorae Korean
 <p align="center"><img src="https://github.com/user-attachments/assets/0d6a15f6-64c2-445e-9d8e-244080587cd4"></p>
 
 ## 🧑‍💻 개발 기간
