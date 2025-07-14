@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -29,6 +30,7 @@ public class OAuthTokenService {
     private final OAuth2AuthorizedClientService auth2AuthorizedClientService;
     private final OAuth2AuthorizedClientManager auth2AuthorizedClientManager;
 
+    @Transactional(readOnly = true)
     public String getAccessToken(Member member) {
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(
                 member.getProvider(),
