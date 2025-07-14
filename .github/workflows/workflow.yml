@@ -90,6 +90,19 @@ jobs:
           cp -r .ebextensions deploy/ || true
           cd deploy && zip -r ../deploy.zip .
 
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+          version_label: "gorae-app-${{ github.sha }}"
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy.zip
+          wait_for_environment_recovery: 300
+          use_existing_version_if_available: true
+
       - name: Update environment variables
         run: |
           aws elasticbeanstalk update-environment \
@@ -108,17 +121,3 @@ jobs:
 #              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_SECRET,Value=${{ secrets.PAYPAL_SECRET }} \
 #              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_SECRET,Value=${{ secrets.JWT_SECRET }} \
 #              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_EXPIRATION,Value=${{ secrets.JWT_EXPIRATION }}
-
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ secrets.EB_APPLICATION_NAME }}
-          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
-          version_label: "gorae-app-${{ github.sha }}"
-          region: ${{ secrets.AWS_REGION }}
-          deployment_package: deploy.zip
-          wait_for_environment_recovery: 300
-          use_existing_version_if_available: true
-
