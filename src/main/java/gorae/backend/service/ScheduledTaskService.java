@@ -36,7 +36,7 @@ public class ScheduledTaskService {
     private static final LocalTime INDONESIA_EVENING_START = LocalTime.of(19, 0);
     private static final LocalTime INDONESIA_EVENING_END = LocalTime.of(22, 0);
 
-    @Scheduled(cron = "0 0 * * * Sun")
+    @Scheduled(cron = "0 0 0 * * Sun")
     @Transactional
     public void updateTimeTable() {
         log.info("[System] UpdateTimeTable started");
