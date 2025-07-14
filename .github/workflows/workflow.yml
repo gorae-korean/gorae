@@ -90,6 +90,25 @@ jobs:
           cp -r .ebextensions deploy/ || true
           cd deploy && zip -r ../deploy.zip .
 
+      - name: Update environment variables
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name ${{ secrets.EB_APPLICATION_NAME }} \
+            --environment-name ${{ secrets.EB_ENVIRONMENT_NAME }} \
+            --option-settings \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_PROFILES_ACTIVE,Value=prod \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_BASEURL,Value=https://api.goraekorean.site \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_URL,Value=${{ secrets.DB_URL }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_USERNAME,Value=${{ secrets.DB_USERNAME }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_PASSWORD,Value=${{ secrets.DB_PASSWORD }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_ID,Value=${{ secrets.GOOGLE_CLIENT_ID }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_SECRET,Value=${{ secrets.GOOGLE_CLIENT_SECRET }}
+#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_BASE_URL,Value=${{ secrets.PAYPAL_BASE_URL }} \
+#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_CLIENT_ID,Value=${{ secrets.PAYPAL_CLIENT_ID }} \
+#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_SECRET,Value=${{ secrets.PAYPAL_SECRET }} \
+#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_SECRET,Value=${{ secrets.JWT_SECRET }} \
+#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_EXPIRATION,Value=${{ secrets.JWT_EXPIRATION }}
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -103,20 +122,3 @@ jobs:
           wait_for_environment_recovery: 300
           use_existing_version_if_available: true
 
-      - name: Update environment variables
-        run: |
-          aws elasticbeanstalk update-environment \
-            --application-name ${{ secrets.EB_APPLICATION_NAME }} \
-            --environment-name ${{ secrets.EB_ENVIRONMENT_NAME }} \
-            --option-settings \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_PROFILES_ACTIVE,Value=prod \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_URL,Value=${{ secrets.DB_URL }} \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_USERNAME,Value=${{ secrets.DB_USERNAME }} \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_PASSWORD,Value=${{ secrets.DB_PASSWORD }} \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_ID,Value=${{ secrets.GOOGLE_CLIENT_ID }} \
-              Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_SECRET,Value=${{ secrets.GOOGLE_CLIENT_SECRET }}
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_BASE_URL,Value=${{ secrets.PAYPAL_BASE_URL }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_CLIENT_ID,Value=${{ secrets.PAYPAL_CLIENT_ID }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_SECRET,Value=${{ secrets.PAYPAL_SECRET }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_SECRET,Value=${{ secrets.JWT_SECRET }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_EXPIRATION,Value=${{ secrets.JWT_EXPIRATION }}
