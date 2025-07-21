@@ -58,6 +58,6 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
 
         response.addCookie(cookie);
-        response.sendRedirect(frontendUrl + "?token=" + token);
+        response.sendRedirect(frontendUrl + "?code=" + token);
     }
 }
