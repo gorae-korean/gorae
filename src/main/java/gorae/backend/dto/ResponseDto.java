@@ -8,6 +8,6 @@ public record ResponseDto<T>(
         ResponseStatus status,
 
         @Schema(description = "응답 데이터")
-        T data
+        T value
 ) {
 }
