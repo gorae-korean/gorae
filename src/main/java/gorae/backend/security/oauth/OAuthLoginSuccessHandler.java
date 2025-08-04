@@ -50,9 +50,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         Cookie cookie = new Cookie("auth_token", token);
         cookie.setMaxAge(86400 * 7);
         cookie.setSecure(profileUtils.isProdMode());
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         cookie.setPath("/");
-        cookie.setAttribute("SameSite", "None");
 
         if (profileUtils.isProdMode()) {
             cookie.setDomain("goraekorean.site");
