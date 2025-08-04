@@ -52,6 +52,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         cookie.setSecure(profileUtils.isProdMode());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
+        cookie.setAttribute("SameSite", "None");
 
         if (profileUtils.isProdMode()) {
             cookie.setDomain("goraekorean.site");
