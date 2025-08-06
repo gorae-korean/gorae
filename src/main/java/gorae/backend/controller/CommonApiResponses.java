@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
                         value = """
                                 {
                                     "status": "ERROR",
-                                    "data": {
+                                    "value": {
                                         "message": "인증에 실패했습니다.",
                                         "code": "FAILED_TO_AUTHENTICATE"
                                     }
@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
                         value = """
                                 {
                                     "status": "ERROR",
-                                    "data": {
+                                    "value": {
                                         "message": "해당 요청에 대한 권한이 없습니다.",
                                         "code": "NO_PERMISSIONS"
                                     }
@@ -56,7 +56,7 @@ import java.lang.annotation.Target;
                         value = """
                                 {
                                     "status": "ERROR",
-                                    "data": "서버에서 에러가 발생했습니다."
+                                    "value": "서버에서 에러가 발생했습니다."
                                 }
                                 """
                 )

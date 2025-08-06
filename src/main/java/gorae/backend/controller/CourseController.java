@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.OffsetTime;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +69,7 @@ public class CourseController {
                             value = """
                                     {
                                         "status": "SUCCESS",
-                                        "data": [
+                                        "value": [
                                             "12:00+09:00",
                                             "15:00+09:00",
                                             "16:00+09:00"
@@ -80,14 +80,14 @@ public class CourseController {
             )
     )
     @GetMapping("/timetable")
-    public ResponseEntity<ResponseDto<List<OffsetTime>>> getTimetable(
+    public ResponseEntity<ResponseDto<List<Instant>>> getTimetable(
             Authentication authentication,
             @Parameter(description = "검색 날짜 (시간은 자정으로 고정 필요)", example = "2025-01-01T00:00:00+09:00")
             @RequestParam ZonedDateTime dateTime) {
 
         String subject = getSubject(authentication);
         log.info("[API] GetTimetable requested from sub: {}", subject);
-        List<OffsetTime> timetable = courseService.getTimetable(dateTime);
+        List<Instant> timetable = courseService.getTimetable(dateTime);
         log.info("[API] GetTimeTable responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, timetable));
     }

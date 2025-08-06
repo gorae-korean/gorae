@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -35,12 +34,12 @@ public class CourseService {
         return courses.stream().map(Course::toDto).toList();
     }
 
-    public List<OffsetTime> getTimetable(ZonedDateTime dateTime) {
+    public List<Instant> getTimetable(ZonedDateTime dateTime) {
         Instant startTime = dateTime.toInstant();
         Instant endTime = startTime.plus(23, ChronoUnit.HOURS);
         return courseRepository.findTimeTable(startTime, endTime)
                 .stream().filter(course -> course.getCurrentCount() < course.getMaxCount())
-                .map(course -> OffsetTime.ofInstant(course.getStartTime(), dateTime.getZone()))
+                .map(Course::getStartTime)
                 .distinct()
                 .toList();
     }
