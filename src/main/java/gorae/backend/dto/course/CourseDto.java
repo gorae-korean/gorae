@@ -19,6 +19,9 @@ public record CourseDto(
         @Schema(description = "교재 레벨")
         TextbookLevel level,
 
+        @Schema(description = "현재 수강 신청 인원", example = "2")
+        int currentCount,
+
         @Schema(description = "최대 수업 인원", example = "4")
         int maxCount
 ) {
