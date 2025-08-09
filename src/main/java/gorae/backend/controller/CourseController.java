@@ -3,6 +3,7 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.course.CourseDto;
+import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.service.CourseService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -82,7 +83,7 @@ public class CourseController {
     @GetMapping("/timetable")
     public ResponseEntity<ResponseDto<List<Instant>>> getTimetable(
             Authentication authentication,
-            @Parameter(description = "검색 날짜 (시간은 자정으로 고정 필요)", example = "2025-01-01T00:00:00+09:00")
+            @Parameter(description = "검색 시간", example = "2025-01-01T00:00:00+09:00")
             @RequestParam ZonedDateTime dateTime) {
 
         String subject = getSubject(authentication);
@@ -90,5 +91,20 @@ public class CourseController {
         List<Instant> timetable = courseService.getTimetable(dateTime);
         log.info("[API] GetTimeTable responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, timetable));
+    }
+
+    @CommonApiResponses(summary = "강좌 시간에 해당하는 교재 검색")
+    @ApiResponse(responseCode = "200", description = "교재 검색 성공")
+    @GetMapping("/textbooks")
+    public ResponseEntity<ResponseDto<List<TextbookSearchDto>>> getCourseTextbooks(
+            Authentication authentication,
+            @Parameter(description = "강좌 시작 시간", example = "2025-01-01T00:00:00+09:00")
+            @RequestParam ZonedDateTime startTime
+    ) {
+        String subject = getSubject(authentication);
+        log.info("[API] GetCourseTextbooks requested from sub: {}", subject);
+        List<TextbookSearchDto> textbooks = courseService.getCourseTextbooks(startTime);
+        log.info("[API] GetCourseTextbooks responded to sub: {}", subject);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
     }
 }

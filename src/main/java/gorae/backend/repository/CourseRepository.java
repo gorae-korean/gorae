@@ -2,6 +2,7 @@ package gorae.backend.repository;
 
 import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
+import gorae.backend.entity.textbook.Textbook;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +32,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "ORDER BY c.startTime")
     @EntityGraph(attributePaths = {"enrollments.student"})
     List<Course> findTimeTable(Instant startTime, Instant endTime);
+
+    @Query("select distinct c.textbook from Course c where c.startTime = :startTime")
+    List<Textbook> findTextbookByStartTime(Instant startTime);
 }
