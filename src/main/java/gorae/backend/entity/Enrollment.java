@@ -33,7 +33,7 @@ public class Enrollment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
-    public static Enrollment addEnrollment(Student student, Course course) {
+    public static Enrollment addEnrollment(Student student, Course course, Ticket ticket) {
         boolean alreadyEnrolled = course.getEnrollments().stream()
                 .anyMatch(enrollment -> enrollment.getStudent().equals(student)
                         && enrollment.getStatus() == EnrollmentStatus.ENROLLED);
@@ -46,6 +46,7 @@ public class Enrollment extends BaseEntity {
         Enrollment enrollment = new Enrollment();
         enrollment.student = student;
         enrollment.course = course;
+        enrollment.ticket = ticket;
         enrollment.enrolledAt = Instant.now();
         enrollment.status = EnrollmentStatus.ENROLLED;
         return enrollment;

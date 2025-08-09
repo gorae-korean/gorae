@@ -1,7 +1,7 @@
 package gorae.backend.service;
 
+import gorae.backend.common.ProfileUtils;
 import gorae.backend.constant.EnrollmentStatus;
-import gorae.backend.constant.TicketStatus;
 import gorae.backend.dto.enrollment.EnrollRequestDto;
 import gorae.backend.dto.enrollment.EnrollmentDto;
 import gorae.backend.entity.Course;
@@ -32,6 +32,7 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final TicketRepository ticketRepository;
     private final CourseRepository courseRepository;
+    private final ProfileUtils profileUtils;
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
@@ -50,26 +51,21 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
 
-        Ticket ticket = ticketRepository.findByPublicId(dto.ticketId())
+        Ticket ticket = ticketRepository.findFirst()
                 .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
-        if (ticket.getStatus() == TicketStatus.USED) {
-            throw new CustomException(ErrorStatus.TICKET_ALREADY_USED);
-        }
 
-        if (!student.getTickets().contains(ticket)) {
-            throw new CustomException(ErrorStatus.TICKET_NOT_FOUND);
-        }
-
-        Enrollment enrollment = Enrollment.addEnrollment(student, course);
+        Enrollment enrollment = Enrollment.addEnrollment(student, course, ticket);
         enrollmentRepository.save(enrollment);
 
         ticket.useTicket();
         ticketRepository.save(ticket);
 
         EnrollmentDto enrollmentDto = enrollment.toDto();
-        log.info("[Service] Enroll succeeded for member: {}, enrollment: {}", studentPublicId, enrollment.getPublicId());
+        log.info("[Service] Enroll succeeded for member: {}, ticket: {}, enrollment: {}",
+                studentPublicId, ticket.getPublicId(), enrollment.getPublicId());
         return enrollmentDto;
     }
+
 
     @Transactional(readOnly = true)
     public List<EnrollmentDto> getEnrollments(String userId) {
@@ -108,7 +104,7 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
         long hoursDifference = Duration.between(now, courseStartTime).toHours();
-        if (hoursDifference < 6) {
+        if (profileUtils.isProdMode() && hoursDifference < 6) {
             throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
         }
 
