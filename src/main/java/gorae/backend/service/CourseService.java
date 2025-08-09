@@ -3,7 +3,6 @@ package gorae.backend.service;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.entity.Course;
-import gorae.backend.entity.textbook.Textbook;
 import gorae.backend.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,9 +47,10 @@ public class CourseService {
 
     public List<TextbookSearchDto> getCourseTextbooks(ZonedDateTime startTime) {
         Instant instantStartTime = startTime.toInstant();
-        return courseRepository.findTextbookByStartTime(instantStartTime)
+        return courseRepository.findByStartTime(instantStartTime)
                 .stream()
-                .map(Textbook::toDto)
+                .map(course -> course.getTextbook().toDto())
+                .distinct()
                 .toList();
     }
 }
