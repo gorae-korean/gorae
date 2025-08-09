@@ -34,5 +34,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findTimeTable(Instant startTime, Instant endTime);
 
     @Query("select distinct c.textbook from Course c where c.startTime = :startTime")
+    @EntityGraph(attributePaths = {"tags"})
     List<Textbook> findTextbookByStartTime(Instant startTime);
 }
