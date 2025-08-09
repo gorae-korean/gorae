@@ -45,8 +45,7 @@ public class Course extends BaseEntity {
         return CourseDto.builder()
                 .id(this.getPublicId())
                 .level(textbook.getLevel())
-                .startTime(startTime)
-                .endTime(endTime)
+                .instructor(instructor.toDto())
                 .maxCount(maxCount)
                 .build();
     }
