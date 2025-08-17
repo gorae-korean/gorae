@@ -12,8 +12,8 @@ spring:
 
   sql:
     init:
-      mode: never
-      data-locations: classpath:init/01-product-data.sql
+      mode: always
+      data-locations: classpath:init/*.sql
       encoding: UTF-8
 
   security:
