@@ -39,15 +39,10 @@ public class TextbookController {
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
     @GetMapping
     public ResponseEntity<ResponseDto<List<TextbookSearchDto>>> searchTextbooks(
-            Authentication authentication,
             @ModelAttribute TextbookSearchRequestDto searchRequest
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetTextbooks requested from sub: {}", subject);
         log.debug(searchRequest.toString());
-
         List<TextbookSearchDto> textbooks = textbookService.searchTextbooks(searchRequest);
-        log.info("[API] GetTextbooks responded to sub: {}", subject);
         return ResponseEntity.ok().body(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
     }
 
@@ -166,12 +161,8 @@ public class TextbookController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<ResponseDto<List<TextbookCategory>>> getCategories(Authentication authentication) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetCategories requested from sub: {}", subject);
-
+    public ResponseEntity<ResponseDto<List<TextbookCategory>>> getCategories() {
         List<TextbookCategory> categories = Arrays.asList(TextbookCategory.values());
-        log.info("[API] GetCategories responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, categories));
     }
 }
