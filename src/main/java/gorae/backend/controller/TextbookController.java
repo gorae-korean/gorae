@@ -1,5 +1,6 @@
 package gorae.backend.controller;
 
+import gorae.backend.constant.textbook.TextbookCategory;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.textbook.*;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -161,5 +163,15 @@ public class TextbookController {
         TextbookRealTalkDto realTalk = textbookService.getRealTalk(id);
         log.info("[API] GetRealTalk responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, realTalk));
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<ResponseDto<List<TextbookCategory>>> getCategories(Authentication authentication) {
+        String subject = getSubject(authentication);
+        log.info("[API] GetCategories requested from sub: {}", subject);
+
+        List<TextbookCategory> categories = Arrays.asList(TextbookCategory.values());
+        log.info("[API] GetCategories responded to sub: {}", subject);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, categories));
     }
 }
