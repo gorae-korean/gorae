@@ -14,7 +14,7 @@ VALUES (2, 'e4f1c2d0-8b3a-4c2b-9f7e-1f0a3b6c8e2d', '2025-03-27 14:32:00+09:00', 
 또한, 떡국에 들어가는 흰 가래떡은 밝은 새해의 출발을 상징하고, 길게 썬 모양은 오래 살길 기원한다는 의미를 담고 있어요. 그래서 떡국은 한국 사람들에게 단순한 음식이 아니라, 새해의 소망을 담은 상징적인 음식이라고 할 수 있어요.
 
 주제 글을 읽고 난 후의 생각을 자유롭게 말해주세요!',
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=512,h=288,f=auto,dpr=1,fit=contain/f1750520809186x884089246249718000/tteokguk_newyear_korea_thumbnail.png'
+        'https://static.goraekorean.site/image/textbook/e4f1c2d0-8b3a-4c2b-9f7e-1f0a3b6c8e2d/떡국.png'
            , 5);
 
 INSERT INTO textbook_tag (textbook_id, tag)
