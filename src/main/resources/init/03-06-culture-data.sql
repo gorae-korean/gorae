@@ -1,10 +1,8 @@
 INSERT INTO culture_tip(textbook_id, image_url, title, subtitle, text)
 VALUES (1,
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750777044989x920374937638909400/image%20%288%29.png',
+        'https://static.goraekorean.site/image/textbook/b3a1e3c2-5f4d-4a9f-8c2d-1f7e9a6b2c3d/culture/아빠사자.png',
         '한국 택시는 ''아빠사자''만 알면 돼!', null, '택시 번호에 ‘아’, ’바’, ’사’, ’자’가 포함되어 있어야 안전한 택시입니다.'),
-       (1,
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750777106844x396301337266689500/ChatGPT%20Image%202025%EB%85%84%206%EC%9B%94%2024%EC%9D%BC%20%EC%98%A4%ED%9B%84%2011_58_21.png',
-        '한국에서는 밤 늦게 택시를 부르면 요금이 비싸져요', null,
+       (1, null, '한국에서는 밤 늦게 택시를 부르면 요금이 비싸져요', null,
         '• 새벽 2시부터 4시까지: 기본 요금에 20% 추가
 • 저녁 10시부터 11시까지: 기본 요금에 20% 추가
 • 저녁 11시부터 새벽 2시까지: 기본 요금에 40% 추가'),
@@ -13,18 +11,14 @@ VALUES (1,
    •  상대가 어른이면 "올해도 건강하세요." 같은 말도 함께 사용하여 인사합니다.
    •  설날 당일 뿐만 아니라 매년 첫 달(1월)에는 만나는 사람에게 "새해 복 많이 받으세요."라고 인사합니다.'),
        (2,
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750924162836x739412654272247700/%ED%95%9C%EA%B5%AD%EC%97%90%EC%84%9C%EB%8A%94%20%EC%84%A4%EB%82%A0%20%EC%95%84%EC%B9%A8%EC%97%90%20%E2%80%98%EC%84%B8%EB%B0%B0%E2%80%99%EB%A5%BC%20%ED%95%98%EA%B3%A0%20%E2%80%98%EC%84%B8%EB%B1%83%EB%8F%88%E2%80%99%EC%9D%84%20%EB%B0%9B%EC%95%84%EC%9A%94.png',
+        'https://static.goraekorean.site/image/textbook/e4f1c2d0-8b3a-4c2b-9f7e-1f0a3b6c8e2d/culture/세배.png',
         '한국에서는 설날 아침에 ''세배''를 하고 ''세뱃돈''을 받아요', null,
         '•  어린이들은 설날 아침에 어른들에게 세배를 하고 세뱃돈을 받습니다.
    •  세배는 어린 사람이 어른에게 절을 하는 것입니다.
    •  존경, 감사 그리고 새해의 희망을 기원하는 행동으로 어른은 세배를 받으면 덕담과 세뱃돈을 줍니다.'),
-       (2,
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750924676543x720143320232296200/%EC%84%A4%EB%82%A0%EC%97%90%EB%8A%94%20%EC%B0%A8%EA%B0%80%20%EC%97%84%EC%B2%AD%20%EB%A7%89%ED%9E%8C%EB%8B%A4%21.png',
-        '설날에는 차가 엄청 막힌다!', null,
+       (2, null, '설날에는 차가 엄청 막힌다!', null,
         '•  설날엔 많은 사람들이 고향에 가기 때문에 도로에 차가 엄청 많습니다.
    •  기차표, 고속버스표도 예매하기 어렵습니다.
    •  차가 막힐 것을 대비해서 설날 연휴가 시작되기 전 미리 고향에 가려는 사람들이 많습니다.'),
-       (2,
-        'https://c1110c23e19e66dd3233a28ac4cc1966.cdn.bubble.io/cdn-cgi/image/w=256,h=256,f=auto,dpr=1,fit=contain/f1750924985936x123922715970253840/%EC%84%B8%EB%B0%B0%EB%8A%94%20%EA%BC%AD%20%ED%95%9C%20%EB%B2%88%EB%A7%8C%20%ED%95%B4%EC%95%BC%20%ED%95%B4%EC%9A%94.png',
-        '세배는 꼭 한 번만 해야 해요', null,
+       (2, null, '세배는 꼭 한 번만 해야 해요', null,
         '•  세뱃돈 두 번 받으려고 절 두 번 하면 안 돼요. 절을 두 번 하는 건 죽은 사람에게만 해요.');
