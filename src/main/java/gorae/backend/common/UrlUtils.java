@@ -14,6 +14,6 @@ public class UrlUtils {
     }
 
     public static String getExpressionImageUrl(UUID textbookId, String fileName) {
-        return STATIC_URL + "/image/textbook/" + textbookId + "/" + fileName + ".png";
+        return STATIC_URL + "/image/textbook/" + textbookId + "/expression/" + fileName + ".png";
     }
 }
