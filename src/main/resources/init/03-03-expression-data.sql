@@ -1,6 +1,9 @@
 INSERT INTO key_expression(id, textbook_id, is_published, english_key_expression, korean_key_expression)
 VALUES (1, 1, true, 'Go to __', '__에 가요.'),
-       (2, 2, true, '''While + verb''', '-(으)면서 -해요');
+       (2, 2, true, '''While + verb''', '-(으)면서 -해요'),
+       (3, 3, true, null, '__ 어떤 것 같아요?'),
+       (4, 3, true, null, '__은/는 괜찮아요.'),
+       (5, 3, true, null, '__은/는 별로예요.');
 
 INSERT INTO key_expression_example(key_expression_id, example)
 VALUES (1, '인사동**에 가요.**'),
@@ -15,15 +18,33 @@ VALUES (1, '인사동**에 가요.**'),
        (2, '커피를 마시면서 친구와 대화해요.'),
        (2, '강아지와 산책하면서 노래를 들어요.'),
        (2, '자기 전에 음악을 들으면서 일기를 써요.'),
-       (2, '주말마다 자전거를 타면서 꽃구경을 해요.');
+       (2, '주말마다 자전거를 타면서 꽃구경을 해요.'),
+       (3, '여기 **어떤 것 같아요?**'),
+       (3, '저 신발은 **어떤 것 같아요?**'),
+       (3, '오늘 날씨는 **어떤 것 같아요?**'),
+       (3, '이 식당은 데이트 장소로 **어떤 것 같아요?**'),
+       (3, '이 음식은 아이들이 먹기에 **어떤 것 같아요?**'),
+       (3, '여기 **괜찮아요.**'),
+       (3, '저 신발**은 괜찮아요.**'),
+       (3, '오늘 날씨**는 괜찮아요.**'),
+       (3, '이 식당 데이트 장소**로 괜찮아요.**'),
+       (3, '이 음식은 아이들이 먹기에 **괜찮아요.**'),
+       (3, '여기 **별로예요.**'),
+       (3, '저 신발은 **별로예요.**'),
+       (3, '오늘 날씨는 **별로예요.**'),
+       (3, '이 식당은 데이트 장소로 **별로예요.**'),
+       (3, '이 음식은 아이들이 먹기에 **별로예요.**');
 
 INSERT INTO key_expression_activity(id, key_expression_id, question)
 VALUES (1, 1, '아래의 장소 그림을 보고 **__에 가요.**를 활용하여 문장을 완성해보세요.'),
        (2, 1, '아래의 인물과 장소 그림을 보고 **__(이)랑 __에 가요.**를 활용하여 문장을 완성해보세요.'),
        (3, 1, '아래의 교통 수단과 장소 그림을 보고 **__(으)로 __에 가요.**를 활용하여 문장을 완성해보세요.'),
-       (4, 2, '아래의 그림을 보고 **__(으)면서 __해요.**를 활용하여 문장을 완성해보세요.')
-ON CONFLICT (id)
-    DO UPDATE SET question = excluded.question;
+       (4, 2, '아래의 그림을 보고 **__(으)면서 __해요.**를 활용하여 문장을 완성해보세요.'),
+       (5, 3, '아래의 그림을 보고 **__ 어떤 것 같아요?**를 활용하여 문장을 완성해보세요.
+그리고 **__은/는 괜찮아요.** 또는 **__은/는 별로예요.**를 활용하여 답변해보세요.'),
+       (6, 3, '아래의 그림을 보고 **__은/는 __하기에 어떤 것 같아요?**를 활용하여 문장을 완성해보세요.
+
+그리고 **__은/는 __하기에 괜찮아요.** 또는 **__은/는 __하기에 별로예요.**를 활용하여 답변해보세요.');
 
 INSERT INTO key_expression_activity_example(activity_id, image_url, text)
 VALUES (1,
@@ -127,4 +148,33 @@ VALUES (1,
         '운전을 하다'),
        (4,
         'https://static.goraekorean.site/image/textbook/e4f1c2d0-8b3a-4c2b-9f7e-1f0a3b6c8e2d/expression/전화를하다.png',
-        '전화를 하다');
+        '전화를 하다'),
+       (5,
+        'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/드라마.png',
+        '드라마'),
+       (5,
+        'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/코트.png',
+        '코트'),
+       (5,
+        'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/카페.png',
+        '카페'),
+       (5,
+        'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/그림.png',
+        '그림'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/공원.png',
+        '공원'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/산책하다.png',
+        '산책하다'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/음악.png',
+        '음악'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/듣다.png',
+        '듣다'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/책.png',
+        '책'),
+       (6,
+        'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/한국어를공부하다.png',
+        '한국어를 공부하다'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/놀이터.png',
+        '놀이터'),
+       (6, 'https://static.goraekorean.site/image/textbook/e2a4c7b8-74d3-4e5a-bf9c-1c2f7d9a23e7/expression/아이들이놀다.png',
+        '아이들이 놀다');
