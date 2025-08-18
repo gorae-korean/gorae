@@ -34,8 +34,6 @@ public class TextbookKeyExpression {
     @Column(nullable = false)
     private String koreanKeyExpression;
 
-    @NotBlank
-    @Column(nullable = false)
     private String englishKeyExpression;
 
     @NotNull

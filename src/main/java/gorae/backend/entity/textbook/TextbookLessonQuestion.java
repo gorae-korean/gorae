@@ -20,8 +20,6 @@ public class TextbookLessonQuestion {
     @Column(nullable = false)
     private String koreanQuestion;
 
-    @NotBlank
-    @Column(nullable = false)
     private String englishQuestion;
 
     public TextbookLessonQuestionDto toDto(int sequence) {

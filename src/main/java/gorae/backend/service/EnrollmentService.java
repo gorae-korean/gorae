@@ -36,6 +36,7 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
+        // TODO: 같은 시간에 하나의 강좌만 수강 가능하게 변경해야 함
         Long studentId = Long.valueOf(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));

@@ -16,12 +16,8 @@ public class TextbookVocabulary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false)
     private String englishExampleSentence1;
 
-    @NotBlank
-    @Column(nullable = false)
     private String englishExampleSentence2;
 
     @NotBlank
