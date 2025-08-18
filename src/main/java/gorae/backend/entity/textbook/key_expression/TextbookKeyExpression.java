@@ -1,6 +1,7 @@
 package gorae.backend.entity.textbook.key_expression;
 
 import gorae.backend.dto.textbook.TextbookKeyExpressionDto;
+import gorae.backend.entity.textbook.Textbook;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,6 +21,10 @@ public class TextbookKeyExpression {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "textbook_id")
+    private Textbook textbook;
 
     @NotEmpty
     @ElementCollection
@@ -41,8 +46,7 @@ public class TextbookKeyExpression {
     private boolean isPublished;
 
     @NotEmpty
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "key_expression_id")
+    @OneToMany(mappedBy = "keyExpression", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TextbookKeyExpressionActivity> keyExpressionActivities = new ArrayList<>();
 
     public TextbookKeyExpressionDto toDto() {

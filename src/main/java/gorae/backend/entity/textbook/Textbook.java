@@ -1,5 +1,6 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.common.UrlUtils;
 import gorae.backend.constant.textbook.TextbookCategory;
 import gorae.backend.constant.textbook.TextbookLevel;
 import gorae.backend.dto.textbook.TextbookArticleDto;
@@ -14,7 +15,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.URL;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -51,11 +51,6 @@ public class Textbook extends BaseEntity {
 
     private String koreanSubtitle;
 
-    @NotBlank
-    @URL(message = "교재 대표 이미지 URL이 유효하지 않습니다.")
-    @Column(nullable = false)
-    private String thumbnailUrl;
-
     @NotNull
     @Min(1)
     @Column(nullable = false)
@@ -69,8 +64,7 @@ public class Textbook extends BaseEntity {
     @JoinColumn(name = "textbook_id")
     private List<TextbookLessonQuestion> lessonQuestions = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "textbook_id")
+    @OneToMany(mappedBy = "textbook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TextbookKeyExpression> keyExpressions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -99,10 +93,10 @@ public class Textbook extends BaseEntity {
 
     public TextbookSearchDto toDto() {
         return TextbookSearchDto.builder()
-                .id(this.getPublicId())
+                .id(getPublicId())
                 .title(englishTitle)
                 .subtitle(englishSubtitle)
-                .thumbnailUrl(thumbnailUrl)
+                .thumbnailUrl(UrlUtils.getTextbookThumbnailUrl(getPublicId()))
                 .isNew(isNew())
                 .readTime(readTime)
                 .tags(tags)
