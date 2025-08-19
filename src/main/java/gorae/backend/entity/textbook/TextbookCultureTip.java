@@ -1,12 +1,12 @@
 package gorae.backend.entity.textbook;
 
+import gorae.backend.common.UrlUtils;
 import gorae.backend.dto.textbook.TextbookCultureTipDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Getter
@@ -16,6 +16,10 @@ public class TextbookCultureTip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "textbook_id")
+    private Textbook textbook;
 
     @NotBlank
     @Column(nullable = false)
@@ -27,11 +31,11 @@ public class TextbookCultureTip {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
-    @URL(message = "이미지 URL이 유효하지 않습니다.")
-    @Column(length = 2048)
-    private String imageUrl;
+    private String fileName;
 
     public TextbookCultureTipDto toDto(int sequence) {
+        String imageUrl = UrlUtils.getCultureTipImageUrl(getTextbook().getPublicId(), fileName);
+
         return TextbookCultureTipDto.builder()
                 .sequence(sequence)
                 .title(title)

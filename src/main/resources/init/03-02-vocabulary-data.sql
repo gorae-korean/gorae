@@ -1,4 +1,4 @@
-TRUNCATE TABLE vocabulary;
+TRUNCATE vocabulary;
 
 INSERT INTO vocabulary(textbook_id, english_example_sentence1, korean_example_sentence1, english_example_sentence2,
                        korean_example_sentence2, english_vocabulary, korean_vocabulary, pronunciation)
@@ -102,44 +102,87 @@ VALUES (1,
         null, '처음 보는 사람에게는 예의를 지키세요.',
         'courtesy', '예의', 'Yeui'),
 
-    (3,
-     null, '선생님은 그 학생에게 이 책을 꼭 읽어보라고 권하셨어요.',
-     null, '의사 선생님은 그에게 운동을 꾸준히 하라고 권하셨어요.',
-     'recommend', '권하다', 'Gwonhada'),
+       (3,
+        null, '선생님은 그 학생에게 이 책을 꼭 읽어보라고 권하셨어요.',
+        null, '의사 선생님은 그에게 운동을 꾸준히 하라고 권하셨어요.',
+        'recommend', '권하다', 'Gwonhada'),
 
-    (3, null, '동생은 엄마 눈치를 살피며 조용히 공부했어요.',
-     null, '내 친구는 눈치가 빨라서 나의 기분을 빨리 알아채요.',
-     'sense', '눈치', 'Nunchi'),
+       (3, null, '동생은 엄마 눈치를 살피며 조용히 공부했어요.',
+        null, '내 친구는 눈치가 빨라서 나의 기분을 빨리 알아채요.',
+        'sense', '눈치', 'Nunchi'),
 
-    (3, null, '우리는 서로 양보하여 갈등 없이 문제를 해결해요.',
-     null, '그는 조금도 양보하지 않고 자기 주장을 내세웠어요.',
-     'concession', '양보', 'Yangbo'),
+       (3, null, '우리는 서로 양보하여 갈등 없이 문제를 해결해요.',
+        null, '그는 조금도 양보하지 않고 자기 주장을 내세웠어요.',
+        'concession', '양보', 'Yangbo'),
 
-    (3, null, '스트레스는 건강에 직접적으로 나쁜 영향을 줄 수 있어요.',
-     null, '저는 그 일과 직접적인 관련이 없어요.',
-     'direct', '직접적', 'Jikjeopjeok'),
+       (3, null, '스트레스는 건강에 직접적으로 나쁜 영향을 줄 수 있어요.',
+        null, '저는 그 일과 직접적인 관련이 없어요.',
+        'direct', '직접적', 'Jikjeopjeok'),
 
-    (3, null, '그녀는 항상 남을 배려해요.',
-     null, '늦은 시간까지 시끄럽게 하는 건 이웃을 배려하지 않는 행동이예요.',
-     'consider', '배려하다', 'Baeryeohada'),
+       (3, null, '그녀는 항상 남을 배려해요.',
+        null, '늦은 시간까지 시끄럽게 하는 건 이웃을 배려하지 않는 행동이예요.',
+        'consider', '배려하다', 'Baeryeohada'),
 
-    (3, null, '시험이 끝난 학생들의 표정이 밝아요.',
-     null, '아이는 선물이 마음에 들지 않아서 실망한 표정을 지었어요.',
-     'expression', '표정', 'Pyojeong'),
+       (3, null, '시험이 끝난 학생들의 표정이 밝아요.',
+        null, '아이는 선물이 마음에 들지 않아서 실망한 표정을 지었어요.',
+        'expression', '표정', 'Pyojeong'),
 
-    (3, null, '그녀는 항상 친절한 말투로 이야기해서 사람들이 좋아해요.',
-     null, '발표할 때는 분명한 말투로 자신감 있게 말하는 것이 중요해요.',
-     'tone', '말투', 'Maltu'),
+       (3, null, '그녀는 항상 친절한 말투로 이야기해서 사람들이 좋아해요.',
+        null, '발표할 때는 분명한 말투로 자신감 있게 말하는 것이 중요해요.',
+        'tone', '말투', 'Maltu'),
 
-    (3, null, '장소와 상황에 맞게 옷을 입어야 해요.',
-     null, '사람들은 힘든 상황을 함께 이겨내기 위해 노력했어요.',
-     'situation', '상황', 'Sanghwang'),
+       (3, null, '장소와 상황에 맞게 옷을 입어야 해요.',
+        null, '사람들은 힘든 상황을 함께 이겨내기 위해 노력했어요.',
+        'situation', '상황', 'Sanghwang'),
 
-    (3, null, '그 친구와 나는 특별한 관계예요.',
-     null, '한국에서는 사람 사이의 관계를 아주 중요하게 생각해요.',
-     'relationship', '관계', 'Gwangye'),
+       (3, null, '그 친구와 나는 특별한 관계예요.',
+        null, '한국에서는 사람 사이의 관계를 아주 중요하게 생각해요.',
+        'relationship', '관계', 'Gwangye'),
 
-    (3, null, '함께 게임을 하면 자연스럽게 친해질 수 있어요.',
-     null, '그는 처음 만난 사람과도 자연스럽게 대화할 수 있어요.',
-     'naturally', '자연스럽게', 'Jayeonseureopge');
+       (3, null, '함께 게임을 하면 자연스럽게 친해질 수 있어요.',
+        null, '그는 처음 만난 사람과도 자연스럽게 대화할 수 있어요.',
+        'naturally', '자연스럽게', 'Jayeonseureopge'),
+
+       (4, 'Selera saya dan dia mirip satu sama lain.', '그와 나는 취향이 서로 비슷하다.',
+        'Saya dan ayah memiliki kepribadian yang mirip.', '아빠와 나는 성격이 비슷하다.',
+        'Mirip / Serupa', '비슷하다', 'Biseutada'),
+
+       (4, 'Hari ini saya makan bersama guru.', '오늘은 선생님과 함께 식사한다.',
+        'Agar menjadi sehat, penting untuk makan secara teratur dan berolahraga.',
+        '건강해지기 위해서는 규칙적으로 식사하는 것과 운동하는 것이 중요하다.',
+        'Makan (secara formal)', '식사하다', 'Siksahada'),
+
+       (4, 'Di Korea ada berbagai budaya tradisional.', '한국에는 다양한 전통문화가 있다.',
+        'Di tempat ini, kita bisa makan makanan tradisional.', '이곳에서 전통 음식을 먹을 수 있다.',
+        'Tradisi', '전통', 'Jeontong'),
+
+       (4, 'Roti ini sangat renyah.', '이 빵은 바삭바삭하다.',
+        'Dia suka jeon (gorengan Korea) yang renyah.', '그녀는 바삭한 전을 좋아한다.',
+        'Renyah', '바삭하다', 'Basakada'),
+
+       (4, 'Aroma jeon sangat gurih.', '전 냄새가 너무 고소하다.',
+        'Dia suka rasa gurih dari susu.', '그는 우유의 고소한 맛을 좋아한다.',
+        'Gurih / Lezat (berminyak dan enak)', '고소하다', 'Gosohada'),
+
+       (4, 'Di sekolah, para siswa hidup dalam komunitas.', '학교에서 학생들은 공동체 생활을 한다.',
+        'Anggota suatu komunitas biasanya memiliki nilai yang mirip.', '한 공동체의 구성원은 비슷한 가치관을 가진다.',
+        'Komunitas', '공동체', 'Gongdongche'),
+
+       (4, 'Adik saya punya kebiasaan menyilangkan kaki.', '동생은 다리를 꼬는 습관이 있다.',
+        'Sulit untuk menghilangkan kebiasaan buruk.', '나쁜 습관을 고치는 것은 어렵다.',
+        'Kebiasaan', '습관', 'Seupgwan'),
+
+       (4, 'Karena internet tidak tersambung dengan baik, saya tidak bisa ikut kelas.', '인터넷이 잘 연결되지 않아서 수업에 참여할 수 없다.',
+        'Jalan ini langsung terhubung ke restoran, jadi mudah untuk berpindah tempat.',
+        '이 길은 식당과 바로 연결되어 있어서 이동하기 편하다.',
+        'Terhubung / Tersambung', '연결되다', 'Yeongyeoldoeda'),
+
+       (4, 'Begitu sampai di rumah, perasaanku menjadi tenang.', '집에 오니 기분이 안정된다.',
+        'Saya merasa gugup, tetapi karena ada teman di samping, hati saya menjadi tenang.',
+        '긴장했지만, 친구가 옆에 있으니 마음이 안정된다.',
+        'Tenang / Stabil / Menjadi nyaman', '안정되다', 'Anjeongdoeda'),
+
+       (4, 'Perjalanan kali ini adalah pengalaman yang sangat baru.', '이번 여행은 아주 새로운 경험이었다.',
+        'Dia merasa sulit untuk bertemu orang baru.', '그녀는 새로운 사람을 만나는 것이 힘들다.',
+        'Baru', '새로운', 'Saeroun');
 

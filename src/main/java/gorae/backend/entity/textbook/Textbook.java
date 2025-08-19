@@ -56,8 +56,7 @@ public class Textbook extends BaseEntity {
     @Column(nullable = false)
     private int readTime;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "textbook_id")
+    @OneToMany(mappedBy = "textbook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TextbookCultureTip> cultureTips = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
