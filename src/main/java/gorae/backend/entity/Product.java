@@ -3,15 +3,14 @@ package gorae.backend.entity;
 import gorae.backend.common.DiscountCalculator;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.product.ProductDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,6 +31,13 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private int count;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "product_benefit",
+            joinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<String> benefits = new HashSet<>();
+
     public ProductDto toDto() {
         return ProductDto.builder()
                 .id(getPublicId())
@@ -42,6 +48,7 @@ public class Product extends BaseEntity {
                 .currencyCode(currencyCode)
                 .count(count)
                 .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
+                .benefits(benefits)
                 .build();
     }
 }

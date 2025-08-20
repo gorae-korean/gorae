@@ -102,7 +102,7 @@ public class CheckoutService {
         UUID studentId = student.getPublicId();
         Product product = order.getProduct();
 
-        log.info("[Service] Product ordered by studentId: {}, product: {}", studentId, product.getName());
+        log.info("[Service] Product ordered by student: {}, product: {}", studentId, product.getName());
 
         if (product.getName() == ProductName.FIRST_CLASS) {
             student.addFirstTicket();
@@ -111,7 +111,7 @@ public class CheckoutService {
         }
 
         studentRepository.save(student);
-        log.info("[Service] CompleteCheckout succeeded for order: {}, studentId: {}", orderId, studentId);
+        log.info("[Service] CompleteCheckout succeeded for order: {}, student: {}", orderId, studentId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

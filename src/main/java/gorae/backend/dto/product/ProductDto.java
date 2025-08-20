@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -31,6 +32,9 @@ public record ProductDto(
         String currencyCode,
         
         @Schema(description = "할인 여부", example = "true")
-        boolean hasDiscount
+        boolean hasDiscount,
+
+        @Schema(description = "장점", example = "[\"1:4 group lesson\"]")
+        Set<String> benefits
 ) {
 }
