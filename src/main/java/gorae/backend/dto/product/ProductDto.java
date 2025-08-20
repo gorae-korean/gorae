@@ -23,13 +23,13 @@ public record ProductDto(
 
         @Schema(description = "할인된 가격", example = "8.00")
         BigDecimal discountedPrice,
-
+        
         @Schema(description = "할인율", example = "10")
         BigDecimal discountPercentage,
 
         @Schema(description = "화폐 단위", example = "USD")
         String currencyCode,
-
+        
         @Schema(description = "할인 여부", example = "true")
         boolean hasDiscount
 ) {

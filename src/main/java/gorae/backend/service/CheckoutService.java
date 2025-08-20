@@ -80,7 +80,7 @@ public class CheckoutService {
                         .build()
         );
 
-        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
+        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getDiscountedPrice().toString());
         PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
         return CreateOrderRequestDto.builder()
                 .intent(PaypalOrderIntent.CAPTURE)
@@ -103,17 +103,14 @@ public class CheckoutService {
         Product product = order.getProduct();
 
         log.info("[Service] Product ordered by studentId: {}, product: {}", studentId, product.getName());
-        switch (product.getName()) {
-            case FIRST_CLASS -> {
-                student.addFirstTicket();
-                studentRepository.save(student);
-            }
-            case EIGHT_CLASSES_ONE_TO_TWO -> {
-                student.addMonthlyTickets(product.getCount());
-                studentRepository.save(student);
-            }
-            default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
+
+        if (product.getName() == ProductName.FIRST_CLASS) {
+            student.addFirstTicket();
+        } else {
+            student.addMonthlyTickets(product.getCount());
         }
+
+        studentRepository.save(student);
         log.info("[Service] CompleteCheckout succeeded for order: {}, studentId: {}", orderId, studentId);
     }
 
