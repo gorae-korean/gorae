@@ -50,7 +50,7 @@ public class CheckoutService {
         UUID studentPublicId = student.getPublicId();
         log.info("[Service] Checkout started for member: {}", studentPublicId);
 
-        if (!student.isFirst() && product.getName() == ProductName.FIRST_TICKET) {
+        if (!student.isFirst() && product.getName() == ProductName.FIRST_CLASS) {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
@@ -80,7 +80,7 @@ public class CheckoutService {
                         .build()
         );
 
-        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getPrice().toString());
+        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getDiscountedPrice().toString());
         PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
         return CreateOrderRequestDto.builder()
                 .intent(PaypalOrderIntent.CAPTURE)
@@ -99,19 +99,19 @@ public class CheckoutService {
         checkoutOrderRepository.save(order);
 
         Student student = order.getStudent();
+        UUID studentId = student.getPublicId();
         Product product = order.getProduct();
-        switch (product.getName()) {
-            case FIRST_TICKET -> {
-                student.addFirstTicket();
-                studentRepository.save(student);
-            }
-            case MONTHLY_TICKETS -> {
-                student.addMonthlyTickets();
-                studentRepository.save(student);
-            }
-            default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
+
+        log.info("[Service] Product ordered by student: {}, product: {}", studentId, product.getName());
+
+        if (product.getName() == ProductName.FIRST_CLASS) {
+            student.addFirstTicket();
+        } else {
+            student.addMonthlyTickets(product.getCount());
         }
-        log.info("[Service] CompleteCheckout succeeded for order: {}", orderId);
+
+        studentRepository.save(student);
+        log.info("[Service] CompleteCheckout succeeded for order: {}, student: {}", orderId, studentId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

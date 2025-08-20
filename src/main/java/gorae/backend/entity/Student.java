@@ -55,8 +55,8 @@ public class Student extends Member {
         tickets.add(ticket);
     }
 
-    public void addMonthlyTickets() {
-        for (int i = 0; i < 8; i++) {
+    public void addMonthlyTickets(int count) {
+        for (int i = 0; i < count; i++) {
             addMonthlyTicket();
         }
     }
