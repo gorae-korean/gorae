@@ -1,5 +1,6 @@
 package gorae.backend.entity;
 
+import gorae.backend.common.DiscountCalculator;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.product.ProductDto;
 import jakarta.persistence.Column;
@@ -19,8 +20,11 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductName name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal price;
+
+    @Column(nullable = false, precision = 8, scale = 2)
+    private BigDecimal discountedPrice;
 
     @Column(nullable = false)
     private String currencyCode;
@@ -28,16 +32,16 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private int count;
 
-    @Column(nullable = false)
-    private boolean isAvailable = true;
-
     public ProductDto toDto() {
         return ProductDto.builder()
                 .id(getPublicId())
-                .name(name)
+                .name(name.getKey())
                 .price(price)
+                .discountedPrice(discountedPrice)
+                .discountPercentage(DiscountCalculator.getDiscountPercentage(price, discountedPrice))
                 .currencyCode(currencyCode)
                 .count(count)
+                .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
                 .build();
     }
 }

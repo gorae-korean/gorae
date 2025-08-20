@@ -50,7 +50,7 @@ public class CheckoutService {
         UUID studentPublicId = student.getPublicId();
         log.info("[Service] Checkout started for member: {}", studentPublicId);
 
-        if (!student.isFirst() && product.getName() == ProductName.FIRST_TICKET) {
+        if (!student.isFirst() && product.getName() == ProductName.FIRST_CLASS) {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
@@ -99,19 +99,22 @@ public class CheckoutService {
         checkoutOrderRepository.save(order);
 
         Student student = order.getStudent();
+        UUID studentId = student.getPublicId();
         Product product = order.getProduct();
+
+        log.info("[Service] Product ordered by studentId: {}, product: {}", studentId, product.getName());
         switch (product.getName()) {
-            case FIRST_TICKET -> {
+            case FIRST_CLASS -> {
                 student.addFirstTicket();
                 studentRepository.save(student);
             }
-            case MONTHLY_TICKETS -> {
-                student.addMonthlyTickets();
+            case EIGHT_CLASSES_ONE_TO_TWO -> {
+                student.addMonthlyTickets(product.getCount());
                 studentRepository.save(student);
             }
             default -> throw new CustomException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
-        log.info("[Service] CompleteCheckout succeeded for order: {}", orderId);
+        log.info("[Service] CompleteCheckout succeeded for order: {}, studentId: {}", orderId, studentId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

@@ -1,6 +1,5 @@
 package gorae.backend.controller;
 
-import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.product.ProductDto;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +26,8 @@ public class ProductController {
     @CommonApiResponses(summary = "상품 목록 조회")
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts(Authentication authentication) {
-        String subject = JwtUtils.getSubject(authentication);
-        log.info("[API] GetProducts requested from sub: {}", subject);
-
+    public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts() {
         List<ProductDto> products = productService.getProducts();
-        log.info("[API] GetProducts responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, products));
     }
 }
