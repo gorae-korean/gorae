@@ -36,7 +36,7 @@ public class CheckoutController {
                             value = """
                                     {
                                         "status": "SUCCESS",
-                                        "data": "https://www.paypal.com/checkoutnow?token=5O190127TN364715T"
+                                        "value": "https://www.paypal.com/checkoutnow?token=5O190127TN364715T"
                                     }
                                     """
                     )
@@ -52,7 +52,7 @@ public class CheckoutController {
                                     value = """
                                             {
                                                 "status": "ERROR",
-                                                "data": {
+                                                "value": {
                                                     "message": "첫 구매 혜택이 이미 사용되었습니다.",
                                                     "code": "CANNOT_BUY_THE_FIRST_PRODUCT"
                                                 }
@@ -64,7 +64,7 @@ public class CheckoutController {
                                     value = """
                                             {
                                                 "status": "ERROR",
-                                                "data": {
+                                                "value": {
                                                     "message": "리다이렉션 링크를 찾을 수 없습니다.",
                                                     "code": "CANNOT_FIND_REDIRECTION_LINK"
                                                 }
@@ -82,7 +82,7 @@ public class CheckoutController {
                             value = """
                                     {
                                         "status": "ERROR",
-                                        "data": {
+                                        "value": {
                                             "message": "상품이 존재하지 않습니다.",
                                             "code": "PRODUCT_NOT_FOUND"
                                         }
