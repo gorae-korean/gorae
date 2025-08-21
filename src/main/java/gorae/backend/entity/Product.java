@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,7 +36,7 @@ public class Product extends BaseEntity {
             name = "product_benefit",
             joinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<String> benefits = new HashSet<>();
+    private List<String> benefits = new ArrayList<>();
 
     public ProductDto toDto() {
         return ProductDto.builder()

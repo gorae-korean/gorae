@@ -1,8 +1,6 @@
 -- product 테이블
 INSERT INTO product (id, public_id, created_at, updated_at, name, price, discounted_price, currency_code, count)
-VALUES (1, '3f8c2a4e-9b2e-4a13-b2d3-4c6e8e8f0a12', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FIRST_CLASS',
-        '1.00', '1.00', 'USD', 1),
-       (2, '7b1f0e3d-2e49-4c53-bf10-8a1e7e1d3c45', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_FOUR',
+VALUES (2, '7b1f0e3d-2e49-4c53-bf10-8a1e7e1d3c45', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_FOUR',
         '25.00', '22.00', 'USD', 4),
        (3, '5e6d8c7a-1f23-4b8b-9c12-7d6e2e4f5b67', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_TWO',
         '41.00', '36.00', 'USD', 4),
@@ -12,19 +10,15 @@ VALUES (1, '3f8c2a4e-9b2e-4a13-b2d3-4c6e8e8f0a12', CURRENT_TIMESTAMP, CURRENT_TI
         '82.00', '65.00', 'USD', 8);
 
 INSERT INTO product_benefit (product_id, benefits)
-VALUES (1, '1:4 group lesson'),
-       (1, '1-hour live Google Meet class'),
-       (1, 'Post-class feedback'),
-       (1, 'One-time purchase only'),
-       (2, '1:4 group lesson'),
-       (2, '1-hour live Google Meet class'),
+VALUES (2, '1:4 group lesson'),
+       (2, '1-hour Google Meet class'),
        (2, 'Post-class feedback'),
        (3, '1:2 group lesson'),
-       (3, '1-hour live Google Meet class'),
+       (3, '1-hour Google Meet class'),
        (3, 'Post-class feedback'),
        (4, '1:4 group lesson'),
-       (4, '1-hour live Google Meet class'),
+       (4, '1-hour Google Meet class'),
        (4, 'Post-class feedback'),
        (5, '1:2 group lesson'),
-       (5, '1-hour live Google Meet class'),
+       (5, '1-hour Google Meet class'),
        (5, 'Post-class feedback');

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -35,6 +35,6 @@ public record ProductDto(
         boolean hasDiscount,
 
         @Schema(description = "장점", example = "[\"1:4 group lesson\"]")
-        Set<String> benefits
+        List<String> benefits
 ) {
 }
