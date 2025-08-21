@@ -45,6 +45,7 @@ public class Product extends BaseEntity {
                 .price(price)
                 .discountedPrice(discountedPrice)
                 .discountPercentage(DiscountCalculator.getDiscountPercentage(price, discountedPrice))
+                .discountAmount(DiscountCalculator.getDiscountAmount(price, discountedPrice))
                 .currencyCode(currencyCode)
                 .count(count)
                 .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))

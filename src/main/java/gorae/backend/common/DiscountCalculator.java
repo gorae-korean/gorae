@@ -23,6 +23,10 @@ public final class DiscountCalculator {
                 .setScale(0, RoundingMode.HALF_UP);
     }
 
+    public static BigDecimal getDiscountAmount(BigDecimal price, BigDecimal discountedPrice) {
+        return price.subtract(discountedPrice);
+    }
+
     public static boolean getHasDiscount(BigDecimal price, BigDecimal discountedPrice) {
         return discountedPrice != null && discountedPrice.compareTo(price) < 0;
     }

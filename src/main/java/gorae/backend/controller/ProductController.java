@@ -10,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -29,5 +31,13 @@ public class ProductController {
     public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts() {
         List<ProductDto> products = productService.getProducts();
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, products));
+    }
+
+    @CommonApiResponses(summary = "특정 상품 정보 조회")
+    @ApiResponse(responseCode = "200", description = "특정 상품 정보 조회 성공")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<ProductDto>> getProduct(@PathVariable UUID id) {
+        ProductDto product = productService.getProduct(id);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, product));
     }
 }

@@ -24,6 +24,9 @@ public record ProductDto(
 
         @Schema(description = "할인된 가격", example = "8.00")
         BigDecimal discountedPrice,
+
+        @Schema(description = "할인된 금액", example = "2.00")
+        BigDecimal discountAmount,
         
         @Schema(description = "할인율", example = "10")
         BigDecimal discountPercentage,
