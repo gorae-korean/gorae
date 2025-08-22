@@ -1,8 +1,12 @@
 package gorae.backend.controller;
 
+import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
+import gorae.backend.dto.checkout.ApproveRequestDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import gorae.backend.service.CheckoutService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -96,6 +100,10 @@ public class CheckoutController {
             Authentication authentication,
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
+        if (dto.productId() == null) {
+            throw new CustomException(ErrorStatus.INVALID_PRODUCT_ID);
+        }
+
         String userId = getId(authentication);
         String subject = getSubject(authentication);
         log.info("[API] Checkout requested from sub: {}", subject);
@@ -106,22 +114,35 @@ public class CheckoutController {
     }
 
     @Hidden
-    @GetMapping("/complete")
-    public ResponseEntity<ResponseDto<String>> completeCheckout(HttpServletRequest request) {
-        String orderId = request.getParameter("token");
-        log.info("[API] CompleteCheckout requested from orderId: {}", orderId);
-        checkoutService.completeCheckout(orderId);
-        log.info("[API] CompleteCheckout responded to orderId: {}", orderId);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "구매가 정상적으로 완료되었습니다."));
-    }
-
-    @Hidden
     @GetMapping("/cancel")
     public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
+        if (orderId == null || orderId.isBlank()) {
+            throw new CustomException(ErrorStatus.INVALID_ORDER_ID);
+        }
+
         log.info("[API] CancelCheckout requested from orderId: {}", orderId);
         checkoutService.cancelCheckout(orderId);
         log.info("[API] CancelCheckout responded to orderId: {}", orderId);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "주문이 취소되었습니다."));
+    }
+
+    @CommonApiResponses(summary = "결제 검증 및 완료")
+    @ApiResponse(responseCode = "200", description = "결제 검증 및 완료 성공")
+    @PostMapping("/approve")
+    public ResponseEntity<ResponseDto<Void>> approveCheckout(
+            Authentication authentication, @RequestBody ApproveRequestDto dto) throws Exception {
+        if (dto.orderId() == null || dto.orderId().isBlank()) {
+            throw new CustomException(ErrorStatus.INVALID_ORDER_ID);
+        }
+
+        String userId = getId(authentication);
+        String subject = JwtUtils.getSubject(authentication);
+        String orderId = dto.orderId();
+        log.info("[API] ApproveCheckout requested from subject: {}, orderId: {}", subject, orderId);
+        checkoutService.approveCheckout(userId, orderId);
+
+        log.info("[API] ApproveCheckout responded to subject: {}, orderId: {}", subject, orderId);
+        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, null));
     }
 }

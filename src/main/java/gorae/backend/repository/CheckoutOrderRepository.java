@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CheckoutOrderRepository extends JpaRepository<CheckoutOrder, Long> {
     Optional<CheckoutOrder> findByOrderId(String orderId);
+
+    Optional<CheckoutOrder> findByOrderIdAndStudent_Id(String orderId, Long studentId);
 }

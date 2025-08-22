@@ -1,12 +1,13 @@
 package gorae.backend.service;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
+import gorae.backend.constant.OrderStatus;
 import gorae.backend.constant.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
-import gorae.backend.dto.client.paypal.PaymentSource;
-import gorae.backend.dto.client.paypal.CreateOrderDto;
 import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
+import gorae.backend.dto.client.paypal.OrderDto;
+import gorae.backend.dto.client.paypal.PaymentSource;
 import gorae.backend.dto.client.paypal.PurchaseUnit;
 import gorae.backend.entity.CheckoutOrder;
 import gorae.backend.entity.Product;
@@ -30,6 +31,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CheckoutService {
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Value("${spring.baseurl}")
     private String baseUrl;
 
@@ -55,7 +59,7 @@ public class CheckoutService {
         }
 
         CreateOrderRequestDto createOrderRequestDto = getCreateOrderRequestDto(product);
-        CreateOrderDto response = paypalHttpClient.createOrder(studentPublicId, createOrderRequestDto);
+        OrderDto response = paypalHttpClient.createOrder(studentPublicId, createOrderRequestDto);
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
                 .orderId(response.id())
                 .status(response.status())
@@ -73,7 +77,7 @@ public class CheckoutService {
     private CreateOrderRequestDto getCreateOrderRequestDto(Product product) {
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
-                        .returnUrl(baseUrl + "/checkouts/complete")
+                        .returnUrl(frontendUrl + "/approve")
                         .cancelUrl(baseUrl + "/checkouts/cancel")
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
                         .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
@@ -90,31 +94,6 @@ public class CheckoutService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void completeCheckout(String orderId) {
-        CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
-        log.info("[Service] CompleteCheckout started for order: {}", orderId);
-
-        order.completeOrder();
-        checkoutOrderRepository.save(order);
-
-        Student student = order.getStudent();
-        UUID studentId = student.getPublicId();
-        Product product = order.getProduct();
-
-        log.info("[Service] Product ordered by student: {}, product: {}", studentId, product.getName());
-
-        if (product.getName() == ProductName.FIRST_CLASS) {
-            student.addFirstTicket();
-        } else {
-            student.addMonthlyTickets(product.getCount());
-        }
-
-        studentRepository.save(student);
-        log.info("[Service] CompleteCheckout succeeded for order: {}, student: {}", orderId, studentId);
-    }
-
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void cancelCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
@@ -123,5 +102,46 @@ public class CheckoutService {
         order.cancelOrder();
         checkoutOrderRepository.save(order);
         log.info("[Service] CancelCheckout succeeded for order: {}", orderId);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void approveCheckout(String userId, String orderId) throws Exception {
+        Student student = studentRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+        CheckoutOrder order = checkoutOrderRepository.findByOrderIdAndStudent_Id(orderId, student.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
+        UUID studentPublicId = student.getPublicId();
+
+        log.info("[Service] ApproveCheckout started for member: {}, order: {}", studentPublicId, orderId);
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            log.info("[Service] Order {} is already completed", orderId);
+            log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
+            return;
+        }
+
+        OrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
+        switch (orderStatus) {
+            case COMPLETED -> {
+                log.info("[Service] Order {} completed in Paypal, syncing locally", orderId);
+                order.completeOrder();
+                student.addMonthlyTickets(order.getProduct().getCount());
+                checkoutOrderRepository.save(order);
+                studentRepository.save(student);
+            }
+            case APPROVED -> {
+                OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
+                if (orderDto.status() != OrderStatus.COMPLETED) {
+                    throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+                }
+
+                order.completeOrder();
+                student.addMonthlyTickets(order.getProduct().getCount());
+                checkoutOrderRepository.save(order);
+                studentRepository.save(student);
+            }
+            case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
+            default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+        }
+        log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
     }
 }
