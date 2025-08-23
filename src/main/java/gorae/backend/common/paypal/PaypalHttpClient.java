@@ -1,9 +1,11 @@
 package gorae.backend.common.paypal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gorae.backend.dto.client.paypal.PaypalAccessTokenDto;
-import gorae.backend.dto.client.paypal.CreateOrderDto;
 import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
+import gorae.backend.dto.client.paypal.OrderDto;
+import gorae.backend.dto.client.paypal.PaypalAccessTokenDto;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +21,8 @@ import java.util.Base64;
 import java.util.UUID;
 
 import static gorae.backend.constant.endpoint.Endpoint.createUrl;
-import static gorae.backend.constant.endpoint.PaypalEndpoint.*;
+import static gorae.backend.constant.endpoint.PaypalEndpoint.GET_ACCESS_TOKEN;
+import static gorae.backend.constant.endpoint.PaypalEndpoint.ORDER_CHECKOUT;
 
 @Slf4j
 @Component
@@ -57,12 +60,13 @@ public class PaypalHttpClient {
             log.info("[Paypal] GetAccessToken succeeded");
         } else {
             log.warn("[Paypal] GetAccessToken failed for code: {}", statusCode);
+            throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 
         return objectMapper.readValue(content, PaypalAccessTokenDto.class);
     }
 
-    public CreateOrderDto createOrder(UUID memberId, CreateOrderRequestDto orderRequestDto) throws Exception {
+    public OrderDto createOrder(UUID memberId, CreateOrderRequestDto orderRequestDto) throws Exception {
         PaypalAccessTokenDto paypalAccessTokenDto = getAccessToken();
         String payload = objectMapper.writeValueAsString(orderRequestDto);
 
@@ -80,13 +84,66 @@ public class PaypalHttpClient {
         log.debug(content);
 
         int statusCode = response.statusCode();
-        if (statusCode == 200) {
+        if (statusCode == 200 || statusCode == 201) {
             log.info("[Paypal] CreateOrder succeeded for member: {}", memberId);
         } else {
             log.warn("[Paypal] CreateOrder failed for member: {}, code: {}", memberId, statusCode);
+            throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 
-        return objectMapper.readValue(content, CreateOrderDto.class);
+        return objectMapper.readValue(content, OrderDto.class);
+    }
+
+    public OrderDto getOrder(UUID memberId, String orderId) throws Exception {
+        PaypalAccessTokenDto paypalAccessTokenDto = getAccessToken();
+        log.info("[Paypal] GetOrder started for member: {}, order: {}", memberId, orderId);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), ORDER_CHECKOUT) + "/" + orderId))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + paypalAccessTokenDto.accessToken())
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        String content = response.body();
+        log.debug(content);
+
+        int statusCode = response.statusCode();
+        if (statusCode == 200) {
+            log.info("[Paypal] GetOrder succeeded for member: {} order: {}", memberId, orderId);
+        } else {
+            log.warn("[Paypal] GetOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
+            throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
+        }
+
+        return objectMapper.readValue(content, OrderDto.class);
+    }
+
+    public OrderDto captureOrder(UUID memberId, String orderId) throws Exception {
+        PaypalAccessTokenDto paypalAccessTokenDto = getAccessToken();
+        log.info("[Paypal] CaptureOrder started for order: {}", orderId);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(createUrl(paypalProperties.getBaseUrl(), ORDER_CHECKOUT) + "/" + orderId + "/capture"))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + paypalAccessTokenDto.accessToken())
+                .POST(HttpRequest.BodyPublishers.ofString("{}"))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        String content = response.body();
+        log.debug(content);
+
+        int statusCode = response.statusCode();
+        if (statusCode == 200 || statusCode == 201) {
+            log.info("[Paypal] CaptureOrder succeeded for member: {} order: {}", memberId, orderId);
+        } else {
+            log.warn("[Paypal] CaptureOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
+            throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
+        }
+
+        return objectMapper.readValue(content, OrderDto.class);
     }
 
     private String encodeBasicCredentials() {

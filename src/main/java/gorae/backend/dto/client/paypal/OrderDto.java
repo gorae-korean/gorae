@@ -9,7 +9,7 @@ import java.util.List;
  * API 문서 바로가기
  * </a>
  */
-public record CreateOrderDto(
+public record OrderDto(
         String id,
         OrderStatus status,
         List<Link> links

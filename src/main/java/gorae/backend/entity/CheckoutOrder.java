@@ -32,8 +32,8 @@ public class CheckoutOrder extends BaseEntity {
     private Instant paymentDate;
 
     public void completeOrder() {
-        paymentDate = Instant.now();
         status = OrderStatus.COMPLETED;
+        paymentDate = Instant.now();
     }
 
     public void cancelOrder() {

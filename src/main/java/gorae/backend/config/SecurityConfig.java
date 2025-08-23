@@ -49,7 +49,6 @@ public class SecurityConfig {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
 
         MvcRequestMatcher[] permitAllWhiteList = {
-                mvc.pattern("/checkouts/complete/**"),
                 mvc.pattern("/checkouts/cancel/**"),
                 mvc.pattern("/textbooks"),
                 mvc.pattern("/textbooks/categories"),
