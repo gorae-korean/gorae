@@ -1,4 +1,4 @@
-package gorae.backend.service;
+package gorae.backend.service.checkout;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
 import gorae.backend.constant.OrderStatus;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -38,6 +39,7 @@ public class CheckoutService {
     private String baseUrl;
 
     private final PaypalHttpClient paypalHttpClient;
+    private final CheckoutCompletionService checkoutCompletionService;
     private final CheckoutOrderRepository checkoutOrderRepository;
     private final StudentRepository studentRepository;
     private final ProductRepository productRepository;
@@ -58,6 +60,26 @@ public class CheckoutService {
             throw new CustomException(ErrorStatus.CANNOT_BUY_THE_FIRST_PRODUCT);
         }
 
+        Optional<CheckoutOrder> optionalExistingOrder = checkoutOrderRepository
+                .findByStudentAndProductAndStatus(student, product, OrderStatus.PAYER_ACTION_REQUIRED);
+        if (optionalExistingOrder.isPresent()) {
+            CheckoutOrder existingOrder = optionalExistingOrder.get();
+            OrderDto existingOrderDto = paypalHttpClient.getOrder(studentPublicId, existingOrder.getOrderId());
+            OrderStatus actualStatus = existingOrderDto.status();
+
+            switch (actualStatus) {
+                case PAYER_ACTION_REQUIRED -> {
+                    return getPayNowUrl(existingOrderDto);
+                }
+                case APPROVED -> throw new CustomException(ErrorStatus.PAYMENT_BEING_PROCESSED);
+                case COMPLETED -> {
+                    log.info("[Checkout] Order {} completed in Paypal, syncing locally", existingOrder.getOrderId());
+                    checkoutCompletionService.handleCompletedOrder(existingOrder, student);
+                }
+                default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+            }
+        }
+
         CreateOrderRequestDto createOrderRequestDto = getCreateOrderRequestDto(product);
         OrderDto response = paypalHttpClient.createOrder(studentPublicId, createOrderRequestDto);
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
@@ -68,10 +90,14 @@ public class CheckoutService {
                 .build();
 
         checkoutOrderRepository.save(checkoutOrder);
-        String href = response.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
-                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
+        String href = getPayNowUrl(response);
         log.info("[Service] Checkout succeeded for member: {}, checkout: {}", studentPublicId, checkoutOrder.getPublicId());
         return href;
+    }
+
+    private static String getPayNowUrl(OrderDto orderDto) {
+        return orderDto.links().stream().filter(link -> PAYER_ACTION_REL.equals(link.rel())).findFirst()
+                .orElseThrow(() -> new CustomException(ErrorStatus.CANNOT_FIND_REDIRECTION_LINK)).href();
     }
 
     private CreateOrderRequestDto getCreateOrderRequestDto(Product product) {
@@ -122,22 +148,15 @@ public class CheckoutService {
         OrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
         switch (orderStatus) {
             case COMPLETED -> {
-                log.info("[Service] Order {} completed in Paypal, syncing locally", orderId);
-                order.completeOrder();
-                student.addMonthlyTickets(order.getProduct().getCount());
-                checkoutOrderRepository.save(order);
-                studentRepository.save(student);
+                log.info("[ApproveCheckout] Order {} completed in Paypal, syncing locally", orderId);
+                checkoutCompletionService.handleCompletedOrder(order, student);
             }
             case APPROVED -> {
                 OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
                 if (orderDto.status() != OrderStatus.COMPLETED) {
                     throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
                 }
-
-                order.completeOrder();
-                student.addMonthlyTickets(order.getProduct().getCount());
-                checkoutOrderRepository.save(order);
-                studentRepository.save(student);
+                checkoutCompletionService.handleCompletedOrder(order, student);
             }
             case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
             default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);

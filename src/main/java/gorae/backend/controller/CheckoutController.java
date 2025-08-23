@@ -7,7 +7,7 @@ import gorae.backend.dto.checkout.ApproveRequestDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
-import gorae.backend.service.CheckoutService;
+import gorae.backend.service.checkout.CheckoutService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

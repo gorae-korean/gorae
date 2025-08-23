@@ -1,6 +1,5 @@
 package gorae.backend.exception;
 
-import gorae.backend.entity.BaseEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,7 +58,8 @@ public enum ErrorStatus {
     TICKET_NOT_FOUND(HttpStatus.NOT_FOUND, "수강권이 존재하지 않습니다."),
 
     // 409 CONFLICT
-    ALREADY_VOIDED_ORDER(HttpStatus.CONFLICT, "이미 취소된 주문입니다.");
+    ALREADY_VOIDED_ORDER(HttpStatus.CONFLICT, "이미 취소된 주문입니다."),
+    PAYMENT_BEING_PROCESSED(HttpStatus.CONFLICT, "이미 진행 중인 결제가 있습니다.");
 
     private final HttpStatus status;
     private final String message;
