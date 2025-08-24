@@ -1,6 +1,6 @@
 package gorae.backend.dto.client.paypal;
 
-import gorae.backend.constant.OrderStatus;
+import gorae.backend.constant.paypal.PaypalOrderStatus;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public record OrderDto(
         String id,
-        OrderStatus status,
+        PaypalOrderStatus status,
         List<Link> links
 ) {
     public record Link(String href, String rel, String method) {

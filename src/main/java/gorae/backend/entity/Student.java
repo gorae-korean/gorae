@@ -49,16 +49,16 @@ public class Student extends Member {
         Ticket ticket = Ticket.builder()
                 .student(this)
                 .startTime(now)
-                .endTime(now.plus(30, ChronoUnit.DAYS))
+                .endTime(now.plus(28, ChronoUnit.DAYS))
                 .status(TicketStatus.ACTIVE)
                 .build();
         tickets.add(ticket);
         return ticket;
     }
 
-    public List<Ticket> addMonthlyTickets(int count) {
+    public List<Ticket> addMonthlyTickets(Product product) {
         List<Ticket> tickets1 = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < product.getCount(); i++) {
             tickets1.add(addMonthlyTicket());
         }
         return tickets1;

@@ -1,6 +1,6 @@
 package gorae.backend.entity;
 
-import gorae.backend.constant.OrderStatus;
+import gorae.backend.constant.CheckoutOrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class CheckoutOrder extends BaseEntity {
     private String orderId;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private CheckoutOrderStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
@@ -32,11 +32,11 @@ public class CheckoutOrder extends BaseEntity {
     private Instant paymentDate;
 
     public void completeOrder() {
-        status = OrderStatus.COMPLETED;
+        status = CheckoutOrderStatus.COMPLETED;
         paymentDate = Instant.now();
     }
 
-    public void cancelOrder() {
-        status = OrderStatus.VOIDED;
+    public void updateStatus(CheckoutOrderStatus status) {
+        this.status = status;
     }
 }

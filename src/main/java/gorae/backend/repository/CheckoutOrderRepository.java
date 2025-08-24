@@ -1,6 +1,6 @@
 package gorae.backend.repository;
 
-import gorae.backend.constant.OrderStatus;
+import gorae.backend.constant.CheckoutOrderStatus;
 import gorae.backend.entity.CheckoutOrder;
 import gorae.backend.entity.Product;
 import gorae.backend.entity.Student;
@@ -13,5 +13,5 @@ public interface CheckoutOrderRepository extends JpaRepository<CheckoutOrder, Lo
 
     Optional<CheckoutOrder> findByOrderIdAndStudent_Id(String orderId, Long studentId);
 
-    Optional<CheckoutOrder> findByStudentAndProductAndStatus(Student student, Product product, OrderStatus status);
+    Optional<CheckoutOrder> findByStudentAndProductAndStatus(Student student, Product product, CheckoutOrderStatus status);
 }
