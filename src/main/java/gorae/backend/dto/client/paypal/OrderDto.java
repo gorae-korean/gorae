@@ -1,6 +1,6 @@
 package gorae.backend.dto.client.paypal;
 
-import gorae.backend.constant.PaypalOrderStatus;
+import gorae.backend.constant.paypal.PaypalOrderStatus;
 
 import java.util.List;
 

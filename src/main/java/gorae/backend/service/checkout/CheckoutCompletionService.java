@@ -2,7 +2,6 @@ package gorae.backend.service.checkout;
 
 import gorae.backend.constant.CheckoutOrderStatus;
 import gorae.backend.entity.CheckoutOrder;
-import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
 import gorae.backend.repository.CheckoutOrderRepository;
 import gorae.backend.repository.TicketRepository;
@@ -21,16 +20,23 @@ public class CheckoutCompletionService {
     private final TicketRepository ticketRepository;
 
     @Transactional
-    public void handleCompletedOrder(CheckoutOrder order, Student student) {
+    public void handleCompletedOrder(CheckoutOrder order) {
         order.completeOrder();
-        List<Ticket> tickets = student.addMonthlyTickets(order.getProduct());
+        List<Ticket> tickets = order.getStudent().addMonthlyTickets(order.getProduct());
         checkoutOrderRepository.save(order);
         ticketRepository.saveAll(tickets);
+        log.info("[Service] Order {} completed in Paypal, syncing locally", order.getOrderId());
     }
 
     @Transactional
     public void handleFailedOrder(CheckoutOrder order) {
         order.updateStatus(CheckoutOrderStatus.FAILED);
+        checkoutOrderRepository.save(order);
+    }
+
+    @Transactional
+    public void handleApprovedOrder(CheckoutOrder order) {
+        order.updateStatus(CheckoutOrderStatus.APPROVED);
         checkoutOrderRepository.save(order);
     }
 

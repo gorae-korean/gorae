@@ -2,8 +2,8 @@ package gorae.backend.service.checkout;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
 import gorae.backend.constant.CheckoutOrderStatus;
-import gorae.backend.constant.PaypalOrderStatus;
-import gorae.backend.constant.PaypalOrderIntent;
+import gorae.backend.constant.paypal.PaypalOrderStatus;
+import gorae.backend.constant.paypal.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
@@ -36,9 +36,6 @@ public class CheckoutService {
     @Value("${frontend.url}")
     private String frontendUrl;
 
-    @Value("${spring.baseurl}")
-    private String baseUrl;
-
     private final PaypalHttpClient paypalHttpClient;
     private final CheckoutCompletionService checkoutCompletionService;
     private final CheckoutOrderRepository checkoutOrderRepository;
@@ -62,7 +59,7 @@ public class CheckoutService {
         }
 
         Optional<CheckoutOrder> optionalExistingOrder = checkoutOrderRepository
-                .findByStudentAndProductAndStatus(student, product, PaypalOrderStatus.PAYER_ACTION_REQUIRED);
+                .findByStudentAndProductAndStatus(student, product, CheckoutOrderStatus.PENDING);
         if (optionalExistingOrder.isPresent()) {
             CheckoutOrder existingOrder = optionalExistingOrder.get();
             OrderDto existingOrderDto = paypalHttpClient.getOrder(studentPublicId, existingOrder.getOrderId());
@@ -73,10 +70,7 @@ public class CheckoutService {
                     return getPayNowUrl(existingOrderDto);
                 }
                 case APPROVED -> throw new CustomException(ErrorStatus.PAYMENT_BEING_PROCESSED);
-                case COMPLETED -> {
-                    log.info("[Checkout] Order {} completed in Paypal, syncing locally", existingOrder.getOrderId());
-                    checkoutCompletionService.handleCompletedOrder(existingOrder, student);
-                }
+                case COMPLETED -> checkoutCompletionService.handleCompletedOrder(existingOrder);
                 default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
             }
         }
@@ -105,7 +99,7 @@ public class CheckoutService {
         PaymentSource.PaypalPaymentSource paymentSource = new PaymentSource.PaypalPaymentSource(
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
                         .returnUrl(frontendUrl + "/approve")
-                        .cancelUrl(baseUrl + "/checkouts/cancel")
+                        .cancelUrl(frontendUrl + "/pricing")
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
                         .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
                         .build()
@@ -137,8 +131,11 @@ public class CheckoutService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         CheckoutOrder order = checkoutOrderRepository.findByOrderIdAndStudent_Id(orderId, student.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
-        UUID studentPublicId = student.getPublicId();
+        if (!student.equals(order.getStudent())) {
+            throw new CustomException(ErrorStatus.NO_PERMISSIONS);
+        }
 
+        UUID studentPublicId = student.getPublicId();
         log.info("[Service] ApproveCheckout started for member: {}, order: {}", studentPublicId, orderId);
         if (order.getStatus() == CheckoutOrderStatus.COMPLETED) {
             log.info("[Service] Order {} is already completed", orderId);
@@ -148,17 +145,14 @@ public class CheckoutService {
 
         PaypalOrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
         switch (orderStatus) {
-            case COMPLETED -> {
-                log.info("[ApproveCheckout] Order {} completed in Paypal, syncing locally", orderId);
-                checkoutCompletionService.handleCompletedOrder(order, student);
-            }
+            case COMPLETED -> checkoutCompletionService.handleCompletedOrder(order);
             case APPROVED -> {
                 OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
                 if (orderDto.status() != PaypalOrderStatus.COMPLETED) {
                     checkoutCompletionService.handleFailedOrder(order);
                     throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
                 }
-                checkoutCompletionService.handleCompletedOrder(order, student);
+                checkoutCompletionService.handleCompletedOrder(order);
             }
             case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
             default -> {

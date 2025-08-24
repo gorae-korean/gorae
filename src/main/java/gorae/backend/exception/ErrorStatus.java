@@ -19,6 +19,7 @@ public enum ErrorStatus {
 
     INVALID_DROP(HttpStatus.BAD_REQUEST, "이미 취소되었거나 수강이 완료된 신청입니다."),
     INVALID_ORDER_ID(HttpStatus.BAD_REQUEST, "잘못된 주문 식별자입니다."),
+    INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "잘못된 주문 상태입니다."),
     INVALID_PRODUCT_ID(HttpStatus.BAD_REQUEST, "잘못된 제품 식별자입니다."),
     INVALID_USER_IDENTIFIER(HttpStatus.BAD_REQUEST, "잘못된 유저 식별자입니다."),
 
@@ -30,6 +31,7 @@ public enum ErrorStatus {
     START_TIME_HAS_PASSED(HttpStatus.BAD_REQUEST, "시작 시간이 이미 경과되어 강의를 생성할 수 없습니다."),
     TICKET_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 수강권입니다."),
     TICKET_IS_NOT_VALID(HttpStatus.BAD_REQUEST, "유효하지 않은 수강권입니다."),
+    UNDEFINED_WEBHOOK_EVENT(HttpStatus.BAD_REQUEST, "정의되지 않은 Webhook 이벤트명입니다."),
     WRONG_CREDENTIAL(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 잘못되었습니다."),
     WRONG_PROVIDER(HttpStatus.BAD_REQUEST, "잘못된 OAuth 공급자입니다."),
     WRONG_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),

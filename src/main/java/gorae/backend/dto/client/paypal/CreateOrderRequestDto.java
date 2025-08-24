@@ -1,7 +1,7 @@
 package gorae.backend.dto.client.paypal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gorae.backend.constant.PaypalOrderIntent;
+import gorae.backend.constant.paypal.PaypalOrderIntent;
 import lombok.Builder;
 import org.springframework.lang.NonNull;
 
