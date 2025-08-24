@@ -44,12 +44,12 @@ public class Student extends Member {
         super.setRole(MemberRole.STUDENT);
     }
 
-    public Ticket addMonthlyTicket() {
+    public Ticket addMonthlyTicket(Product product) {
         Instant now = Instant.now();
         Ticket ticket = Ticket.builder()
                 .student(this)
                 .startTime(now)
-                .endTime(now.plus(28, ChronoUnit.DAYS))
+                .endTime(now.plus(product.getDuration(), ChronoUnit.DAYS))
                 .status(TicketStatus.ACTIVE)
                 .build();
         tickets.add(ticket);
@@ -59,7 +59,7 @@ public class Student extends Member {
     public List<Ticket> addMonthlyTickets(Product product) {
         List<Ticket> tickets1 = new ArrayList<>();
         for (int i = 0; i < product.getCount(); i++) {
-            tickets1.add(addMonthlyTicket());
+            tickets1.add(addMonthlyTicket(product));
         }
         return tickets1;
     }

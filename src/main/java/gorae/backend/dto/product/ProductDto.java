@@ -38,6 +38,9 @@ public record ProductDto(
         boolean hasDiscount,
 
         @Schema(description = "장점", example = "[\"1:4 group lesson\"]")
-        List<String> benefits
+        List<String> benefits,
+
+        @Schema(description = "수강 기간(일)", example = "28")
+        int duration
 ) {
 }

@@ -32,6 +32,9 @@ public class Ticket extends BaseEntity {
 
     private Instant droppedAt;
 
+    @Column(nullable = false)
+    private int lessonRatio;
+
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
