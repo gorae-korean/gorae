@@ -44,7 +44,7 @@ public class Student extends Member {
         super.setRole(MemberRole.STUDENT);
     }
 
-    public void addMonthlyTicket() {
+    public Ticket addMonthlyTicket() {
         Instant now = Instant.now();
         Ticket ticket = Ticket.builder()
                 .student(this)
@@ -53,16 +53,14 @@ public class Student extends Member {
                 .status(TicketStatus.ACTIVE)
                 .build();
         tickets.add(ticket);
+        return ticket;
     }
 
-    public void addMonthlyTickets(int count) {
+    public List<Ticket> addMonthlyTickets(int count) {
+        List<Ticket> tickets1 = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            addMonthlyTicket();
+            tickets1.add(addMonthlyTicket());
         }
-    }
-
-    public void addFirstTicket() {
-        isFirst = false;
-        addMonthlyTicket();
+        return tickets1;
     }
 }
