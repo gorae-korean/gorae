@@ -119,6 +119,7 @@ public class CheckoutService {
                 .build();
     }
 
+    // 단순 결제 취소 절차를 어떻게 밟아야 할지 모르겠음
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void cancelCheckout(String orderId) {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)

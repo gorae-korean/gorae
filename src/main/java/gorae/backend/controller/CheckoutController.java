@@ -132,14 +132,14 @@ public class CheckoutController {
     @PostMapping("/approve")
     public ResponseEntity<ResponseDto<Void>> approveCheckout(
             Authentication authentication, @RequestBody ApproveRequestDto dto) throws Exception {
-        if (dto.orderId() == null || dto.orderId().isBlank()) {
+        String subject = JwtUtils.getSubject(authentication);
+        String orderId = dto.orderId();
+        log.info("[API] ApproveCheckout requested from subject: {}, orderId: {}", subject, orderId);
+        if (orderId == null || orderId.isBlank()) {
             throw new CustomException(ErrorStatus.INVALID_ORDER_ID);
         }
 
         String userId = getId(authentication);
-        String subject = JwtUtils.getSubject(authentication);
-        String orderId = dto.orderId();
-        log.info("[API] ApproveCheckout requested from subject: {}, orderId: {}", subject, orderId);
         checkoutService.approveCheckout(userId, orderId);
 
         log.info("[API] ApproveCheckout responded to subject: {}, orderId: {}", subject, orderId);
