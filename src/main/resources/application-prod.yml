@@ -37,7 +37,7 @@ paypal:
 
 logging:
   level:
-    gorae.backend: debug
+    gorae.backend: info
     org.springframework.boot.actuate: warn
 
 jwt:

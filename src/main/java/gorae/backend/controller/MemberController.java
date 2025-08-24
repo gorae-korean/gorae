@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Objects;
 
-import static gorae.backend.common.JwtUtils.getSubject;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,8 +31,6 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공")
     @GetMapping("/me")
     public ResponseEntity<ResponseDto<MyInfoDto>> getMyInfo(Authentication authentication) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetMyInfo requested from sub: {}", subject);
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         List<String> roles = oAuth2User.getAttribute("roles");
@@ -47,7 +43,6 @@ public class MemberController {
                 .role(role)
                 .build();
 
-        log.info("[API] GetMyInfo responded to sub: {}", subject);
         return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, myInfo));
     }
 }
