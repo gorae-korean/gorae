@@ -1,7 +1,8 @@
 package gorae.backend.service.checkout;
 
 import gorae.backend.common.paypal.PaypalHttpClient;
-import gorae.backend.constant.OrderStatus;
+import gorae.backend.constant.CheckoutOrderStatus;
+import gorae.backend.constant.PaypalOrderStatus;
 import gorae.backend.constant.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
@@ -61,11 +62,11 @@ public class CheckoutService {
         }
 
         Optional<CheckoutOrder> optionalExistingOrder = checkoutOrderRepository
-                .findByStudentAndProductAndStatus(student, product, OrderStatus.PAYER_ACTION_REQUIRED);
+                .findByStudentAndProductAndStatus(student, product, PaypalOrderStatus.PAYER_ACTION_REQUIRED);
         if (optionalExistingOrder.isPresent()) {
             CheckoutOrder existingOrder = optionalExistingOrder.get();
             OrderDto existingOrderDto = paypalHttpClient.getOrder(studentPublicId, existingOrder.getOrderId());
-            OrderStatus actualStatus = existingOrderDto.status();
+            PaypalOrderStatus actualStatus = existingOrderDto.status();
 
             switch (actualStatus) {
                 case PAYER_ACTION_REQUIRED -> {
@@ -84,7 +85,7 @@ public class CheckoutService {
         OrderDto response = paypalHttpClient.createOrder(studentPublicId, createOrderRequestDto);
         CheckoutOrder checkoutOrder = CheckoutOrder.builder()
                 .orderId(response.id())
-                .status(response.status())
+                .status(CheckoutOrderStatus.PENDING)
                 .product(product)
                 .student(student)
                 .build();
@@ -126,8 +127,7 @@ public class CheckoutService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
         log.info("[Service] CancelCheckout started for order: {}", orderId);
 
-        order.cancelOrder();
-        checkoutOrderRepository.save(order);
+        checkoutCompletionService.handleCancelledOrder(order);
         log.info("[Service] CancelCheckout succeeded for order: {}", orderId);
     }
 
@@ -140,13 +140,13 @@ public class CheckoutService {
         UUID studentPublicId = student.getPublicId();
 
         log.info("[Service] ApproveCheckout started for member: {}, order: {}", studentPublicId, orderId);
-        if (order.getStatus() == OrderStatus.COMPLETED) {
+        if (order.getStatus() == CheckoutOrderStatus.COMPLETED) {
             log.info("[Service] Order {} is already completed", orderId);
             log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
             return;
         }
 
-        OrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
+        PaypalOrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
         switch (orderStatus) {
             case COMPLETED -> {
                 log.info("[ApproveCheckout] Order {} completed in Paypal, syncing locally", orderId);
@@ -154,13 +154,17 @@ public class CheckoutService {
             }
             case APPROVED -> {
                 OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
-                if (orderDto.status() != OrderStatus.COMPLETED) {
+                if (orderDto.status() != PaypalOrderStatus.COMPLETED) {
+                    checkoutCompletionService.handleFailedOrder(order);
                     throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
                 }
                 checkoutCompletionService.handleCompletedOrder(order, student);
             }
             case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
-            default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+            default -> {
+                checkoutCompletionService.handleFailedOrder(order);
+                throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+            }
         }
         log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
     }

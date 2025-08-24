@@ -1,6 +1,6 @@
 package gorae.backend.constant;
 
-public enum OrderStatus {
+public enum PaypalOrderStatus {
     CREATED,
     SAVED,
     APPROVED,
