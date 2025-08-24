@@ -19,6 +19,7 @@ public enum ErrorStatus {
 
     INVALID_DROP(HttpStatus.BAD_REQUEST, "이미 취소되었거나 수강이 완료된 신청입니다."),
     INVALID_ORDER_ID(HttpStatus.BAD_REQUEST, "잘못된 주문 식별자입니다."),
+    INVALID_ORDER_ID_PATH(HttpStatus.BAD_REQUEST, "주문 식별자를 찾을 수 없습니다."),
     INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "잘못된 주문 상태입니다."),
     INVALID_PRODUCT_ID(HttpStatus.BAD_REQUEST, "잘못된 제품 식별자입니다."),
     INVALID_USER_IDENTIFIER(HttpStatus.BAD_REQUEST, "잘못된 유저 식별자입니다."),
