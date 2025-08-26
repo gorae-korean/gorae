@@ -40,7 +40,7 @@ public class LectureService {
 
     @Transactional
     public LectureDto createLecture(String userId) throws Exception {
-        Long instructorId = Long.valueOf(userId);
+        long instructorId = Long.parseLong(userId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -71,7 +71,7 @@ public class LectureService {
 
     @Transactional
     public LectureDto joinLecture(String userId) {
-        Long memberId = Long.valueOf(userId);
+        long memberId = Long.parseLong(userId);
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 

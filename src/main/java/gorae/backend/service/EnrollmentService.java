@@ -37,7 +37,7 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -87,7 +87,7 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<EnrollmentDto> getEnrollments(String userId) {
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         return enrollmentRepository.findByStudent_Id(studentId)
                 .stream()
                 .map(Enrollment::toDto)
@@ -96,7 +96,7 @@ public class EnrollmentService {
 
     @Transactional
     public void drop(String userId, UUID enrollmentId) {
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         Enrollment enrollment = enrollmentRepository.findByPublicId(enrollmentId)
