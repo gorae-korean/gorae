@@ -41,7 +41,7 @@ public class EnrollmentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        Course course = courseRepository.findByPublicId(dto.courseId())
+        Course course = courseRepository.findByPublicIdWithLock(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
 
         UUID studentPublicId = student.getPublicId();
@@ -88,9 +88,6 @@ public class EnrollmentService {
     @Transactional(readOnly = true)
     public List<EnrollmentDto> getEnrollments(String userId) {
         Long studentId = Long.valueOf(userId);
-        if (!studentRepository.existsById(studentId)) {
-            throw new CustomException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
         return enrollmentRepository.findByStudent_Id(studentId)
                 .stream()
                 .map(Enrollment::toDto)
