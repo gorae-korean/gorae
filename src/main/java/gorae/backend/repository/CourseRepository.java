@@ -2,8 +2,10 @@ package gorae.backend.repository;
 
 import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +16,9 @@ import java.util.UUID;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    Optional<Course> findByPublicId(UUID publicId);
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select c from Course c where c.publicId = :publicId")
+    Optional<Course> findByPublicIdWithLock(UUID publicId);
 
     List<Course> findByTextbook_PublicId(UUID textbookId);
 

@@ -38,6 +38,9 @@ public class Product extends BaseEntity {
     )
     private List<String> benefits = new ArrayList<>();
 
+    @Column(nullable = false)
+    private int duration;
+
     public ProductDto toDto() {
         return ProductDto.builder()
                 .id(getPublicId())
@@ -50,6 +53,7 @@ public class Product extends BaseEntity {
                 .count(count)
                 .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
                 .benefits(benefits)
+                .duration(duration)
                 .build();
     }
 }

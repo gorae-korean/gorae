@@ -101,7 +101,7 @@ public class CheckoutController {
             @RequestBody CheckoutRequestDto dto
     ) throws Exception {
         if (dto.productId() == null) {
-            throw new CustomException(ErrorStatus.INVALID_PRODUCT_ID);
+            throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
         String userId = getId(authentication);
@@ -118,7 +118,7 @@ public class CheckoutController {
     public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
         if (orderId == null || orderId.isBlank()) {
-            throw new CustomException(ErrorStatus.INVALID_ORDER_ID);
+            throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
         log.info("[API] CancelCheckout requested from orderId: {}", orderId);
@@ -134,7 +134,7 @@ public class CheckoutController {
             Authentication authentication, @RequestBody ApproveRequestDto dto) throws Exception {
         String orderId = dto.orderId();
         if (orderId == null || orderId.isBlank()) {
-            throw new CustomException(ErrorStatus.INVALID_ORDER_ID);
+            throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
         String userId = getId(authentication);

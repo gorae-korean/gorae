@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -34,28 +35,52 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final ProfileUtils profileUtils;
 
+    private static final int DEADLINE_HOUR = 1;
+
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
-        // TODO: 같은 시간에 하나의 강좌만 수강 가능하게 변경해야 함
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        Course course = courseRepository.findByPublicId(dto.courseId())
+        Course course = courseRepository.findByPublicIdWithLock(dto.courseId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
 
         UUID studentPublicId = student.getPublicId();
         UUID coursePublicId = course.getPublicId();
         log.info("[Service] Enroll started for member: {}, course: {}", studentPublicId, coursePublicId);
 
-        if (course.getStartTime().isBefore(Instant.now())) {
+        Instant startTime = course.getStartTime();
+        Instant now = Instant.now();
+        if (startTime.isBefore(now)) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
 
-        Ticket ticket = ticketRepository.findFirst()
-                .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
+        long hoursDifference = Duration.between(now, startTime).toHours();
+        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
+            throw new CustomException(ErrorStatus.CANNOT_ENROLL_COURSE_NEAR_START_TIME);
+        }
 
-        Enrollment enrollment = Enrollment.addEnrollment(student, course, ticket);
+        if (enrollmentRepository.existsByStudentAndCourse_StartTimeAndStatus(student, startTime, EnrollmentStatus.ENROLLED)) {
+            throw new CustomException(ErrorStatus.CANNOT_ENROLL_MORE);
+        }
+
+        if (course.getCurrentCount() >= course.getMaxCount()) {
+            throw new CustomException(ErrorStatus.COURSE_IS_FULL);
+        }
+
+        Ticket ticket = ticketRepository.findFirstByStudentAndLessonRatio(student, startTime, course.getMaxCount())
+                    .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
+
+        Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndCourse(student, course);
+        Enrollment enrollment;
+        if (existingEnrollment.isPresent()) {
+            enrollment = existingEnrollment.get();
+            enrollment.reEnroll(ticket);
+        } else {
+            enrollment = Enrollment.addEnrollment(student, course, ticket);
+        }
+
         enrollmentRepository.save(enrollment);
 
         ticket.useTicket();
@@ -70,10 +95,7 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<EnrollmentDto> getEnrollments(String userId) {
-        Long studentId = Long.valueOf(userId);
-        if (!studentRepository.existsById(studentId)) {
-            throw new CustomException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
+        long studentId = Long.parseLong(userId);
         return enrollmentRepository.findByStudent_Id(studentId)
                 .stream()
                 .map(Enrollment::toDto)
@@ -82,7 +104,7 @@ public class EnrollmentService {
 
     @Transactional
     public void drop(String userId, UUID enrollmentId) {
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
         Enrollment enrollment = enrollmentRepository.findByPublicId(enrollmentId)
@@ -105,15 +127,15 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
         long hoursDifference = Duration.between(now, courseStartTime).toHours();
-        if (profileUtils.isProdMode() && hoursDifference < 6) {
+        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
             throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
         }
 
-        enrollment.cancelEnrollment();
-        enrollmentRepository.save(enrollment);
-
         Ticket ticket = enrollment.getTicket();
         ticket.returnTicket();
+        enrollment.cancelEnrollment();
+
+        enrollmentRepository.save(enrollment);
         ticketRepository.save(ticket);
         log.info("[Service] Drop succeeded for member: {}, enrollment: {}", studentPublicId, enrollmentPublicId);
     }

@@ -20,6 +20,9 @@ public record TicketDto(
         Instant endTime,
 
         @Schema(description = "수강권 상태")
-        TicketStatus status
+        TicketStatus status,
+
+        @Schema(description = "수강 가능 규모")
+        int lessonRatio
 ) {
 }

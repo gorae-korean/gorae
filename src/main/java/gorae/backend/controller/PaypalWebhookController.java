@@ -4,6 +4,7 @@ import gorae.backend.dto.client.paypal.PaypalWebhookDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import gorae.backend.service.PaypalWebhookService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class PaypalWebhookController {
     private final PaypalWebhookService paypalWebhookService;
 
+    @Hidden
     @PostMapping
     ResponseEntity<Void> handleWebhook(@RequestBody PaypalWebhookDto webhookData) {
         log.info("[Webhook] New Paypal webhook received for id: {}, summary: {}", webhookData.id(), webhookData.summary());

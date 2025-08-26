@@ -37,7 +37,7 @@ public class InstructorService {
             throw new CustomException(ErrorStatus.MUST_BE_LONGER_THAN_60_MINUTES);
         }
 
-        Long instructorId = Long.valueOf(userId);
+        long instructorId = Long.parseLong(userId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -62,7 +62,7 @@ public class InstructorService {
     }
 
     public List<AvailabilityDto> getAvailabilities(String userId) {
-        Long instructorId = Long.valueOf(userId);
+        long instructorId = Long.parseLong(userId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
 
