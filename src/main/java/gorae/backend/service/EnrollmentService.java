@@ -35,6 +35,8 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final ProfileUtils profileUtils;
 
+    private static final int DEADLINE_HOUR = 1;
+
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
         long studentId = Long.parseLong(userId);
@@ -49,8 +51,14 @@ public class EnrollmentService {
         log.info("[Service] Enroll started for member: {}, course: {}", studentPublicId, coursePublicId);
 
         Instant startTime = course.getStartTime();
-        if (startTime.isBefore(Instant.now())) {
+        Instant now = Instant.now();
+        if (startTime.isBefore(now)) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
+        }
+
+        long hoursDifference = Duration.between(now, startTime).toHours();
+        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
+            throw new CustomException(ErrorStatus.CANNOT_ENROLL_COURSE_NEAR_START_TIME);
         }
 
         if (enrollmentRepository.existsByStudentAndCourse_StartTimeAndStatus(student, startTime, EnrollmentStatus.ENROLLED)) {
@@ -61,7 +69,7 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.COURSE_IS_FULL);
         }
 
-        Ticket ticket = ticketRepository.findFirstByStudentAndLessonRatio(student, course.getMaxCount())
+        Ticket ticket = ticketRepository.findFirstByStudentAndLessonRatio(student, startTime, course.getMaxCount())
                     .orElseThrow(() -> new CustomException(ErrorStatus.TICKET_NOT_FOUND));
 
         Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndCourse(student, course);
@@ -119,7 +127,7 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
         long hoursDifference = Duration.between(now, courseStartTime).toHours();
-        if (profileUtils.isProdMode() && hoursDifference < 6) {
+        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
             throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
         }
 

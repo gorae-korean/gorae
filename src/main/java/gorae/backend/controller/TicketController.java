@@ -3,6 +3,8 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.ticket.TicketDto;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
 import gorae.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,6 +50,10 @@ public class TicketController {
             Authentication authentication,
             @Parameter(description = "강의 규모", example = "2")
             @RequestParam int ratio) {
+        if (ratio <= 0) {
+            throw new CustomException(ErrorStatus.INVALID_PARAMETER);
+        }
+
         String subject = getSubject(authentication);
         log.info("[API] GetTicketCount requested from sub: {}", subject);
 
