@@ -41,6 +41,9 @@ public record ProductDto(
         List<String> benefits,
 
         @Schema(description = "수강 기간(일)", example = "28")
-        int duration
+        int duration,
+
+        @Schema(description = "강의 규모", example = "2")
+        int lessonRatio
 ) {
 }
