@@ -17,9 +17,14 @@ public class TicketService {
     private final TicketRepository ticketRepository;
 
     public List<TicketDto> getTickets(String userId) {
-        Long studentId = Long.valueOf(userId);
+        long studentId = Long.parseLong(userId);
         return ticketRepository.findByStatusAndStudent_Id(TicketStatus.ACTIVE, studentId)
                 .stream().map(Ticket::toDto)
                 .toList();
+    }
+
+    public long getTicketCount(String userId, int ratio) {
+        long studentId = Long.parseLong(userId);
+        return ticketRepository.countByStudent_IdAndLessonRatio(studentId, ratio);
     }
 }

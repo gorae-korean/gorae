@@ -17,4 +17,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select t from Ticket t where t.status = 'ACTIVE' and t.lessonRatio = :lessonRatio " +
             "and t.student = :student order by t.endTime limit 1")
     Optional<Ticket> findFirstByStudentAndLessonRatio(Student student, int lessonRatio);
+
+    long countByStudent_IdAndLessonRatio(Long id, int lessonRatio);
 }
