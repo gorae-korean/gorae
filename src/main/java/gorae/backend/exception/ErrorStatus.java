@@ -12,6 +12,7 @@ public enum ErrorStatus {
     AVAILABILITY_OVERLAPPED(HttpStatus.BAD_REQUEST, "기존 일정과 겹칩니다."),
     CANNOT_BUY_THE_FIRST_PRODUCT(HttpStatus.BAD_REQUEST, "첫 구매 혜택이 이미 사용되었습니다."),
     CANNOT_DROP_COURSE_NEAR_START_TIME(HttpStatus.BAD_REQUEST, "강의 시작 시간이 얼마 남지 않아 취소가 불가능합니다."),
+    CANNOT_ENROLL_MORE(HttpStatus.BAD_REQUEST, "한 시간에 두 개 이상 수강할 수 없습니다."),
     CLIENT_IS_NULL(HttpStatus.BAD_REQUEST, "구글에 다시 로그인이 필요합니다."),
     COURSE_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "이미 시작된 강좌입니다."),
     COURSE_IS_FULL(HttpStatus.BAD_REQUEST, "해당 강좌 인원이 모두 찼습니다."),

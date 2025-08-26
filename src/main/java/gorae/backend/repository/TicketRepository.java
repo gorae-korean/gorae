@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByStudent(Student student);
 
-    @Query("select t from Ticket t where t.status = 'ACTIVE' order by t.endTime limit 1")
-    Optional<Ticket> findFirst();
+    @Query("select t from Ticket t where t.status = 'ACTIVE' and t.lessonRatio = :lessonRatio " +
+            "and t.student = :student order by t.endTime limit 1")
+    Optional<Ticket> findFirstByStudentAndLessonRatio(Student student, int lessonRatio);
 }

@@ -28,11 +28,7 @@ public class Ticket extends BaseEntity {
     @Column(nullable = false)
     private Instant endTime;
 
-    private Instant usedAt;
-
-    private Instant droppedAt;
-
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private int lessonRatio;
 
     @Enumerated(EnumType.STRING)
@@ -40,12 +36,11 @@ public class Ticket extends BaseEntity {
 
     public void useTicket() {
         status = TicketStatus.USED;
-        usedAt = Instant.now();
     }
 
     public void returnTicket() {
         status = TicketStatus.ACTIVE;
-        droppedAt = Instant.now();
+        enrollment = null;
     }
 
     public TicketDto toDto() {

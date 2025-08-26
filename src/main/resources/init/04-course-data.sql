@@ -11,7 +11,7 @@ VALUES (gen_random_uuid(),
         2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
        (gen_random_uuid(),
         date_trunc('hour', NOW()) + interval '2 hour', date_trunc('hour', NOW()) + interval '3 hour',
-        2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 10),
+        2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
        (gen_random_uuid(),
         date_trunc('hour', NOW()) + interval '3 hour', date_trunc('hour', NOW()) + interval '4 hour',
-        2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 10);
+        2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2);

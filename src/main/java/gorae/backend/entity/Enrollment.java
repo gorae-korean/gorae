@@ -2,8 +2,6 @@ package gorae.backend.entity;
 
 import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.enrollment.EnrollmentDto;
-import gorae.backend.exception.CustomException;
-import gorae.backend.exception.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,19 +28,12 @@ public class Enrollment extends BaseEntity {
     @Column(nullable = false)
     private Instant enrolledAt;
 
+    private Instant droppedAt;
+
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
     public static Enrollment addEnrollment(Student student, Course course, Ticket ticket) {
-        boolean alreadyEnrolled = course.getEnrollments().stream()
-                .anyMatch(enrollment -> enrollment.getStudent().equals(student)
-                        && enrollment.getStatus() == EnrollmentStatus.ENROLLED);
-        if (alreadyEnrolled) {
-            throw new CustomException(ErrorStatus.ALREADY_ENROLLED);
-        }
-        if (course.getCurrentCount() >= course.getMaxCount()) {
-            throw new CustomException(ErrorStatus.COURSE_IS_FULL);
-        }
         Enrollment enrollment = new Enrollment();
         enrollment.student = student;
         enrollment.course = course;
@@ -54,6 +45,14 @@ public class Enrollment extends BaseEntity {
 
     public void cancelEnrollment() {
         status = EnrollmentStatus.DROPPED;
+        droppedAt = Instant.now();
+        ticket = null;
+    }
+
+    public void reEnroll(Ticket ticket) {
+        this.ticket = ticket;
+        this.enrolledAt = Instant.now();
+        this.status = EnrollmentStatus.ENROLLED;
     }
 
     public EnrollmentDto toDto() {
