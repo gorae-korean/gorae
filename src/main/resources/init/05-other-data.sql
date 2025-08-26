@@ -7,21 +7,21 @@ VALUES
 , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
 ( gen_random_uuid(), 3, date_trunc('month', NOW() - interval '1 month')
 , date_trunc('month', NOW()) - interval '1 second', 'USED'
-, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4);
+, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
 
 -- -- 이번 달 티켓 (ACTIVE)
--- ( gen_random_uuid(), 3, date_trunc('month', NOW())
--- , date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
--- , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
--- ( gen_random_uuid(), 3, date_trunc('month', NOW())
--- , date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
--- , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
--- ( gen_random_uuid(), 3, date_trunc('month', NOW())
--- , date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
--- , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
--- ( gen_random_uuid(), 3, date_trunc('month', NOW())
--- , date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
--- , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4);
+( gen_random_uuid(), 3, date_trunc('month', NOW())
+, date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
+( gen_random_uuid(), 3, date_trunc('month', NOW())
+, date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2),
+( gen_random_uuid(), 3, date_trunc('month', NOW())
+, date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4),
+( gen_random_uuid(), 3, date_trunc('month', NOW())
+, date_trunc('month', NOW() + interval '1 month') - interval '1 second', 'ACTIVE'
+, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4);
 
 INSERT INTO enrollment (public_id, student_id, course_id, ticket_id, enrolled_at, status)
 VALUES (gen_random_uuid(), 3, 1, 1, NOW() - interval '7 day', 'ENROLLED'),
