@@ -25,6 +25,6 @@ public class TicketService {
 
     public long getTicketCount(String userId, int ratio) {
         long studentId = Long.parseLong(userId);
-        return ticketRepository.countByStudent_IdAndLessonRatio(studentId, ratio);
+        return ticketRepository.countByStudent_IdAndLessonRatioAndStatus(studentId, ratio, TicketStatus.ACTIVE);
     }
 }

@@ -1,7 +1,6 @@
 spring:
   application:
     name: backend
-#    d
 
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}

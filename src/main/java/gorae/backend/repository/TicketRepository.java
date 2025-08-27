@@ -19,5 +19,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "and t.student = :student and t.endTime > :startTime order by t.endTime limit 1")
     Optional<Ticket> findFirstByStudentAndLessonRatio(Student student, Instant startTime, int lessonRatio);
 
-    long countByStudent_IdAndLessonRatio(Long studentId, int lessonRatio);
+    long countByStudent_IdAndLessonRatioAndStatus(Long studentId, int lessonRatio, TicketStatus status);
 }
