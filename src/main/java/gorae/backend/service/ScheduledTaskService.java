@@ -12,6 +12,7 @@ import gorae.backend.repository.InstructorRepository;
 import gorae.backend.repository.TextbookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,9 @@ public class ScheduledTaskService {
     private final InstructorRepository instructorRepository;
     private final TextbookRepository textbookRepository;
 
+    @Value("${scheduling.enabled}")
+    private boolean schedulingEnabled;
+
     private static final ZoneId SEOUL_ZONE_ID = ZoneId.of("Asia/Seoul");
     private static final ZoneId INDONESIA_ZONE_ID = ZoneId.of("Asia/Jakarta");
 
@@ -39,6 +43,10 @@ public class ScheduledTaskService {
     @Scheduled(cron = "0 0 0 * * Sun")
     @Transactional
     public void updateTimeTable() {
+        if (!schedulingEnabled) {
+            return;
+        }
+
         log.info("[System] UpdateTimeTable started");
         List<Instructor> instructors = instructorRepository.findAll();
         List<Course> newCourses = new ArrayList<>();
