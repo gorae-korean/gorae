@@ -50,6 +50,7 @@ public class SecurityConfig {
 
         MvcRequestMatcher[] permitAllWhiteList = {
                 mvc.pattern("/checkouts/cancel/**"),
+                mvc.pattern("/products"),
                 mvc.pattern("/webhooks/**"),
                 mvc.pattern("/textbooks"),
                 mvc.pattern("/textbooks/categories"),

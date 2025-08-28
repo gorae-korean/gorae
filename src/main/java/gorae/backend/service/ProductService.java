@@ -19,7 +19,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<ProductDto> getProducts() {
-        return productRepository.findAll()
+        return productRepository.findAllOrderByPrice()
                 .stream().map(Product::toDto)
                 .toList();
     }
