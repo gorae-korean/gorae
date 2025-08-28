@@ -32,10 +32,10 @@ public class OAuth2Config {
                 }
 
                 return OAuth2AuthorizationRequest.from(defaultRequest)
-                        .additionalParameters(params -> {
-                            params.put("access_type", "offline");
-                            params.put("prompt", "consent");
-                        })
+//                        .additionalParameters(params -> {
+//                            params.put("access_type", "offline");
+//                            params.put("prompt", "consent");
+//                        })
                         .build();
             }
 
@@ -48,10 +48,10 @@ public class OAuth2Config {
 
                 if (clientRegistrationId.equals("google")) {
                     return OAuth2AuthorizationRequest.from(defaultRequest)
-                            .additionalParameters(params -> {
-                                params.put("access_type", "offline");
-                                params.put("prompt", "consent");
-                            })
+//                            .additionalParameters(params -> {
+//                                params.put("access_type", "offline");
+//                                params.put("prompt", "consent");
+//                            })
                             .build();
                 }
 

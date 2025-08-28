@@ -41,6 +41,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private int duration;
 
+    @Column(nullable = false)
+    private int lessonRatio;
+
     public ProductDto toDto() {
         return ProductDto.builder()
                 .id(getPublicId())
@@ -54,6 +57,7 @@ public class Product extends BaseEntity {
                 .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
                 .benefits(benefits)
                 .duration(duration)
+                .lessonRatio(lessonRatio)
                 .build();
     }
 }
