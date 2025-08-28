@@ -5,6 +5,7 @@ import gorae.backend.dto.instructor.InstructorDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Builder
@@ -18,6 +19,12 @@ public record CourseDto(
 
         @Schema(description = "교재 레벨")
         TextbookLevel level,
+
+        @Schema(description = "강의 시작 시간")
+        Instant startTime,
+
+        @Schema(description = "강의 종료 시간")
+        Instant endTime,
 
         @Schema(description = "현재 수강 신청 인원", example = "2")
         int currentCount,
