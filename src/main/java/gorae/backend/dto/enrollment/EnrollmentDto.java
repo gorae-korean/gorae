@@ -17,6 +17,9 @@ public record EnrollmentDto(
         @Schema(description = "수강 신청 시간")
         Instant enrolledAt,
 
+        @Schema(description = "수강 취소 시간")
+        Instant droppedAt,
+
         @Schema(description = "수강 신청 과목")
         CourseDto course,
 

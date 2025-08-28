@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -18,13 +19,14 @@ public class TicketService {
 
     public List<TicketDto> getTickets(String userId) {
         long studentId = Long.parseLong(userId);
-        return ticketRepository.findByStatusAndStudent_Id(TicketStatus.ACTIVE, studentId)
+        return ticketRepository.findByStatusAndStudent_IdAndEndTimeAfter(TicketStatus.ACTIVE, studentId, Instant.now())
                 .stream().map(Ticket::toDto)
                 .toList();
     }
 
     public long getTicketCount(String userId, int ratio) {
         long studentId = Long.parseLong(userId);
-        return ticketRepository.countByStudent_IdAndLessonRatioAndStatus(studentId, ratio, TicketStatus.ACTIVE);
+        return ticketRepository
+                .countByStudent_IdAndLessonRatioAndStatusAndEndTimeAfter(studentId, ratio, TicketStatus.ACTIVE, Instant.now());
     }
 }

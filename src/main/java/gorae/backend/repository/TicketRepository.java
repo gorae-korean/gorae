@@ -13,11 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    List<Ticket> findByStatusAndStudent_Id(TicketStatus status, Long studentId);
+    List<Ticket> findByStatusAndStudent_IdAndEndTimeAfter(TicketStatus status, Long studentId, Instant endTimeAfter);
 
     @Query("select t from Ticket t where t.status = 'ACTIVE' and t.lessonRatio = :lessonRatio " +
             "and t.student = :student and t.endTime > :startTime order by t.endTime limit 1")
     Optional<Ticket> findFirstByStudentAndLessonRatio(Student student, Instant startTime, int lessonRatio);
 
-    long countByStudent_IdAndLessonRatioAndStatus(Long studentId, int lessonRatio, TicketStatus status);
+    long countByStudent_IdAndLessonRatioAndStatusAndEndTimeAfter(Long studentId, int lessonRatio, TicketStatus status, Instant endTimeAfter);
 }

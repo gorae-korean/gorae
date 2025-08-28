@@ -59,6 +59,7 @@ public class Enrollment extends BaseEntity {
         return EnrollmentDto.builder()
                 .id(this.getPublicId())
                 .enrolledAt(enrolledAt)
+                .droppedAt(droppedAt)
                 .course(course.toDto())
                 .status(status)
                 .build();

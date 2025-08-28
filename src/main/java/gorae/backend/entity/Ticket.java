@@ -48,7 +48,6 @@ public class Ticket extends BaseEntity {
                 .id(getPublicId())
                 .startTime(startTime)
                 .endTime(endTime)
-                .status(status)
                 .lessonRatio(lessonRatio)
                 .build();
     }
