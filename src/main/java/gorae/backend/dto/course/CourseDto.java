@@ -2,6 +2,7 @@ package gorae.backend.dto.course;
 
 import gorae.backend.constant.textbook.TextbookLevel;
 import gorae.backend.dto.instructor.InstructorDto;
+import gorae.backend.dto.textbook.TextbookSearchDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -16,6 +17,9 @@ public record CourseDto(
 
         @Schema(description = "강사 이름")
         InstructorDto instructor,
+
+        @Schema(description = "강의 교재")
+        TextbookSearchDto textbook,
 
         @Schema(description = "교재 레벨")
         TextbookLevel level,
