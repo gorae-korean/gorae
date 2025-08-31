@@ -27,6 +27,6 @@ public class JwtUtils {
         }
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        return Objects.requireNonNull(oAuth2User.getName());
+        return Objects.requireNonNull(oAuth2User.getAttribute("publicId"));
     }
 }
