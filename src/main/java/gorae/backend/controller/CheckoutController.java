@@ -20,7 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import static gorae.backend.common.JwtUtils.getId;
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -104,11 +104,11 @@ public class CheckoutController {
         }
 
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] Checkout requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] Checkout requested from {}", publicId);
 
         String redirectUrl = checkoutService.checkout(userId, dto);
-        log.info("[API] Checkout responded to sub: {}", subject);
+        log.info("[API] Checkout responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(redirectUrl));
     }
 
@@ -120,9 +120,9 @@ public class CheckoutController {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
-        log.info("[API] CancelCheckout requested from orderId: {}", orderId);
+        log.info("[API] CancelCheckout requested from order: {}", orderId);
         checkoutService.cancelCheckout(orderId);
-        log.info("[API] CancelCheckout responded to orderId: {}", orderId);
+        log.info("[API] CancelCheckout responded to order: {}", orderId);
         return ResponseEntity.ok(ResponseDto.createSuccess());
     }
 
@@ -137,11 +137,11 @@ public class CheckoutController {
         }
 
         String userId = getId(authentication);
-        String subject = JwtUtils.getSubject(authentication);
-        log.info("[API] ApproveCheckout requested from subject: {}, orderId: {}", subject, orderId);
+        String publicId = JwtUtils.getPublicId(authentication);
+        log.info("[API] ApproveCheckout requested from user: {}, order: {}", publicId, orderId);
         checkoutService.approveCheckout(userId, orderId);
 
-        log.info("[API] ApproveCheckout responded to subject: {}, orderId: {}", subject, orderId);
+        log.info("[API] ApproveCheckout responded to user: {}, order: {}", publicId, orderId);
         return ResponseEntity.ok(ResponseDto.createSuccess());
     }
 }

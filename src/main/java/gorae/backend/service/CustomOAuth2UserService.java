@@ -42,6 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member member = saveOrUpdate(oAuthAttributes);
 
         Map<String, Object> newAttributes = new HashMap<>(attributes);
+        newAttributes.put("publicId", member.getPublicId());
         newAttributes.put("registrationId", registrationId);
         newAttributes.put("nameAttributeKey", userNameAttributeName);
         newAttributes.put("id", member.getId());

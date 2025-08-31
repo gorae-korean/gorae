@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static gorae.backend.common.JwtUtils.getId;
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -32,11 +32,11 @@ public class LectureController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(Authentication authentication) throws Exception {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] CreateLectureManually requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] CreateLectureManually requested from sub: {}", publicId);
 
         LectureDto lectureDto = lectureService.createLecture(userId);
-        log.info("[API] CreateLectureManually responded to sub: {}", subject);
+        log.info("[API] CreateLectureManually responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(lectureDto));
     }
@@ -52,11 +52,11 @@ public class LectureController {
     @GetMapping("/join")
     public ResponseEntity<ResponseDto<LectureDto>> joinLecture(Authentication authentication) {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] JoinLecture requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] JoinLecture requested from sub: {}", publicId);
 
         LectureDto lectureDto = lectureService.joinLecture(userId);
-        log.info("[API] JoinLecture responded to sub: {}", subject);
+        log.info("[API] JoinLecture responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(lectureDto));
     }

@@ -21,7 +21,7 @@ public class JwtUtils {
         return Objects.requireNonNull(oauthUser.getAttribute("id")).toString();
     }
 
-    public static String getSubject(Authentication authentication) {
+    public static String getPublicId(Authentication authentication) {
         if (authentication == null) {
             throw new IllegalStateException("Authentication cannot be null");
         }

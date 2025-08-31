@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static gorae.backend.common.JwtUtils.getId;
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -36,11 +36,11 @@ public class TicketController {
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<TicketDto>>> getTickets(Authentication authentication) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetTickets requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetTickets requested from {}", publicId);
 
         List<TicketDto> tickets = ticketService.getTickets(getId(authentication));
-        log.info("[API] GetTickets responded to sub: {}", subject);
+        log.info("[API] GetTickets responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(tickets));
     }
 
@@ -56,11 +56,11 @@ public class TicketController {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
-        String subject = getSubject(authentication);
-        log.info("[API] GetTicketCount requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetTicketCount requested from {}", publicId);
 
         long ticketCount = ticketService.getTicketCount(getId(authentication), ratio);
-        log.info("[API] GetTicketCount responded to sub: {}", subject);
+        log.info("[API] GetTicketCount responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(ticketCount));
     }
 }

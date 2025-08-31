@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static gorae.backend.common.JwtUtils.getId;
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -37,11 +37,11 @@ public class InstructorController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ResponseDto<List<AvailabilityDto>>> getAvailabilities(Authentication authentication) {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] GetAvailabilities requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetAvailabilities requested from sub: {}", publicId);
 
         List<AvailabilityDto> availabilities = instructorService.getAvailabilities(userId);
-        log.info("[API] GetAvailabilities responded to sub: {}", subject);
+        log.info("[API] GetAvailabilities responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(availabilities));
     }
@@ -68,11 +68,11 @@ public class InstructorController {
             @RequestBody AvailabilityAddRequestDto dto
     ) {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] AddAvailability requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] AddAvailability requested from sub: {}", publicId);
 
         instructorService.addAvailability(userId, dto);
-        log.info("[API] AddAvailability responded to sub: {}", subject);
+        log.info("[API] AddAvailability responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess());
     }

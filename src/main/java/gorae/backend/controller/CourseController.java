@@ -23,7 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -44,15 +44,15 @@ public class CourseController {
             @RequestParam(required = false) ZonedDateTime startTime
     ) {
 
-        String subject = getSubject(authentication);
-        log.info("[API] SearchCourses requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] SearchCourses requested from {}", publicId);
 
         if (textbookId == null && startTime == null) {
             throw new IllegalArgumentException("한 개 이상의 매개변수가 필요합니다.");
         }
 
         List<CourseDto> courses = courseService.searchCourses(textbookId, startTime);
-        log.info("[API] SearchCourses responded to sub: {}", subject);
+        log.info("[API] SearchCourses responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(courses));
     }
@@ -85,10 +85,10 @@ public class CourseController {
             @Parameter(description = "검색 시간", example = "2025-01-01T00:00:00+09:00")
             @RequestParam ZonedDateTime dateTime) {
 
-        String subject = getSubject(authentication);
-        log.info("[API] GetTimetable requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetTimetable requested from {}", publicId);
         List<Instant> timetable = courseService.getTimetable(dateTime);
-        log.info("[API] GetTimeTable responded to sub: {}", subject);
+        log.info("[API] GetTimeTable responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(timetable));
     }
 
@@ -100,10 +100,10 @@ public class CourseController {
             @Parameter(description = "강좌 시작 시간", example = "2025-01-01T00:00:00+09:00")
             @RequestParam ZonedDateTime startTime
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetCourseTextbooks requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetCourseTextbooks requested from sub: {}", publicId);
         List<TextbookSearchDto> textbooks = courseService.getCourseTextbooks(startTime);
-        log.info("[API] GetCourseTextbooks responded to sub: {}", subject);
+        log.info("[API] GetCourseTextbooks responded to sub: {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(textbooks));
     }
 }

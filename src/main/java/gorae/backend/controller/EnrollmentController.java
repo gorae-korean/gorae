@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static gorae.backend.common.JwtUtils.getId;
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -39,11 +39,11 @@ public class EnrollmentController {
             Authentication authentication, @RequestBody EnrollRequestDto dto) {
 
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] Enroll requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] Enroll requested from sub: {}", publicId);
 
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
-        log.info("[API] Enroll responded to sub: {}", subject);
+        log.info("[API] Enroll responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(enrollmentDto));
     }
@@ -57,12 +57,12 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<EnrollmentDto>>> getEnrollments(Authentication authentication) {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] GetEnrollments requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetEnrollments requested from sub: {}", publicId);
         log.debug("Role: {}", authentication.getAuthorities());
 
         List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
-        log.info("[API] GetEnrollments responded to sub: {}", subject);
+        log.info("[API] GetEnrollments responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(enrollmentDtoList));
     }
@@ -79,11 +79,11 @@ public class EnrollmentController {
             @Parameter(description = "수강 신청 내역 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID enrollmentId) {
         String userId = getId(authentication);
-        String subject = getSubject(authentication);
-        log.info("[API] Drop requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] Drop requested from sub: {}", publicId);
 
         enrollmentService.drop(userId, enrollmentId);
-        log.info("[API] Drop responded to sub: {}", subject);
+        log.info("[API] Drop responded to sub: {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess());
     }

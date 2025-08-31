@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static gorae.backend.common.JwtUtils.getSubject;
+import static gorae.backend.common.JwtUtils.getPublicId;
 
 @Slf4j
 @RestController
@@ -56,11 +56,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetArticle requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetArticle requested from {}", publicId);
 
         TextbookArticleDto article = textbookService.getArticle(id);
-        log.info("[API] GetArticle responded to sub: {}", subject);
+        log.info("[API] GetArticle responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(article));
     }
 
@@ -75,11 +75,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetVocabularies requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetVocabularies requested from {}", publicId);
 
         List<TextbookVocabularyDto> vocabularies = textbookService.getVocabularies(id);
-        log.info("[API] GetVocabularies responded to sub: {}", subject);
+        log.info("[API] GetVocabularies responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(vocabularies));
     }
 
@@ -94,11 +94,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetKeyExpressions requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetKeyExpressions requested from {}", publicId);
 
         List<TextbookKeyExpressionDto> keyExpressions = textbookService.getKeyExpressions(id);
-        log.info("[API] GetKeyExpressions responded to sub: {}", subject);
+        log.info("[API] GetKeyExpressions responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(keyExpressions));
     }
 
@@ -113,11 +113,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetLessonQuestions requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetLessonQuestions requested from {}", publicId);
 
         List<TextbookLessonQuestionDto> lessonQuestions = textbookService.getLessonQuestions(id);
-        log.info("[API] GetLessonQuestions responded to sub: {}", subject);
+        log.info("[API] GetLessonQuestions responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(lessonQuestions));
     }
 
@@ -132,11 +132,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetCultureTips requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetCultureTips requested from {}", publicId);
 
         List<TextbookCultureTipDto> cultureTips = textbookService.getCultureTips(id);
-        log.info("[API] GetCultureTips responded to sub: {}", subject);
+        log.info("[API] GetCultureTips responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(cultureTips));
     }
 
@@ -151,11 +151,11 @@ public class TextbookController {
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID id
     ) {
-        String subject = getSubject(authentication);
-        log.info("[API] GetRealTalk requested from sub: {}", subject);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetRealTalk requested from {}", publicId);
 
         TextbookRealTalkDto realTalk = textbookService.getRealTalk(id);
-        log.info("[API] GetRealTalk responded to sub: {}", subject);
+        log.info("[API] GetRealTalk responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(realTalk));
     }
 
