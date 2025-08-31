@@ -28,12 +28,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             return;
         }
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
         ErrorStatus errorStatus = ErrorStatus.FAILED_TO_AUTHENTICATE;
-        ResponseDto<Void> responseDto = ResponseDto.createError(errorStatus.name(), errorStatus.getMessage());
+        ResponseDto<Void> responseDto = ResponseDto.createError(errorStatus.getStatus(), errorStatus.name(), errorStatus.getMessage());
 
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
     }

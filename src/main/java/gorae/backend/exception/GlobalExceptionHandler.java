@@ -2,6 +2,7 @@ package gorae.backend.exception;
 
 import gorae.backend.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
         ErrorStatus errorStatus = e.getErrorStatus();
         return ResponseEntity
                 .ok()
-                .body(ResponseDto.createError(errorStatus.name(), errorStatus.getMessage()));
+                .body(ResponseDto.createError(errorStatus.getStatus(), errorStatus.name(), errorStatus.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
@@ -56,7 +57,7 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity
                 .ok()
-                .body(ResponseDto.createError("RUNTIME_ERROR", e.getMessage()));
+                .body(ResponseDto.createError(HttpStatus.BAD_REQUEST, "RUNTIME_ERROR", e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -70,6 +71,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .ok()
-                .body(ResponseDto.createError("SERVER_ERROR", "Error occurred in the server."));
+                .body(ResponseDto.createError(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR", "Error occurred in the server."));
     }
 }

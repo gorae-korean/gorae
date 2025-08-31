@@ -56,11 +56,7 @@ public class TicketController {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
-        String publicId = getPublicId(authentication);
-        log.info("[API] GetTicketCount requested from {}", publicId);
-
         long ticketCount = ticketService.getTicketCount(getId(authentication), ratio);
-        log.info("[API] GetTicketCount responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(ticketCount));
     }
 }
