@@ -2,7 +2,6 @@ package gorae.backend.controller;
 
 import gorae.backend.constant.textbook.TextbookCategory;
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.textbook.*;
 import gorae.backend.service.TextbookService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,7 +42,7 @@ public class TextbookController {
     ) {
         log.debug(searchRequest.toString());
         List<TextbookSearchDto> textbooks = textbookService.searchTextbooks(searchRequest);
-        return ResponseEntity.ok().body(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
+        return ResponseEntity.ok().body(ResponseDto.createSuccess(textbooks));
     }
 
     @CommonApiResponses(
@@ -62,7 +61,7 @@ public class TextbookController {
 
         TextbookArticleDto article = textbookService.getArticle(id);
         log.info("[API] GetArticle responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, article));
+        return ResponseEntity.ok(ResponseDto.createSuccess(article));
     }
 
     @CommonApiResponses(
@@ -81,7 +80,7 @@ public class TextbookController {
 
         List<TextbookVocabularyDto> vocabularies = textbookService.getVocabularies(id);
         log.info("[API] GetVocabularies responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, vocabularies));
+        return ResponseEntity.ok(ResponseDto.createSuccess(vocabularies));
     }
 
     @CommonApiResponses(
@@ -100,7 +99,7 @@ public class TextbookController {
 
         List<TextbookKeyExpressionDto> keyExpressions = textbookService.getKeyExpressions(id);
         log.info("[API] GetKeyExpressions responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, keyExpressions));
+        return ResponseEntity.ok(ResponseDto.createSuccess(keyExpressions));
     }
 
     @CommonApiResponses(
@@ -119,7 +118,7 @@ public class TextbookController {
 
         List<TextbookLessonQuestionDto> lessonQuestions = textbookService.getLessonQuestions(id);
         log.info("[API] GetLessonQuestions responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, lessonQuestions));
+        return ResponseEntity.ok(ResponseDto.createSuccess(lessonQuestions));
     }
 
     @CommonApiResponses(
@@ -138,7 +137,7 @@ public class TextbookController {
 
         List<TextbookCultureTipDto> cultureTips = textbookService.getCultureTips(id);
         log.info("[API] GetCultureTips responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, cultureTips));
+        return ResponseEntity.ok(ResponseDto.createSuccess(cultureTips));
     }
 
     @CommonApiResponses(
@@ -157,12 +156,12 @@ public class TextbookController {
 
         TextbookRealTalkDto realTalk = textbookService.getRealTalk(id);
         log.info("[API] GetRealTalk responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, realTalk));
+        return ResponseEntity.ok(ResponseDto.createSuccess(realTalk));
     }
 
     @GetMapping("/categories")
     public ResponseEntity<ResponseDto<List<TextbookCategory>>> getCategories() {
         List<TextbookCategory> categories = Arrays.asList(TextbookCategory.values());
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, categories));
+        return ResponseEntity.ok(ResponseDto.createSuccess(categories));
     }
 }

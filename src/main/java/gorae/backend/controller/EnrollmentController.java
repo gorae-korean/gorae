@@ -1,13 +1,10 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.enrollment.EnrollRequestDto;
 import gorae.backend.dto.enrollment.EnrollmentDto;
 import gorae.backend.service.EnrollmentService;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +45,7 @@ public class EnrollmentController {
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
         log.info("[API] Enroll responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDto));
+                .body(ResponseDto.createSuccess(enrollmentDto));
     }
 
     @CommonApiResponses(summary = "수강 신청 내역 조회")
@@ -67,27 +64,17 @@ public class EnrollmentController {
         List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
         log.info("[API] GetEnrollments responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, enrollmentDtoList));
+                .body(ResponseDto.createSuccess(enrollmentDtoList));
     }
 
     @CommonApiResponses(summary = "수강 신청 취소")
     @ApiResponse(
             responseCode = "200",
-            description = "수강 신청 취소 성공",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "SUCCESS",
-                                        "data": "정상적으로 취소되었습니다."
-                                    }
-                                    """
-                    )
-            )
+            description = "수강 신청 취소 성공"
     )
     @DeleteMapping("/{enrollmentId}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<ResponseDto<String>> drop(
+    public ResponseEntity<ResponseDto<Void>> drop(
             Authentication authentication,
             @Parameter(description = "수강 신청 내역 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
             @PathVariable UUID enrollmentId) {
@@ -98,6 +85,6 @@ public class EnrollmentController {
         enrollmentService.drop(userId, enrollmentId);
         log.info("[API] Drop responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, "정상적으로 취소되었습니다."));
+                .body(ResponseDto.createSuccess());
     }
 }

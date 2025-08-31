@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.service.InstructorService;
@@ -44,7 +43,7 @@ public class InstructorController {
         List<AvailabilityDto> availabilities = instructorService.getAvailabilities(userId);
         log.info("[API] GetAvailabilities responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, availabilities));
+                .body(ResponseDto.createSuccess(availabilities));
     }
 
     @CommonApiResponses(summary = "강사 일정 추가")
@@ -64,7 +63,7 @@ public class InstructorController {
     )
     @PostMapping("/availabilities")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<ResponseDto<String>> addAvailability(
+    public ResponseEntity<ResponseDto<Void>> addAvailability(
             Authentication authentication,
             @RequestBody AvailabilityAddRequestDto dto
     ) {
@@ -75,13 +74,6 @@ public class InstructorController {
         instructorService.addAvailability(userId, dto);
         log.info("[API] AddAvailability responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, "일정이 정상적으로 추가되었습니다."));
+                .body(ResponseDto.createSuccess());
     }
-
-//    @PostMapping("/unavailabilites")
-//    @PreAuthorize("hasRole('INSTRUCTOR')")
-//    public ResponseEntity<ResponseDto<String>> addUnavailability(
-//            Authentication authentication,
-//            @RequestBody
-//    )
 }

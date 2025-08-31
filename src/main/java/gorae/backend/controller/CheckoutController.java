@@ -2,7 +2,6 @@ package gorae.backend.controller;
 
 import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.checkout.ApproveRequestDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.exception.CustomException;
@@ -110,12 +109,12 @@ public class CheckoutController {
 
         String redirectUrl = checkoutService.checkout(userId, dto);
         log.info("[API] Checkout responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, redirectUrl));
+        return ResponseEntity.ok(ResponseDto.createSuccess(redirectUrl));
     }
 
     @Hidden
     @GetMapping("/cancel")
-    public ResponseEntity<ResponseDto<String>> cancelCheckout(HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<Void>> cancelCheckout(HttpServletRequest request) {
         String orderId = request.getParameter("token");
         if (orderId == null || orderId.isBlank()) {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
@@ -124,7 +123,7 @@ public class CheckoutController {
         log.info("[API] CancelCheckout requested from orderId: {}", orderId);
         checkoutService.cancelCheckout(orderId);
         log.info("[API] CancelCheckout responded to orderId: {}", orderId);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, "주문이 취소되었습니다."));
+        return ResponseEntity.ok(ResponseDto.createSuccess());
     }
 
     @CommonApiResponses(summary = "결제 검증 및 완료")
@@ -143,6 +142,6 @@ public class CheckoutController {
         checkoutService.approveCheckout(userId, orderId);
 
         log.info("[API] ApproveCheckout responded to subject: {}, orderId: {}", subject, orderId);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, null));
+        return ResponseEntity.ok(ResponseDto.createSuccess());
     }
 }

@@ -2,7 +2,6 @@ package gorae.backend.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.exception.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -35,10 +33,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setCharacterEncoding("UTF-8");
 
         ErrorStatus errorStatus = ErrorStatus.FAILED_TO_AUTHENTICATE;
-        ResponseDto<Map<String, String>> responseDto = new ResponseDto<>(ResponseStatus.ERROR, Map.of(
-                "code", errorStatus.name(),
-                "message", errorStatus.getMessage()
-        ));
+        ResponseDto<Void> responseDto = ResponseDto.createError(errorStatus.name(), errorStatus.getMessage());
 
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
     }

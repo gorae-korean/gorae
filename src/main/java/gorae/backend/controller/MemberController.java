@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.member.MyInfoDto;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,6 +42,6 @@ public class MemberController {
                 .role(role)
                 .build();
 
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, myInfo));
+        return ResponseEntity.ok(ResponseDto.createSuccess(myInfo));
     }
 }

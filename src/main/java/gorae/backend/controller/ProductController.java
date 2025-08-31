@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.product.ProductDto;
 import gorae.backend.service.ProductService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +29,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts() {
         List<ProductDto> products = productService.getProducts();
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, products));
+        return ResponseEntity.ok(ResponseDto.createSuccess(products));
     }
 
     @CommonApiResponses(summary = "특정 상품 정보 조회")
@@ -38,6 +37,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<ProductDto>> getProduct(@PathVariable UUID id) {
         ProductDto product = productService.getProduct(id);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, product));
+        return ResponseEntity.ok(ResponseDto.createSuccess(product));
     }
 }

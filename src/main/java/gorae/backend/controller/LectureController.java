@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.lecture.LectureDto;
 import gorae.backend.service.LectureService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,10 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static gorae.backend.common.JwtUtils.getSubject;
 import static gorae.backend.common.JwtUtils.getId;
+import static gorae.backend.common.JwtUtils.getSubject;
 
 @Slf4j
 @RestController
@@ -36,7 +38,7 @@ public class LectureController {
         LectureDto lectureDto = lectureService.createLecture(userId);
         log.info("[API] CreateLectureManually responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
+                .body(ResponseDto.createSuccess(lectureDto));
     }
 
     @CommonApiResponses(
@@ -56,6 +58,6 @@ public class LectureController {
         LectureDto lectureDto = lectureService.joinLecture(userId);
         log.info("[API] JoinLecture responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, lectureDto));
+                .body(ResponseDto.createSuccess(lectureDto));
     }
 }

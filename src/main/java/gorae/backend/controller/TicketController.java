@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.ticket.TicketDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
@@ -14,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class TicketController {
 
         List<TicketDto> tickets = ticketService.getTickets(getId(authentication));
         log.info("[API] GetTickets responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, tickets));
+        return ResponseEntity.ok(ResponseDto.createSuccess(tickets));
     }
 
     @CommonApiResponses(summary = "수강권 개수 조회")
@@ -59,6 +61,6 @@ public class TicketController {
 
         long ticketCount = ticketService.getTicketCount(getId(authentication), ratio);
         log.info("[API] GetTicketCount responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, ticketCount));
+        return ResponseEntity.ok(ResponseDto.createSuccess(ticketCount));
     }
 }

@@ -1,7 +1,6 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.ResponseStatus;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.dto.textbook.TextbookSearchDto;
 import gorae.backend.service.CourseService;
@@ -55,7 +54,7 @@ public class CourseController {
         List<CourseDto> courses = courseService.searchCourses(textbookId, startTime);
         log.info("[API] SearchCourses responded to sub: {}", subject);
         return ResponseEntity.ok()
-                .body(new ResponseDto<>(ResponseStatus.SUCCESS, courses));
+                .body(ResponseDto.createSuccess(courses));
     }
 
     @CommonApiResponses(
@@ -90,7 +89,7 @@ public class CourseController {
         log.info("[API] GetTimetable requested from sub: {}", subject);
         List<Instant> timetable = courseService.getTimetable(dateTime);
         log.info("[API] GetTimeTable responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, timetable));
+        return ResponseEntity.ok(ResponseDto.createSuccess(timetable));
     }
 
     @CommonApiResponses(summary = "강좌 시간에 해당하는 교재 검색")
@@ -105,6 +104,6 @@ public class CourseController {
         log.info("[API] GetCourseTextbooks requested from sub: {}", subject);
         List<TextbookSearchDto> textbooks = courseService.getCourseTextbooks(startTime);
         log.info("[API] GetCourseTextbooks responded to sub: {}", subject);
-        return ResponseEntity.ok(new ResponseDto<>(ResponseStatus.SUCCESS, textbooks));
+        return ResponseEntity.ok(ResponseDto.createSuccess(textbooks));
     }
 }
