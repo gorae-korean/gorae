@@ -61,6 +61,7 @@ public class EnrollmentService {
             throw new CustomException(ErrorStatus.CANNOT_ENROLL_COURSE_NEAR_START_TIME);
         }
 
+        // TODO: 1시간 단위로 수업이 꼭 이루어지지는 않아서 메소드 수정 필요
         if (enrollmentRepository.existsByStudentAndCourse_StartTimeAndStatus(student, startTime, EnrollmentStatus.ENROLLED)) {
             throw new CustomException(ErrorStatus.CANNOT_ENROLL_MORE);
         }

@@ -2,6 +2,7 @@ package gorae.backend.service;
 
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
+import gorae.backend.dto.instructor.InstructorDto;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.exception.CustomException;
@@ -23,6 +24,13 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class InstructorService {
     private final InstructorRepository instructorRepository;
+
+    public List<InstructorDto> getInstructors() {
+        return instructorRepository.findAllExceptMe()
+                .stream()
+                .map(Instructor::toDto)
+                .toList();
+    }
 
     @Transactional
     public void addAvailability(String userId, AvailabilityAddRequestDto dto) {

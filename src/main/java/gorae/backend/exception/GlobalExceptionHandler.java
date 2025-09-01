@@ -32,19 +32,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseDto<Void>> handleCustomException(CustomException e) {
         String subject = getCurrentUserSubject();
-        log.error("[Exception] CustomException for user: {}, code: {}, message: {}",
+        log.warn("[Exception] CustomException for user: {}, code: {}, message: {}",
                 subject, e.getErrorStatus().name(), e.getMessage());
 
         ErrorStatus errorStatus = e.getErrorStatus();
         return ResponseEntity
-                .ok()
-                .body(ResponseDto.createError(errorStatus.getStatus(), errorStatus.name(), errorStatus.getMessage()));
+                .ok(ResponseDto.createError(errorStatus.getStatus(), errorStatus.name(), errorStatus.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ResponseDto<Void>> handleAuthorizationDeniedException() {
         String subject = getCurrentUserSubject();
-        log.error("[Exception] AuthorizationDeniedException for user: {}", subject);
+        log.warn("[Exception] AuthorizationDeniedException for user: {}", subject);
         
         CustomException exception = new CustomException(ErrorStatus.NO_PERMISSIONS);
         return handleCustomException(exception);
@@ -53,11 +52,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ResponseDto<Void>> handleRuntimeException(RuntimeException e) {
         String subject = getCurrentUserSubject();
-        log.error("[Exception] RuntimeException for user: {}, message: {}", subject, e.getMessage(), e);
+        log.warn("[Exception] RuntimeException for user: {}, message: {}", subject, e.getMessage(), e);
         
         return ResponseEntity
-                .ok()
-                .body(ResponseDto.createError(HttpStatus.BAD_REQUEST, "RUNTIME_ERROR", e.getMessage()));
+                .ok(ResponseDto.createError(HttpStatus.BAD_REQUEST, "RUNTIME_ERROR", e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -70,7 +68,6 @@ public class GlobalExceptionHandler {
         log.error("[Exception] Unhandled exception for user: {}, message: {}", subject, e.getMessage(), e);
 
         return ResponseEntity
-                .ok()
-                .body(ResponseDto.createError(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR", "Error occurred in the server."));
+                .ok(ResponseDto.createError(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR", "Error occurred in the server."));
     }
 }

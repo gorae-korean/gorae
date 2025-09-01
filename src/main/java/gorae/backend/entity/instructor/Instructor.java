@@ -32,7 +32,7 @@ import static gorae.backend.common.TimeUtils.timeOverlaps;
 public class Instructor extends Member {
     @URL
     @Schema(description = "강사 프로필 사진 URL", example = "https://example.com/static/profile.png")
-    String profileImageUrl;
+    private String profileImageUrl;
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true, cascade = CascadeType.ALL)
     @Builder.Default

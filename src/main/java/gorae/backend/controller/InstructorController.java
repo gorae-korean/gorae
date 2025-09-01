@@ -3,6 +3,7 @@ package gorae.backend.controller;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
+import gorae.backend.dto.instructor.InstructorDto;
 import gorae.backend.service.InstructorService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -27,6 +28,17 @@ import static gorae.backend.common.JwtUtils.getPublicId;
 @Tag(name = "강사 전용 API")
 public class InstructorController {
     private final InstructorService instructorService;
+
+    @CommonApiResponses(summary = "강사 목록 조회")
+    @ApiResponse(
+            responseCode = "200",
+            description = "강사 목록 조회 성공"
+    )
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<InstructorDto>>> getInstructors() {
+        List<InstructorDto> instructors = instructorService.getInstructors();
+        return ResponseEntity.ok(ResponseDto.createSuccess(instructors));
+    }
 
     @CommonApiResponses(summary = "강사 일정 조회")
     @ApiResponse(
