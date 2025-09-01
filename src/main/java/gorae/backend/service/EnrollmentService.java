@@ -126,13 +126,19 @@ public class EnrollmentService {
         if (courseStartTime.isBefore(now)) {
             throw new CustomException(ErrorStatus.COURSE_ALREADY_STARTED);
         }
-        long hoursDifference = Duration.between(now, courseStartTime).toHours();
-        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
-            throw new CustomException(ErrorStatus.CANNOT_DROP_COURSE_NEAR_START_TIME);
-        }
 
         Ticket ticket = enrollment.getTicket();
-        ticket.returnTicket();
+        if (ticket.getEndTime().isBefore(Instant.now())) {
+            throw new CustomException(ErrorStatus.TICKET_EXPIRED);
+        }
+
+        long hoursDifference = Duration.between(now, courseStartTime).toHours();
+        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
+            ticket.clearTicket();
+        } else {
+            ticket.returnTicket();
+        }
+
         enrollment.cancelEnrollment();
 
         enrollmentRepository.save(enrollment);

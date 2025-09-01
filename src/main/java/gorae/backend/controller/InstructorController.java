@@ -38,10 +38,10 @@ public class InstructorController {
     public ResponseEntity<ResponseDto<List<AvailabilityDto>>> getAvailabilities(Authentication authentication) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] GetAvailabilities requested from sub: {}", publicId);
+        log.info("[API] GetAvailabilities requested from {}", publicId);
 
         List<AvailabilityDto> availabilities = instructorService.getAvailabilities(userId);
-        log.info("[API] GetAvailabilities responded to sub: {}", publicId);
+        log.info("[API] GetAvailabilities responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(availabilities));
     }
@@ -69,10 +69,10 @@ public class InstructorController {
     ) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] AddAvailability requested from sub: {}", publicId);
+        log.info("[API] AddAvailability requested from {}", publicId);
 
         instructorService.addAvailability(userId, dto);
-        log.info("[API] AddAvailability responded to sub: {}", publicId);
+        log.info("[API] AddAvailability responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess());
     }

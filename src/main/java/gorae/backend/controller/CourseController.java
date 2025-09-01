@@ -105,9 +105,9 @@ public class CourseController {
             @RequestParam ZonedDateTime startTime
     ) {
         String publicId = getPublicId(authentication);
-        log.info("[API] GetCourseTextbooks requested from sub: {}", publicId);
+        log.info("[API] GetCourseTextbooks requested from {}", publicId);
         List<TextbookSearchDto> textbooks = courseService.getCourseTextbooks(startTime);
-        log.info("[API] GetCourseTextbooks responded to sub: {}", publicId);
+        log.info("[API] GetCourseTextbooks responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(textbooks));
     }
 }

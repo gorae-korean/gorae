@@ -40,10 +40,10 @@ public class EnrollmentController {
 
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] Enroll requested from sub: {}", publicId);
+        log.info("[API] Enroll requested from {}", publicId);
 
         EnrollmentDto enrollmentDto = enrollmentService.enroll(userId, dto);
-        log.info("[API] Enroll responded to sub: {}", publicId);
+        log.info("[API] Enroll responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(enrollmentDto));
     }
@@ -58,11 +58,11 @@ public class EnrollmentController {
     public ResponseEntity<ResponseDto<List<EnrollmentDto>>> getEnrollments(Authentication authentication) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] GetEnrollments requested from sub: {}", publicId);
+        log.info("[API] GetEnrollments requested from {}", publicId);
         log.debug("Role: {}", authentication.getAuthorities());
 
         List<EnrollmentDto> enrollmentDtoList = enrollmentService.getEnrollments(userId);
-        log.info("[API] GetEnrollments responded to sub: {}", publicId);
+        log.info("[API] GetEnrollments responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(enrollmentDtoList));
     }
@@ -80,10 +80,10 @@ public class EnrollmentController {
             @PathVariable UUID enrollmentId) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] Drop requested from sub: {}", publicId);
+        log.info("[API] Drop requested from {}", publicId);
 
         enrollmentService.drop(userId, enrollmentId);
-        log.info("[API] Drop responded to sub: {}", publicId);
+        log.info("[API] Drop responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess());
     }

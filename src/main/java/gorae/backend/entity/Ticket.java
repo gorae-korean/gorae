@@ -40,6 +40,10 @@ public class Ticket extends BaseEntity {
 
     public void returnTicket() {
         status = TicketStatus.ACTIVE;
+        clearTicket();
+    }
+
+    public void clearTicket() {
         enrollment = null;
     }
 

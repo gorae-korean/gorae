@@ -33,10 +33,10 @@ public class LectureController {
     public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(Authentication authentication) throws Exception {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] CreateLectureManually requested from sub: {}", publicId);
+        log.info("[API] CreateLectureManually requested from {}", publicId);
 
         LectureDto lectureDto = lectureService.createLecture(userId);
-        log.info("[API] CreateLectureManually responded to sub: {}", publicId);
+        log.info("[API] CreateLectureManually responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(lectureDto));
     }
@@ -53,10 +53,10 @@ public class LectureController {
     public ResponseEntity<ResponseDto<LectureDto>> joinLecture(Authentication authentication) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
-        log.info("[API] JoinLecture requested from sub: {}", publicId);
+        log.info("[API] JoinLecture requested from {}", publicId);
 
         LectureDto lectureDto = lectureService.joinLecture(userId);
-        log.info("[API] JoinLecture responded to sub: {}", publicId);
+        log.info("[API] JoinLecture responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(lectureDto));
     }
