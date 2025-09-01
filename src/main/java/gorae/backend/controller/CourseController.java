@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ public class CourseController {
     @CommonApiResponses(summary = "강좌 검색", description = "하나 이상의 매개변수를 사용해야 합니다.")
     @ApiResponse(responseCode = "200", description = "강좌 검색 성공")
     @GetMapping
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<CourseDto>>> searchCourses(
             Authentication authentication,
             @Parameter(description = "교재 ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
@@ -80,6 +82,7 @@ public class CourseController {
             )
     )
     @GetMapping("/timetable")
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<Instant>>> getTimetable(
             Authentication authentication,
             @Parameter(description = "검색 시간", example = "2025-01-01T00:00:00+09:00")
@@ -95,6 +98,7 @@ public class CourseController {
     @CommonApiResponses(summary = "강좌 시간에 해당하는 교재 검색")
     @ApiResponse(responseCode = "200", description = "교재 검색 성공")
     @GetMapping("/textbooks")
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<List<TextbookSearchDto>>> getCourseTextbooks(
             Authentication authentication,
             @Parameter(description = "강좌 시작 시간", example = "2025-01-01T00:00:00+09:00")

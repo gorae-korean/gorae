@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,56 +46,8 @@ public class CheckoutController {
                     )
             )
     )
-    @ApiResponse(
-            responseCode = "400",
-            description = "결제 요청 중 문제 발생",
-            content = @Content(
-                    examples = {
-                            @ExampleObject(
-                                    name = "상품 첫 구매 불가",
-                                    value = """
-                                            {
-                                                "status": "ERROR",
-                                                "value": {
-                                                    "message": "첫 구매 혜택이 이미 사용되었습니다.",
-                                                    "code": "CANNOT_BUY_THE_FIRST_PRODUCT"
-                                                }
-                                            }
-                                            """
-                            ),
-                            @ExampleObject(
-                                    name = "리다이렉션 링크 오류",
-                                    value = """
-                                            {
-                                                "status": "ERROR",
-                                                "value": {
-                                                    "message": "리다이렉션 링크를 찾을 수 없습니다.",
-                                                    "code": "CANNOT_FIND_REDIRECTION_LINK"
-                                                }
-                                            }
-                                            """
-                            )
-                    }
-            )
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "필요한 데이터를 찾을 수 없음",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "status": "ERROR",
-                                        "value": {
-                                            "message": "상품이 존재하지 않습니다.",
-                                            "code": "PRODUCT_NOT_FOUND"
-                                        }
-                                    }
-                                    """
-                    )
-            )
-    )
     @PostMapping
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<String>> checkout(
             Authentication authentication,
             @RequestBody CheckoutRequestDto dto
@@ -129,6 +82,7 @@ public class CheckoutController {
     @CommonApiResponses(summary = "결제 검증 및 완료")
     @ApiResponse(responseCode = "200", description = "결제 검증 및 완료 성공")
     @PostMapping("/approve")
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<Void>> approveCheckout(
             Authentication authentication, @RequestBody ApproveRequestDto dto) throws Exception {
         String orderId = dto.orderId();
