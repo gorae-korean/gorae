@@ -56,7 +56,8 @@ public class SecurityConfig {
                 mvc.pattern("/textbooks/categories"),
                 mvc.pattern("/oauth/**"),
                 mvc.pattern("/favicon.ico"),
-                mvc.pattern("/actuator/health")
+                mvc.pattern("/actuator/health"),
+                mvc.pattern("/instructors")
         };
 
         MvcRequestMatcher[] swaggerPaths = {
