@@ -16,10 +16,6 @@ public class TextbookVocabulary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String englishExampleSentence1;
-
-    private String englishExampleSentence2;
-
     @NotBlank
     @Column(nullable = false)
     private String koreanExampleSentence1;
@@ -27,10 +23,6 @@ public class TextbookVocabulary {
     @NotBlank
     @Column(nullable = false)
     private String koreanExampleSentence2;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String englishVocabulary;
 
     @NotBlank
     @Column(nullable = false)
@@ -45,11 +37,8 @@ public class TextbookVocabulary {
                 .sequence(sequence)
                 .koreanVocabulary(koreanVocabulary)
                 .pronunciation(pronunciation)
-                .englishVocabulary(englishVocabulary)
                 .koreanExampleSentence1(koreanExampleSentence1)
-                .englishExampleSentence1(englishExampleSentence1)
                 .koreanExampleSentence2(koreanExampleSentence2)
-                .englishExampleSentence2(englishExampleSentence2)
                 .build();
     }
 }
