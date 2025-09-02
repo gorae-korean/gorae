@@ -1,0 +1,3 @@
+-- INSERT INTO gorae.public.textbook(read_time, created_at, updated_at, public_id, article, category, english_subtitle,
+--                                   english_title, korean_subtitle, korean_title, level)
+-- VALUES ()
