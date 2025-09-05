@@ -1,4 +1,4 @@
-name: Deploy to AWS Elastic Beanstalk Docker
+name: Deploy to prod instance
 
 on:
   push:
@@ -87,7 +87,8 @@ jobs:
         run: |
           mkdir -p deploy
           cp Dockerrun.aws.json deploy/
-          cp -r .ebextensions deploy/ || true
+          mkdir -p deploy/.ebextensions
+          cp .ebextensions/01_prod_nginx_https.config deploy/.ebextensions
           cd deploy && zip -r ../deploy.zip .
 
       - name: Deploy to Elastic Beanstalk
