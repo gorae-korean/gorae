@@ -1,5 +1,3 @@
-TRUNCATE gorae.public.key_expression CASCADE;
-
 INSERT INTO key_expression(id, textbook_id, is_published, english_key_expression, korean_key_expression)
 VALUES (1, 1, true, 'Go to __', '__에 가요.'),
        (2, 2, true, '''While + verb''', '-(으)면서 -해요'),
