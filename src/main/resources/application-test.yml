@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO}
+    open-in-view: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:init/*.sql
+      encoding: UTF-8
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${SPRING_BASEURL}/login/oauth2/code/google
+            # 여기서 openid를 추가하면 문제가 생김
+            scope:
+              - email
+              - profile
+
+paypal:
+  baseUrl: https://api-m.sandbox.paypal.com
+  clientId: AXlRpjTDKe1fU7Sutb7ZdeiZg57WjzlOEY2To_OvMZ8TZAlDXc7RnKYthOJx0-duuZASZpm9So2Rc6ZB
+  secret: EDghk3mhBDLcyVniDLl_WPAvTmGNWXEbsRoH8sVqnVf7zcPRLxlxNqSz5XYSmxKTx44GFO7BPOX3eExM
+
+logging:
+  level:
+    gorae.backend: DEBUG
+    security: DEBUG
+    web: debug
+
+jwt:
+  secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1
+  # 7 days
+  expiration: 604800000
+
+frontend:
+  url: https://goraekorean.site/version-test

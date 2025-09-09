@@ -13,7 +13,8 @@ VALUES (5, 4, '2025-08-17 11:49:00+09:00', '2025-08-17 11:49:00+09:00', '9f2c0b2
 INSERT INTO textbook_tag(textbook_id, tag)
 VALUES (5, 'Leisure');
 
-INSERT INTO vocabulary(textbook_id, korean_example_sentence1, korean_example_sentence2, korean_vocabulary, pronunciation)
+INSERT INTO vocabulary(textbook_id, korean_example_sentence1, korean_example_sentence2, korean_vocabulary,
+                       pronunciation)
 VALUES (5,
         '긴 휴일이 생기면 사람들은 여행을 떠나거나 여유롭게 휴식을 취해요.', '휴일마다 놀이 공원이 붐벼요.',
         '휴일', 'Hyuil'),
@@ -35,3 +36,54 @@ VALUES (5,
        (5,
         '그는 가게에서 피규어를 구경하는 걸 좋아해요.', '그는 새로운 전시회를 구경하고 깊은 감동을 받았어요.',
         '구경하다', 'Gugyeonghada');
+
+INSERT INTO key_expression(id, is_published, textbook_id, english_key_expression, korean_key_expression)
+VALUES (8, true, 5, '_______  หรือ _______', '_______  (이)거나/나_______'),
+       (9, true, 5, '_______ด้วย.', '_______ (이)기도 해요.');
+
+INSERT INTO key_expression_example(key_expression_id, example)
+VALUES (8, '제 취미는 독서**거나** 사진 찍기예요.'),
+       (8, '오늘의 점심은 떡볶이**거나** 김밥이에요.'),
+       (8, '저 건물은 박물관**이거나** 미술관이에요.'),
+       (8, '그분의 직업은 교수**거나** 연구원이에요.'),
+       (8, '그 소문은 사실**이거나** 누군가가 지어낸 이야기일 수 있어요.'),
+       (9, '그의 말은 농담 같지만 진심**이기도 해요.**'),
+       (9, '이 영화는 재미있으면서 교육적**이기도 해요.**'),
+       (9, '저 길은 산책로이면서 자전거 도로**기도 해요.**'),
+       (9, '그 경험은 힘들었지만 소중한 추억이기도 해요.'),
+       (9, '서울은 현대적인 도시이면서 전통적인 도시**기도 해요.**');
+
+INSERT INTO key_expression_activity(id, key_expression_id, question)
+VALUES (9, 8, '**_______ (이)거나/나_______** 를 활용하여 질문에 답해보세요.'),
+       (10, 9, '**_______ (이)기도 해요.** 를 활용하여 질문에 답해보세요.');
+
+INSERT INTO key_expression_activity_example(activity_id, file_name, text)
+VALUES (9, 'house-friend', '집, 친구'),
+       (9, 'rain-snow', '비, 눈'),
+       (9, 'book-newspaper', '책, 신문'),
+       (9, 'subway-bus', '지하철, 버스'),
+       (10, 'doctor', '의사'),
+       (10, 'movie-sad', '영화, 슬프다'),
+       (10, 'book-difficult', '책, 어렵다'),
+       (10, 'today-cold', '오늘, 춥다');
+
+INSERT INTO lesson_question(textbook_id, english_question, korean_question)
+VALUES (5, null, '여러분은 놀이 공원에 자주 가나요? 놀이 공원에서 놀았던 경험에 대해 이야기 해주세요.'),
+       (5, null, '여러분은 어떤 날 놀이 공원에 가보고 싶나요? 그 이유는 무엇인가요?'),
+       (5, null, '여러분은 누구와 함께 놀이 공원에 가보고 싶나요? 그 이유는 무엇인가요?'),
+       (5, null, '놀이 공원을 간다면 어떤 놀이기구를 가장 타보고 싶나요? 그 이유는 무엇인가요?'),
+       (5, null, '한국 놀이 공원에 가게 된다면 제일 해보고 싶은 것은 뭐예요?'),
+       (5, null, '여러분의 나라에도 놀이 공원이 있나요? 주로 놀이 공원에 가면 무엇을 하나요?'),
+       (5, null, '여러분이 가장 좋아하는 놀이기구는 뭐예요? 그 이유는 무엇인가요?'),
+       (5, null, '놀이 공원 입장료에 대해 어떻게 생각하나요? 비싸다고 생각하나요 적절하다고 생각하나요? 그 이유는 무엇인가요?');
+
+INSERT INTO culture_tip(textbook_id, file_name, subtitle, text, title)
+VALUES (5, 'uniform', null, '- 한국 놀이 공원은 친구, 연인, 가족과 함께 동심으로 돌아가 재밌는 추억을 만들고 싶어하는 사람들이 많이 가요.
+- 그래서 학생이 아니어도 교복을 빌려 입고 놀거나 사진을 찍는 사람들이 많아요.
+- 한국 놀이 공원에는 교복 대여점도 있어서 다양한 색깔과 디자인의 교복을 빌릴 수 있어요. SNS에 교복 인증샷을 올리는 것도 한국 놀이 공원 필수 코스예요.',
+        '교복 입고 놀이 공원 가는 게 유행이래!'),
+       (5, 'ghost', null, '- 한국 놀이 공원의 ‘귀신의 집’은 인기가 많아요.
+- 처녀 귀신, 도깨비와 같은 한국 전통 귀신부터 유령, 좀비, 괴물 같은 여러 종류의 귀신 분장을 한 배우들이 실제로 여기저기에서 튀어나와 사람들을 놀래켜요.
+- 깜깜한 조명과 음산한 음악이 무서운 분위기를 만드니 혼자 가지 말고 꼭 친구, 연인, 가족과 함께 가세요!!', '한국 놀이 공원에는 귀신이 나온다고?'),
+       (5, 'ticket', null, '- 놀이 공원 입장권은 현장 매표소에서 사는 것보다 온라인 앱에서 사는 것이 더 저렴해요.
+- 여러 쿠폰이나 할인 이벤트가 많아서 앱으로 미리 검색해보고 구입하는 것이 좋아요.', '입장권은 매표소보다 앱이 싸다? ');
