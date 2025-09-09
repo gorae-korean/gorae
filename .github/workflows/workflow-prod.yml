@@ -87,8 +87,28 @@ jobs:
         run: |
           mkdir -p deploy
           cp Dockerrun.aws.json deploy/
-          mkdir -p deploy/.ebextensions
-          cp .ebextensions/01_prod_nginx_https.config deploy/.ebextensions
+
+          # AL2023: .platform 디렉터리 사용
+          mkdir -p deploy/.platform/nginx/conf.d
+          mkdir -p deploy/.platform/hooks/postdeploy
+
+          # conf 파일을 그대로 배치
+          cp conf/01_prod_nginx_https.conf deploy/.platform/nginx/conf.d/https_redirect.conf
+
+          # 배포 후 nginx 테스트 및 리로드 훅
+          cat > deploy/.platform/hooks/postdeploy/01-reload-nginx.sh << 'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          # 기본 사이트가 충돌을 유발하면 비활성화(존재할 경우)
+          if [ -f /etc/nginx/sites-enabled/default ]; then
+            rm -f /etc/nginx/sites-enabled/default || true
+          fi
+          nginx -t
+          systemctl reload nginx
+          EOF
+          chmod +x deploy/.platform/hooks/postdeploy/01-reload-nginx.sh
+
+          # 패키징
           cd deploy && zip -r ../deploy.zip .
 
       - name: Deploy to Elastic Beanstalk

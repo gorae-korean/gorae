@@ -78,7 +78,7 @@ jobs:
           mkdir -p deploy/.platform/hooks/postdeploy
           
           # conf 파일을 그대로 배치
-          cp .ebextensions/02_test_nginx_https.conf deploy/.platform/nginx/conf.d/https_redirect.conf
+          cp conf/02_test_nginx_https.conf deploy/.platform/nginx/conf.d/https_redirect.conf
           
           # 배포 후 nginx 테스트 및 리로드 훅
           cat > deploy/.platform/hooks/postdeploy/01-reload-nginx.sh << 'EOF'
