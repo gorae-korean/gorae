@@ -35,4 +35,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "ORDER BY c.startTime")
     @EntityGraph(attributePaths = {"enrollments.student"})
     List<Course> findTimeTable(Instant startTime, Instant endTime);
+
+    List<Course> findByInstructor_Id(Long instructorId);
 }
