@@ -16,7 +16,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -33,6 +35,8 @@ public class SecurityConfig {
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
     private final OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
+    private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -74,6 +78,8 @@ public class SecurityConfig {
                     oauth2.userInfoEndpoint(userInfo ->
                             userInfo.userService(customOAuth2UserService));
                     oauth2.successHandler(oAuthLoginSuccessHandler);
+                    oauth2.authorizedClientService(oAuth2AuthorizedClientService);
+                    oauth2.authorizedClientRepository(oAuth2AuthorizedClientRepository);
                 }
         );
 
