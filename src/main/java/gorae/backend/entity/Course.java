@@ -1,5 +1,6 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.CourseStatus;
 import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.course.CourseDto;
 import gorae.backend.entity.instructor.Instructor;
@@ -41,6 +42,9 @@ public class Course extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private int maxCount;
 
+    @Enumerated(EnumType.STRING)
+    private CourseStatus status;
+
     public CourseDto toDto() {
         return CourseDto.builder()
                 .id(this.getPublicId())
@@ -51,6 +55,7 @@ public class Course extends BaseEntity {
                 .endTime(endTime)
                 .currentCount(getCurrentCount())
                 .maxCount(maxCount)
+                .status(status)
                 .build();
     }
 
