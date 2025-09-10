@@ -137,8 +137,8 @@ jobs:
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=SPRING_DATASOURCE_PASSWORD,Value=${{ secrets.DB_PASSWORD }} \
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_ID,Value=${{ secrets.GOOGLE_CLIENT_ID }} \
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=GOOGLE_CLIENT_SECRET,Value=${{ secrets.GOOGLE_CLIENT_SECRET }}
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_BASE_URL,Value=${{ secrets.PAYPAL_BASE_URL }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_CLIENT_ID,Value=${{ secrets.PAYPAL_CLIENT_ID }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_SECRET,Value=${{ secrets.PAYPAL_SECRET }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_SECRET,Value=${{ secrets.JWT_SECRET }} \
-#              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_EXPIRATION,Value=${{ secrets.JWT_EXPIRATION }}
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_BASE_URL,Value=${{ secrets.PAYPAL_BASE_URL }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_CLIENT_ID,Value=${{ secrets.PAYPAL_CLIENT_ID }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PAYPAL_SECRET,Value=${{ secrets.PAYPAL_SECRET }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_SECRET,Value=${{ secrets.JWT_SECRET }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=JWT_EXPIRATION,Value=${{ secrets.JWT_EXPIRATION }}

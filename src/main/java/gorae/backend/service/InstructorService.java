@@ -1,12 +1,15 @@
 package gorae.backend.service;
 
+import gorae.backend.dto.course.CourseDto;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.dto.instructor.InstructorDto;
+import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
+import gorae.backend.repository.CourseRepository;
 import gorae.backend.repository.InstructorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class InstructorService {
     private final InstructorRepository instructorRepository;
+    private final CourseRepository courseRepository;
 
     public List<InstructorDto> getInstructors() {
         return instructorRepository.findAllExceptMe()
@@ -76,6 +80,14 @@ public class InstructorService {
 
         return instructor.getAvailabilities().stream()
                 .map(InstructorAvailability::toDto)
+                .toList();
+    }
+
+    public List<CourseDto> getInstructorCourses(String userId) {
+        long instructorId = Long.parseLong(userId);
+        return courseRepository.findByInstructor_Id(instructorId)
+                .stream()
+                .map(Course::toDto)
                 .toList();
     }
 }

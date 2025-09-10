@@ -1,5 +1,6 @@
 package gorae.backend.dto.course;
 
+import gorae.backend.constant.CourseStatus;
 import gorae.backend.constant.textbook.TextbookLevel;
 import gorae.backend.dto.instructor.InstructorDto;
 import gorae.backend.dto.textbook.TextbookSearchDto;
@@ -34,6 +35,9 @@ public record CourseDto(
         int currentCount,
 
         @Schema(description = "최대 수업 인원", example = "4")
-        int maxCount
+        int maxCount,
+
+        @Schema(description = "강의 상태", example = "UPCOMING")
+        CourseStatus status
 ) {
 }

@@ -1,12 +1,11 @@
 package gorae.backend.controller;
 
 import gorae.backend.dto.ResponseDto;
+import gorae.backend.dto.course.CourseDto;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.dto.instructor.InstructorDto;
 import gorae.backend.service.InstructorService;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -61,17 +60,7 @@ public class InstructorController {
     @CommonApiResponses(summary = "강사 일정 추가")
     @ApiResponse(
             responseCode = "200",
-            description = "강사 일정 추가 성공",
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                        {
-                                            "status": "SUCCESS",
-                                            "data": "일정이 정상적으로 추가되었습니다."
-                                        }
-                                    """
-                    )
-            )
+            description = "강사 일정 추가 성공"
     )
     @PostMapping("/availabilities")
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -87,5 +76,19 @@ public class InstructorController {
         log.info("[API] AddAvailability responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess());
+    }
+
+    @CommonApiResponses(summary = "강사 강의 조회")
+    @ApiResponse(responseCode = "200", description = "강사 강의 조회 성공")
+    @GetMapping("/courses")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ResponseDto<List<CourseDto>>> getInstructorCourses(Authentication authentication) {
+        String userId = getId(authentication);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetInstructorCourses requested from {}", publicId);
+
+        List<CourseDto> courses = instructorService.getInstructorCourses(userId);
+        log.info("[API] GetInstructorCourses responded to {}", publicId);
+        return ResponseEntity.ok(ResponseDto.createSuccess(courses));
     }
 }

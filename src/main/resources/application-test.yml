@@ -9,6 +9,7 @@ spring:
       ddl-auto: ${HIBERNATE_DDL_AUTO}
     open-in-view: true
     defer-datasource-initialization: true
+
   sql:
     init:
       mode: always
@@ -29,9 +30,9 @@ spring:
               - profile
 
 paypal:
-  baseUrl: https://api-m.sandbox.paypal.com
-  clientId: AXlRpjTDKe1fU7Sutb7ZdeiZg57WjzlOEY2To_OvMZ8TZAlDXc7RnKYthOJx0-duuZASZpm9So2Rc6ZB
-  secret: EDghk3mhBDLcyVniDLl_WPAvTmGNWXEbsRoH8sVqnVf7zcPRLxlxNqSz5XYSmxKTx44GFO7BPOX3eExM
+  baseUrl: ${PAYPAL_BASE_URL}
+  clientId: ${PAYPAL_CLIENT_ID}
+  secret: ${PAYPAL_SECRET}
 
 logging:
   level:
@@ -40,9 +41,8 @@ logging:
     web: debug
 
 jwt:
-  secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1
-  # 7 days
-  expiration: 604800000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 frontend:
   url: https://goraekorean.site/version-test
