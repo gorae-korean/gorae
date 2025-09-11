@@ -1,10 +1,10 @@
 package gorae.backend.service;
 
-import gorae.backend.dto.course.CourseDto;
+import gorae.backend.constant.CourseStatus;
+import gorae.backend.dto.course.InstructorCourseDto;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.dto.instructor.InstructorDto;
-import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.instructor.InstructorAvailability;
 import gorae.backend.exception.CustomException;
@@ -83,11 +83,10 @@ public class InstructorService {
                 .toList();
     }
 
-    public List<CourseDto> getInstructorCourses(String userId) {
+    public List<InstructorCourseDto> getInstructorCourses(String userId, CourseStatus status) {
         long instructorId = Long.parseLong(userId);
-        return courseRepository.findByInstructor_Id(instructorId)
-                .stream()
-                .map(Course::toDto)
+        return courseRepository.findByInstructor_IdAndStatus(instructorId, status)
+                .stream().map(course -> course.toInstructorCourseDto(status))
                 .toList();
     }
 }

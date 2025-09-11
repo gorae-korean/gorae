@@ -1,4 +1,5 @@
 -- Course 테이블
+TRUNCATE course CASCADE;
 INSERT INTO course (public_id, start_time, end_time, instructor_id, textbook_id, created_at, updated_at, max_count, status)
 VALUES (gen_random_uuid(),
         date_trunc('hour', NOW()) + interval '1 hour', date_trunc('hour', NOW()) + interval '2 hour',

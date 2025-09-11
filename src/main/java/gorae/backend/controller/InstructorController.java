@@ -1,7 +1,8 @@
 package gorae.backend.controller;
 
+import gorae.backend.constant.CourseStatus;
 import gorae.backend.dto.ResponseDto;
-import gorae.backend.dto.course.CourseDto;
+import gorae.backend.dto.course.InstructorCourseDto;
 import gorae.backend.dto.instructor.AvailabilityAddRequestDto;
 import gorae.backend.dto.instructor.AvailabilityDto;
 import gorae.backend.dto.instructor.InstructorDto;
@@ -82,12 +83,15 @@ public class InstructorController {
     @ApiResponse(responseCode = "200", description = "강사 강의 조회 성공")
     @GetMapping("/courses")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<ResponseDto<List<CourseDto>>> getInstructorCourses(Authentication authentication) {
+    public ResponseEntity<ResponseDto<List<InstructorCourseDto>>> getInstructorCourses(
+            Authentication authentication,
+            @RequestParam CourseStatus status
+    ) {
         String userId = getId(authentication);
         String publicId = getPublicId(authentication);
         log.info("[API] GetInstructorCourses requested from {}", publicId);
 
-        List<CourseDto> courses = instructorService.getInstructorCourses(userId);
+        List<InstructorCourseDto> courses = instructorService.getInstructorCourses(userId, status);
         log.info("[API] GetInstructorCourses responded to {}", publicId);
         return ResponseEntity.ok(ResponseDto.createSuccess(courses));
     }
