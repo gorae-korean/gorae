@@ -1,6 +1,9 @@
 package gorae.backend.service;
 
+import gorae.backend.common.paypal.PaypalHttpClient;
 import gorae.backend.constant.CheckoutOrderStatus;
+import gorae.backend.constant.paypal.PaypalOrderStatus;
+import gorae.backend.dto.client.paypal.OrderDto;
 import gorae.backend.entity.CheckoutOrder;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
@@ -17,21 +20,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaypalWebhookService {
     private final CheckoutOrderRepository checkoutOrderRepository;
     private final CheckoutCompletionService checkoutCompletionService;
+    private final PaypalHttpClient paypalHttpClient;
 
     @Transactional
-    public void handleCheckoutOrderApproved(String orderId) {
+    public void handleCheckoutOrderApproved(String orderId) throws Exception {
         CheckoutOrder order = checkoutOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
         CheckoutOrderStatus orderStatus = order.getStatus();
         switch (orderStatus) {
             case PENDING -> {
                 log.info("[Webhook] Processing approved order: {} (PENDING -> APPROVED)", orderId);
-                checkoutCompletionService.handleApprovedOrder(order);
+                OrderDto orderDto = paypalHttpClient.captureOrder(order.getStudent().getPublicId(), orderId);
+                if (orderDto.status() != PaypalOrderStatus.COMPLETED) {
+                    checkoutCompletionService.handleFailedOrder(order);
+                    throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+                }
+                checkoutCompletionService.handleCompletedOrder(order);
             }
-            case APPROVED -> log.info("[Webhook] Order {} already approved - duplicate webhook ignored", orderId);
             case COMPLETED -> log.warn("[Webhook] Received approval webhook for already completed order: {}", orderId);
             default -> {
-                log.error("[Webhook] Invalid state transition for order: {} ({} -> APPROVED)", orderId, orderStatus);
+                log.warn("[Webhook] Invalid state transition for order: {} ({} -> APPROVED)", orderId, orderStatus);
                 throw new CustomException(ErrorStatus.INVALID_ORDER_STATUS);
             }
         }
@@ -43,17 +51,13 @@ public class PaypalWebhookService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.ORDER_NOT_FOUND));
         CheckoutOrderStatus orderStatus = order.getStatus();
         switch (orderStatus) {
-            case APPROVED -> {
-                log.info("[Webhook] Processing payment completion: {} (APPROVED -> COMPLETED)", orderId);
-                checkoutCompletionService.handleCompletedOrder(order);
-            }
             case PENDING -> {
-                log.info("[Webhook] Fast-track completion: {} (PENDING -> COMPLETED)", orderId);
+                log.info("[Webhook] Processing payment completion: {} (PENDING -> COMPLETED)", orderId);
                 checkoutCompletionService.handleCompletedOrder(order);
             }
             case COMPLETED -> log.info("[Webhook] Order {} already completed - duplicate webhook ignored", orderId);
             default -> {
-                log.error("[Webhook] Invalid state transition for order: {} ({} -> COMPLETED)", orderId, orderStatus);
+                log.warn("[Webhook] Invalid state transition for order: {} ({} -> COMPLETED)", orderId, orderStatus);
                 throw new CustomException(ErrorStatus.INVALID_ORDER_STATUS);
             }
         }

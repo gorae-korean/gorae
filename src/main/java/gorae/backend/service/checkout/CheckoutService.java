@@ -62,16 +62,25 @@ public class CheckoutService {
                 .findByStudentAndProductAndStatus(student, product, CheckoutOrderStatus.PENDING);
         if (optionalExistingOrder.isPresent()) {
             CheckoutOrder existingOrder = optionalExistingOrder.get();
-            OrderDto existingOrderDto = paypalHttpClient.getOrder(studentPublicId, existingOrder.getOrderId());
-            PaypalOrderStatus actualStatus = existingOrderDto.status();
 
-            switch (actualStatus) {
-                case PAYER_ACTION_REQUIRED -> {
-                    return getPayNowUrl(existingOrderDto);
+            try {
+                OrderDto existingOrderDto = paypalHttpClient.getOrder(studentPublicId, existingOrder.getOrderId());
+                PaypalOrderStatus actualStatus = existingOrderDto.status();
+
+                switch (actualStatus) {
+                    case PAYER_ACTION_REQUIRED -> {
+                        return getPayNowUrl(existingOrderDto);
+                    }
+                    case APPROVED -> throw new CustomException(ErrorStatus.PAYMENT_BEING_PROCESSED);
+                    case COMPLETED -> checkoutCompletionService.handleCompletedOrder(existingOrder);
+                    default -> checkoutCompletionService.handleFailedOrder(existingOrder);
                 }
-                case APPROVED -> throw new CustomException(ErrorStatus.PAYMENT_BEING_PROCESSED);
-                case COMPLETED -> checkoutCompletionService.handleCompletedOrder(existingOrder);
-                default -> throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+            } catch (CustomException e) {
+                if (e.getErrorStatus() == ErrorStatus.PAYPAL_API_ERROR) {
+                    checkoutCompletionService.handleFailedOrder(existingOrder);
+                } else {
+                    throw e;
+                }
             }
         }
 
@@ -143,23 +152,32 @@ public class CheckoutService {
             return;
         }
 
-        PaypalOrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
-        switch (orderStatus) {
-            case COMPLETED -> checkoutCompletionService.handleCompletedOrder(order);
-            case APPROVED -> {
-                OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
-                if (orderDto.status() != PaypalOrderStatus.COMPLETED) {
+        try {
+            PaypalOrderStatus orderStatus = paypalHttpClient.getOrder(studentPublicId, orderId).status();
+            switch (orderStatus) {
+                case COMPLETED -> checkoutCompletionService.handleCompletedOrder(order);
+                case APPROVED -> {
+                    OrderDto orderDto = paypalHttpClient.captureOrder(studentPublicId, orderId);
+                    if (orderDto.status() != PaypalOrderStatus.COMPLETED) {
+                        checkoutCompletionService.handleFailedOrder(order);
+                        throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+                    }
+                    checkoutCompletionService.handleCompletedOrder(order);
+                }
+                case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
+                default -> {
                     checkoutCompletionService.handleFailedOrder(order);
                     throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
                 }
-                checkoutCompletionService.handleCompletedOrder(order);
             }
-            case VOIDED -> throw new CustomException(ErrorStatus.ALREADY_VOIDED_ORDER);
-            default -> {
+        } catch (CustomException e) {
+            if (e.getErrorStatus() == ErrorStatus.PAYPAL_API_ERROR) {
                 checkoutCompletionService.handleFailedOrder(order);
-                throw new CustomException(ErrorStatus.FAILED_TO_COMPLETE_CHECKOUT);
+            } else {
+                throw e;
             }
         }
+
         log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
     }
 }

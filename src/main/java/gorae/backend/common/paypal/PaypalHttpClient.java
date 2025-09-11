@@ -53,7 +53,7 @@ public class PaypalHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.info(content);
+        log.debug(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200) {
