@@ -24,7 +24,7 @@ public class PaypalWebhookController {
 
     @Hidden
     @PostMapping
-    ResponseEntity<Void> handleWebhook(@RequestBody PaypalWebhookDto webhookData) {
+    ResponseEntity<Void> handleWebhook(@RequestBody PaypalWebhookDto webhookData) throws Exception {
         log.info("[Webhook] New Paypal webhook received for id: {}, summary: {}", webhookData.id(), webhookData.summary());
         log.debug(webhookData.toString());
 

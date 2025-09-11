@@ -35,12 +35,6 @@ public class CheckoutCompletionService {
     }
 
     @Transactional
-    public void handleApprovedOrder(CheckoutOrder order) {
-        order.updateStatus(CheckoutOrderStatus.APPROVED);
-        checkoutOrderRepository.save(order);
-    }
-
-    @Transactional
     public void handleCancelledOrder(CheckoutOrder order) {
         order.updateStatus(CheckoutOrderStatus.CANCELLED);
         checkoutOrderRepository.save(order);

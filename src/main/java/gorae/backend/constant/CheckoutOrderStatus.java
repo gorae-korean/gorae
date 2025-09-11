@@ -4,7 +4,6 @@ public enum CheckoutOrderStatus {
     CREATED,
     PENDING,
     CANCELLED,
-    APPROVED,
     COMPLETED,
     FAILED,
     REFUNDED,
