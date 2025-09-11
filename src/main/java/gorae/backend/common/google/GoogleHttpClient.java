@@ -58,7 +58,7 @@ public class GoogleHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.debug(content);
+        log.info(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200) {

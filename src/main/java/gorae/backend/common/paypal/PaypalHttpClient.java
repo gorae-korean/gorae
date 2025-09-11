@@ -53,7 +53,7 @@ public class PaypalHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.debug(content);
+        log.info(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200) {
@@ -81,7 +81,7 @@ public class PaypalHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.debug(content);
+        log.info(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200 || statusCode == 201) {
@@ -107,7 +107,7 @@ public class PaypalHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.debug(content);
+        log.info(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200) {
@@ -133,7 +133,7 @@ public class PaypalHttpClient {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String content = response.body();
-        log.debug(content);
+        log.info(content);
 
         int statusCode = response.statusCode();
         if (statusCode == 200 || statusCode == 201) {
