@@ -28,7 +28,6 @@ spring:
             scope:
               - email
               - profile
-              - https://www.googleapis.com/auth/meetings.space.created
 
 paypal:
   baseUrl: https://api-m.sandbox.paypal.com

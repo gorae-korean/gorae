@@ -5,7 +5,9 @@ import gorae.backend.constant.endpoint.GoogleEndpoint;
 import gorae.backend.dto.client.google.SpaceConfig;
 import gorae.backend.dto.client.google.SpaceDto;
 import gorae.backend.entity.instructor.Instructor;
-import gorae.backend.service.OAuthTokenService;
+import gorae.backend.exception.CustomException;
+import gorae.backend.exception.ErrorStatus;
+import gorae.backend.service.auth.OAuthTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -65,6 +67,12 @@ public class GoogleHttpClient {
             log.info("[Google] CreateSpace succeeded for member: {}", instructorPublicId);
         } else {
             log.warn("[Google] CreateSpace failed for member: {}, code: {}", instructorPublicId, statusCode);
+            if (statusCode == 401) {
+                throw new CustomException(ErrorStatus.UNAUTHORIZED_GOOGLE_CLIENT);
+            } else if (statusCode == 403) {
+                throw new CustomException(ErrorStatus.DENIED_GOOGLE_CLIENT);
+            }
+            throw new CustomException(ErrorStatus.GOOGLE_API_ERROR);
         }
 
         return objectMapper.readValue(content, SpaceDto.class);

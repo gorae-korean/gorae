@@ -13,6 +13,9 @@ public class GoogleProperties {
     @Value("${google.oauth.baseUrl}")
     private String oauthBaseUrl;
 
+    @Value("${google.oauth.callbackEndpoint}")
+    private String oauthCallbackEndpoint;
+
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
 

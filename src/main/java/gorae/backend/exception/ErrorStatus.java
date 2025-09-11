@@ -16,6 +16,7 @@ public enum ErrorStatus {
     CLIENT_IS_NULL(HttpStatus.BAD_REQUEST, "구글에 다시 로그인이 필요합니다."),
     COURSE_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "이미 시작된 강좌입니다."),
     COURSE_IS_FULL(HttpStatus.BAD_REQUEST, "해당 강좌 인원이 모두 찼습니다."),
+    GOOGLE_API_ERROR(HttpStatus.BAD_REQUEST, "Google API 내에서 에러가 발생했습니다."),
 
     INVALID_DROP(HttpStatus.BAD_REQUEST, "이미 취소되었거나 수강이 완료된 신청입니다."),
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 파라미터가 있습니다."),
@@ -34,6 +35,7 @@ public enum ErrorStatus {
     FAILED_TO_AUTHENTICATE(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     FAILED_TO_GET_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "토큰을 재생성하는 데 실패했습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다."),
+    UNAUTHORIZED_GOOGLE_CLIENT(HttpStatus.UNAUTHORIZED, "Google API 인증에 실패했습니다."),
 
     // 402 PAYMENT_REQUIRED
     CANNOT_FIND_REDIRECTION_LINK(HttpStatus.PAYMENT_REQUIRED, "리다이렉션 링크를 찾을 수 없습니다."),
@@ -41,6 +43,7 @@ public enum ErrorStatus {
     PAYPAL_API_ERROR(HttpStatus.PAYMENT_REQUIRED, "Paypal API 내에서 에러가 발생했습니다."),
 
     // 403 FORBIDDEN
+    DENIED_GOOGLE_CLIENT(HttpStatus.FORBIDDEN, "Google API 요청에 대한 권한이 부족합니다."),
     NO_PERMISSIONS(HttpStatus.FORBIDDEN, "해당 요청에 대한 권한이 없습니다."),
 
     // 404 NOT_FOUND

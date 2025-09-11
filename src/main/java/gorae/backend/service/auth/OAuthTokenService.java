@@ -1,4 +1,4 @@
-package gorae.backend.service;
+package gorae.backend.service.auth;
 
 import gorae.backend.entity.Member;
 import gorae.backend.exception.CustomException;
@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -47,7 +50,7 @@ public class OAuthTokenService {
         return client.getAccessToken().getTokenValue();
     }
 
-    private OAuth2AuthenticationToken createAuthentication(Member member) {
+    public OAuth2AuthenticationToken createAuthentication(Member member) {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole()));
         OAuth2User oAuth2User = new DefaultOAuth2User(
                 authorities,
