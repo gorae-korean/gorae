@@ -13,7 +13,7 @@ public record SpaceConfig(
 ) {
     public static SpaceConfig forLecture() {
         ModerationRestrictions restrictions = ModerationRestrictions.builder()
-                .chatRestriction(SpaceConfig.ModerationRestrictions.RestrictionType.HOSTS_ONLY)
+                .chatRestriction(ModerationRestrictions.RestrictionType.NO_RESTRICTION)
                 .presentRestriction(SpaceConfig.ModerationRestrictions.RestrictionType.HOSTS_ONLY)
                 .reactionRestriction(SpaceConfig.ModerationRestrictions.RestrictionType.NO_RESTRICTION)
                 .build();

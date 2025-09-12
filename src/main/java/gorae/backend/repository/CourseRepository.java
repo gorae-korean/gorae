@@ -28,8 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByTextbook_PublicIdAndStartTime(UUID textbookId, Instant startTime);
 
-    Optional<Course> findByInstructor_IdAndStartTime(Long instructorId, Instant startTime);
-
     boolean existsByInstructorAndStartTime(Instructor instructor, Instant startTimeAfter);
 
     @Query("SELECT c FROM Course c WHERE c.startTime BETWEEN :startTime AND :endTime " +

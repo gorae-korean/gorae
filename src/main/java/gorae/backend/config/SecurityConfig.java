@@ -61,13 +61,13 @@ public class SecurityConfig {
         MvcRequestMatcher[] permitAllWhiteList = {
                 mvc.pattern("/checkouts/cancel/**"),
                 mvc.pattern("/products"),
-                mvc.pattern("/webhooks/**"),
                 mvc.pattern("/textbooks"),
                 mvc.pattern("/textbooks/categories"),
                 mvc.pattern("/oauth/code/**"),
+                mvc.pattern("/instructors"),
+                mvc.pattern("/webhooks/**"),
                 mvc.pattern("/favicon.ico"),
-                mvc.pattern("/actuator/health"),
-                mvc.pattern("/instructors")
+                mvc.pattern("/actuator/health")
         };
 
         MvcRequestMatcher[] swaggerPaths = {

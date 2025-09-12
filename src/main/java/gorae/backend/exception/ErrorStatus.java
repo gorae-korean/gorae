@@ -27,6 +27,7 @@ public enum ErrorStatus {
     LECTURE_CAN_BE_CREATED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 생성될 수 있습니다."),
     LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES(HttpStatus.BAD_REQUEST, "강의는 시작 시간 5분 전부터 참여할 수 있습니다."),
     MUST_BE_LONGER_THAN_60_MINUTES(HttpStatus.BAD_REQUEST, "두 시간의 차이가 60분 이상이어야 합니다."),
+    NOT_ENOUGH_STUDENTS(HttpStatus.BAD_REQUEST, "학생의 수가 부족해 화상 강의를 생성할 수 없습니다."),
     TICKET_EXPIRED(HttpStatus.BAD_REQUEST, "수강권이 만료되었습니다."),
     UNDEFINED_WEBHOOK_EVENT(HttpStatus.BAD_REQUEST, "정의되지 않은 Webhook 이벤트명입니다."),
     WRONG_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),

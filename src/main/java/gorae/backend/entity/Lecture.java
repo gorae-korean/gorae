@@ -25,7 +25,7 @@ public class Lecture extends BaseEntity {
     @Column(nullable = false)
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
