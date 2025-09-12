@@ -49,7 +49,7 @@ public class CourseService {
         Instant instantStartTime = startTime.toInstant();
         return courseRepository.findByStartTime(instantStartTime)
                 .stream()
-                .map(course -> course.getTextbook().toDto())
+                .map(course -> course.getTextbook().toDto(false))
                 .distinct()
                 .toList();
     }

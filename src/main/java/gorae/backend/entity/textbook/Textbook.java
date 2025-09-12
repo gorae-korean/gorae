@@ -90,11 +90,11 @@ public class Textbook extends BaseEntity {
         return Duration.between(getCreatedAt(), Instant.now()).toDays() <= 14;
     }
 
-    public TextbookSearchDto toDto() {
+    public TextbookSearchDto toDto(boolean isKorean) {
         return TextbookSearchDto.builder()
                 .id(getPublicId())
-                .title(englishTitle)
-                .subtitle(englishSubtitle)
+                .title(isKorean ? koreanTitle : englishTitle)
+                .subtitle(isKorean ? koreanSubtitle : englishSubtitle)
                 .thumbnailUrl(UrlUtils.getTextbookThumbnailUrl(getPublicId()))
                 .isNew(isNew())
                 .readTime(readTime)

@@ -52,7 +52,7 @@ public class Course extends BaseEntity {
                 .id(this.getPublicId())
                 .level(textbook.getLevel())
                 .instructor(instructor.toDto())
-                .textbook(textbook.toDto())
+                .textbook(textbook.toDto(false))
                 .startTime(startTime)
                 .endTime(endTime)
                 .currentCount(getCurrentCount())
@@ -71,7 +71,7 @@ public class Course extends BaseEntity {
 
         return InstructorCourseDto.builder()
                 .id(this.getPublicId())
-                .textbook(textbook.toDto())
+                .textbook(textbook.toDto(true))
                 .students(students)
                 .startTime(startTime)
                 .endTime(endTime)
