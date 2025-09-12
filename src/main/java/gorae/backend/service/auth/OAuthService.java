@@ -34,10 +34,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -50,6 +48,8 @@ public class OAuthService {
     private final OAuthTokenService oAuthTokenService;
     private final RestTemplate restTemplate;
 
+    private final Map<String, UUID> stateStore = new ConcurrentHashMap<>();
+
     private static final String GOOGLE = "google";
 
     @Value("${spring.baseurl}")
@@ -60,6 +60,9 @@ public class OAuthService {
         UUID state = UUID.randomUUID();
         String scopes = String.join(" ", requestDto.requiredScopes());
         String redirectUri = baseUrl + googleProperties.getOauthCallbackEndpoint();
+
+        stateStore.put(publicId, state);
+        log.debug("[Service] State {} stored for member {}", state, publicId);
 
         String authorizationUrl = UriComponentsBuilder
                 .fromUriString(googleProperties.getOauthBaseUrl())
@@ -77,7 +80,6 @@ public class OAuthService {
         return new GoogleScopeResponseDto(authorizationUrl, state);
     }
 
-    // TODO: state 검증 추가
     @Transactional
     public void handleCallback(String userId, UUID state, String code, String scope) {
         long memberId = Long.parseLong(userId);
@@ -86,6 +88,16 @@ public class OAuthService {
 
         UUID publicId = member.getPublicId();
         log.info("[Service] HandleCallback started for {}, scope: {}", publicId, scope);
+
+        UUID expectedState = stateStore.get(publicId.toString());
+        if (expectedState == null || !expectedState.equals(state)) {
+            log.warn("[Service] HandleCallback failed for {}: state validation failed. Expected: {}, Actual: {}",
+                    publicId, expectedState, state);
+            throw new IllegalStateException("Invalid state parameter");
+        }
+
+        stateStore.remove(publicId.toString());
+        log.debug("[Service] State {} validated and removed for member {}", state, publicId);
 
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(GOOGLE);
         if (clientRegistration == null) {
