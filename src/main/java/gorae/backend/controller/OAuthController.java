@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Set;
 import java.util.UUID;
@@ -23,6 +25,9 @@ import java.util.UUID;
 @Tag(name = "Google에 토큰 및 권한 요청 API")
 public class OAuthController {
     private final OAuthService authService;
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     @PostMapping("/scope/google")
     public ResponseEntity<ResponseDto<GoogleScopeResponseDto>> requestScopes(
@@ -43,15 +48,19 @@ public class OAuthController {
 
     @Hidden
     @GetMapping("/callback/google")
-    public ResponseEntity<ResponseDto<Void>> authCallback(
+    public RedirectView authCallback(
             Authentication authentication,
             @RequestParam UUID state, @RequestParam String code, @RequestParam String scope
     ) {
         String userId = JwtUtils.getId(authentication);
         String publicId = JwtUtils.getPublicId(authentication);
         log.info("[API] AuthCallback requested from {}", publicId);
-
-        authService.handleCallback(userId, state, code, scope);
-        return ResponseEntity.ok(ResponseDto.createSuccess());
+        try {
+            authService.handleCallback(userId, state, code, scope);
+            return new RedirectView(frontendUrl + "/oauth?status=success");
+        } catch (Exception e) {
+            log.error("[API] AuthCallback error for {}: {}", publicId, e.getMessage());
+            return new RedirectView(frontendUrl + "/oauth?status=failure");
+        }
     }
 }

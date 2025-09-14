@@ -59,7 +59,7 @@ public class PaypalHttpClient {
         if (statusCode == 200) {
             log.info("[Paypal] GetAccessToken succeeded");
         } else {
-            log.warn("[Paypal] GetAccessToken failed for code: {}", statusCode);
+            log.error("[Paypal] GetAccessToken failed for code: {}", statusCode);
             throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 
@@ -87,7 +87,7 @@ public class PaypalHttpClient {
         if (statusCode == 200 || statusCode == 201) {
             log.info("[Paypal] CreateOrder succeeded for member: {}", memberId);
         } else {
-            log.warn("[Paypal] CreateOrder failed for member: {}, code: {}", memberId, statusCode);
+            log.error("[Paypal] CreateOrder failed for member: {}, code: {}", memberId, statusCode);
             throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 
@@ -113,7 +113,7 @@ public class PaypalHttpClient {
         if (statusCode == 200) {
             log.info("[Paypal] GetOrder succeeded for member: {} order: {}", memberId, orderId);
         } else {
-            log.warn("[Paypal] GetOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
+            log.error("[Paypal] GetOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
             throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 
@@ -139,7 +139,7 @@ public class PaypalHttpClient {
         if (statusCode == 200 || statusCode == 201) {
             log.info("[Paypal] CaptureOrder succeeded for member: {} order: {}", memberId, orderId);
         } else {
-            log.warn("[Paypal] CaptureOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
+            log.error("[Paypal] CaptureOrder failed for member: {}, order: {}, code: {}", memberId, orderId, statusCode);
             throw new CustomException(ErrorStatus.PAYPAL_API_ERROR);
         }
 

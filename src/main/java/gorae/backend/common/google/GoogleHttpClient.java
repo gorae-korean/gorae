@@ -66,7 +66,7 @@ public class GoogleHttpClient {
         if (statusCode == 200) {
             log.info("[Google] CreateSpace succeeded for member: {}", instructorPublicId);
         } else {
-            log.warn("[Google] CreateSpace failed for member: {}, code: {}", instructorPublicId, statusCode);
+            log.error("[Google] CreateSpace failed for member: {}, code: {}", instructorPublicId, statusCode);
             if (statusCode == 401) {
                 throw new CustomException(ErrorStatus.UNAUTHORIZED_GOOGLE_CLIENT);
             } else if (statusCode == 403) {
