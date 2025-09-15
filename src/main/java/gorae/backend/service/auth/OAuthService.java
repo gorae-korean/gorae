@@ -76,7 +76,7 @@ public class OAuthService {
                 .build()
                 .toUriString();
 
-        log.info("[Service] GenerateAuthUri succeeded for member: {}, scopes: {}", publicId, state);
+        log.info("[Service] GenerateAuthUri succeeded for member: {}, state: {}", publicId, state);
         return new GoogleScopeResponseDto(authorizationUrl, state);
     }
 
@@ -152,8 +152,7 @@ public class OAuthService {
 
         OAuth2RefreshToken refreshToken = null;
         if (refreshTokenValue != null) {
-            int secondsToAdd = accessTokenDto.refreshTokenExpiresIn();
-            refreshToken = new OAuth2RefreshToken(refreshTokenValue, issuedAt, issuedAt.plusSeconds(secondsToAdd));
+            refreshToken = new OAuth2RefreshToken(refreshTokenValue, issuedAt);
         }
 
         OAuth2AuthorizedClient authorizedClient = new OAuth2AuthorizedClient(
