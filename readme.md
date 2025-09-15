@@ -1,5 +1,5 @@
 # 🐋 Gorae Korean
-<p align="center"><img src="https://github.com/user-attachments/assets/0d6a15f6-64c2-445e-9d8e-244080587cd4"></p>
+<img width="350" height="376" alt="KakaoTalk_20250721_211438901-removebg-preview" src="https://github.com/user-attachments/assets/14ee4a42-b97a-470f-9b9f-626250336d98" />
 
 ## 🧑‍💻 개발 기간
 > **서울시립대학교 창업동아리 인액터스** <br>
@@ -22,3 +22,4 @@
 <img src="https://github.com/user-attachments/assets/b2e6fc2c-c5da-44d0-a537-5f3b78990b12" width="80"></a>
 <img src="https://github.com/user-attachments/assets/37ad89cd-8cfc-492d-839a-a49ada2d821d" width="80"></a>
 <img src="https://github.com/user-attachments/assets/9c6e5a31-3631-4c97-af37-6dbcb93069d1" width="80"></a>
+
