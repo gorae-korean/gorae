@@ -66,6 +66,6 @@ public class Student extends Member {
     }
 
     public StudentDto toDto() {
-        return new StudentDto(getName(), getEmail());
+        return new StudentDto(getName(), getPicture());
     }
 }

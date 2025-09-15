@@ -40,7 +40,7 @@ public class LectureService {
     private static final int MAX_TIME_LIMIT = 5;
 
     @Transactional
-    public LectureDto createLecture(String userId, CreateLectureRequestDto requestDto) throws Exception {
+    public UUID createLecture(String userId, CreateLectureRequestDto requestDto) throws Exception {
         long instructorId = Long.parseLong(userId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
@@ -76,7 +76,7 @@ public class LectureService {
 
             existingLecture.start();
             lectureRepository.save(existingLecture);
-            return existingLecture.toDto(true);
+            return existingLecture.getPublicId();
         }
 
         SpaceDto spaceDto = googleHttpClient.createSpace(instructor);
@@ -85,7 +85,7 @@ public class LectureService {
         lectureRepository.save(lecture);
         log.info("[Service] CreateLecture succeeded for member: {}, course: {}, lecture: {}",
                 instructorPublicId, coursePublicId, lecture.getPublicId());
-        return lecture.toDto(true);
+        return lecture.getPublicId();
     }
 
     @Transactional
@@ -117,5 +117,26 @@ public class LectureService {
         log.info("[Service] JoinLecture succeeded for member: {}, course: {}, lecture: {}",
                 memberPublicId, coursePublicId, lecture.getPublicId());
         return lectureDto;
+    }
+
+    @Transactional(readOnly = true)
+    public LectureDto getLectureInfo(String userId, UUID lectureId) {
+        long instructorId = Long.parseLong(userId);
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        Lecture lecture = lectureRepository.findByPublicId(lectureId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
+
+        UUID instructorPublicId = instructor.getPublicId();
+        UUID lecturePublicId = lecture.getPublicId();
+        log.info("[Service] GetLectureInfo started for member: {}, lecture: {}", instructorPublicId, lecturePublicId);
+
+        if (!lecture.getInstructor().equals(instructor)) {
+            throw new CustomException(ErrorStatus.NO_PERMISSIONS);
+        }
+
+        log.info("[Service] GetLectureInfo succeeded for member: {}, lecture: {}", instructorPublicId, lecturePublicId);
+        return lecture.toDto(true);
     }
 }

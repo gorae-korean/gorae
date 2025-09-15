@@ -2,6 +2,7 @@ package gorae.backend.entity;
 
 import gorae.backend.constant.LectureStatus;
 import gorae.backend.dto.lecture.LectureDto;
+import gorae.backend.dto.member.StudentDto;
 import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -75,13 +76,17 @@ public class Lecture extends BaseEntity {
     }
 
     public LectureDto toDto(boolean isInstructor) {
-        List<String> names = students.stream().map(Student::getName).toList();
+        List<StudentDto> studentDtoList = null;
+        if (isInstructor) {
+            studentDtoList = this.students.stream().map(student ->
+                    new StudentDto(student.getName(), student.getPicture())).toList();
+        }
 
         return LectureDto.builder()
                 .id(this.getPublicId())
                 .code(code)
                 .redirectUrl(url)
-                .studentNames(isInstructor ? names : null)
+                .students(studentDtoList)
                 .build();
     }
 }

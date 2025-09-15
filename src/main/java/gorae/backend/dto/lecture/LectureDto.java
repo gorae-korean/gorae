@@ -1,6 +1,7 @@
 package gorae.backend.dto.lecture;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import gorae.backend.dto.member.StudentDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -20,10 +21,6 @@ public record LectureDto(
         @Schema(description = "화상 강의 참여 링크", example = "https://meet.google.com/eaa-ebzk-zdp")
         String redirectUrl,
 
-        @Schema(
-                description = "참여 학생 구글 이름 목록",
-                example = "[\"student1@google.com\", \"student2@google.com\", \"student3@google.com\", \"student4@google.com\"]"
-        )
-        List<String> studentNames
+        List<StudentDto> students
 ) {
 }
