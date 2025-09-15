@@ -2,6 +2,7 @@ package gorae.backend.entity;
 
 import gorae.backend.constant.MemberRole;
 import gorae.backend.constant.TicketStatus;
+import gorae.backend.dto.member.StudentDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -62,5 +63,9 @@ public class Student extends Member {
             tickets1.add(addMonthlyTicket(product, Instant.now()));
         }
         return tickets1;
+    }
+
+    public StudentDto toDto() {
+        return new StudentDto(getName(), getEmail());
     }
 }

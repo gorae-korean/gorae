@@ -24,4 +24,5 @@ google:
   meet:
     baseUrl: https://meet.googleapis.com
   oauth:
-    baseUrl: https://accounts.google.com
+    baseUrl: https://accounts.google.com/o/oauth2/auth
+    callbackEndpoint: /oauth/callback/google

@@ -1,5 +1,6 @@
 package gorae.backend.repository;
 
+import gorae.backend.constant.CourseStatus;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.LockModeType;
@@ -27,8 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByTextbook_PublicIdAndStartTime(UUID textbookId, Instant startTime);
 
-    Optional<Course> findByInstructor_IdAndStartTime(Long instructorId, Instant startTime);
-
     boolean existsByInstructorAndStartTime(Instructor instructor, Instant startTimeAfter);
 
     @Query("SELECT c FROM Course c WHERE c.startTime BETWEEN :startTime AND :endTime " +
@@ -36,5 +35,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @EntityGraph(attributePaths = {"enrollments.student"})
     List<Course> findTimeTable(Instant startTime, Instant endTime);
 
-    List<Course> findByInstructor_Id(Long instructorId);
+    List<Course> findByInstructor_IdAndStatus(Long instructorId, CourseStatus status);
 }

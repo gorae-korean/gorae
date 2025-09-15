@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ResponseDto<Void>> handleRuntimeException(RuntimeException e) {
         String subject = getCurrentUserSubject();
-        log.warn("[Exception] RuntimeException for user: {}, message: {}", subject, e.getMessage(), e);
+        log.error("[Exception] RuntimeException for user: {}, message: {}", subject, e.getMessage());
         
         return ResponseEntity
                 .ok(ResponseDto.createError(HttpStatus.BAD_REQUEST, "RUNTIME_ERROR", e.getMessage()));
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
         }
 
         String subject = getCurrentUserSubject();
-        log.error("[Exception] Unhandled exception for user: {}, message: {}", subject, e.getMessage(), e);
+        log.error("[Exception] Unhandled exception for user: {}, message: {}", subject, e.getMessage());
 
         return ResponseEntity
                 .ok(ResponseDto.createError(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR", "Error occurred in the server."));

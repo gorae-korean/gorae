@@ -35,7 +35,7 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final ProfileUtils profileUtils;
 
-    private static final int DEADLINE_HOUR = 1;
+    private static final int DEADLINE_HOUR = 24;
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {

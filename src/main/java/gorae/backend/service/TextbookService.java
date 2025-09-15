@@ -27,7 +27,7 @@ public class TextbookService {
     public List<TextbookSearchDto> searchTextbooks(TextbookSearchRequestDto dto) {
         return textbookRepository.findAll(
                         TextbookSpecification.searchByCondition(dto)
-                ).stream().map(Textbook::toDto)
+                ).stream().map(textbook -> textbook.toDto(false))
                 .toList();
     }
 

@@ -3,6 +3,8 @@ package gorae.backend.entity;
 import gorae.backend.constant.CourseStatus;
 import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.dto.course.CourseDto;
+import gorae.backend.dto.course.InstructorCourseDto;
+import gorae.backend.dto.member.StudentDto;
 import gorae.backend.entity.instructor.Instructor;
 import gorae.backend.entity.textbook.Textbook;
 import jakarta.persistence.*;
@@ -50,7 +52,27 @@ public class Course extends BaseEntity {
                 .id(this.getPublicId())
                 .level(textbook.getLevel())
                 .instructor(instructor.toDto())
-                .textbook(textbook.toDto())
+                .textbook(textbook.toDto(false))
+                .startTime(startTime)
+                .endTime(endTime)
+                .currentCount(getCurrentCount())
+                .maxCount(maxCount)
+                .status(status)
+                .build();
+    }
+
+    public InstructorCourseDto toInstructorCourseDto(CourseStatus courseStatus) {
+        List<StudentDto> students;
+        if (courseStatus == CourseStatus.CANCELLED) {
+            students = null;
+        } else {
+            students = getStudents().stream().map(Student::toDto).toList();
+        }
+
+        return InstructorCourseDto.builder()
+                .id(this.getPublicId())
+                .textbook(textbook.toDto(true))
+                .students(students)
                 .startTime(startTime)
                 .endTime(endTime)
                 .currentCount(getCurrentCount())
