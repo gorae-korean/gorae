@@ -186,6 +186,7 @@ public class OAuthService {
             throw new IllegalStateException("Failed to exchange code for token");
         }
 
+        log.info(Objects.requireNonNull(response.getBody()).toString());
         return response.getBody();
     }
 
