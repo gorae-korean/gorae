@@ -75,6 +75,11 @@ public class Lecture extends BaseEntity {
         this.actualStartTime = Instant.now();
     }
 
+    public void end() {
+        this.status = LectureStatus.ENDED;
+        this.actualEndTime = Instant.now();
+    }
+
     public LectureDto toDto(boolean isInstructor) {
         List<StudentDto> studentDtoList = null;
         if (isInstructor) {

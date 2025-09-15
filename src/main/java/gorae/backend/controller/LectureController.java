@@ -84,4 +84,21 @@ public class LectureController {
         log.info("[API] GetLectureInfo responded to {}, lecture: {}", publicId, lectureId);
         return ResponseEntity.ok(ResponseDto.createSuccess(lectureDto));
     }
+
+    @Operation(summary = "화상 강의 완료")
+    @ApiResponse(responseCode = "200", description = "화상 강의 완료 성공")
+    @PatchMapping("/{id}/complete")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ResponseDto<Void>> completeLecture(
+            Authentication authentication,
+            @PathVariable(name = "id") UUID lectureId
+    ) {
+        String userId = getId(authentication);
+        String publicId = getPublicId(authentication);
+        log.info("[API] CompleteLecture requested from {}, lecture: {}", publicId, lectureId);
+
+        lectureService.completeLecture(userId, lectureId);
+        log.info("[API] CompleteLecture responded to {}, lecture: {}", publicId, lectureId);
+        return ResponseEntity.ok(ResponseDto.createSuccess());
+    }
 }

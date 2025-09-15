@@ -10,6 +10,7 @@ public enum ErrorStatus {
     // 400 BAD_REQUEST
     AVAILABILITY_OVERLAPPED(HttpStatus.BAD_REQUEST, "기존 일정과 겹칩니다."),
     CANNOT_BUY_THE_FIRST_PRODUCT(HttpStatus.BAD_REQUEST, "첫 구매 혜택이 이미 사용되었습니다."),
+    CANNOT_COMPLETE_LECTURE_EARLY(HttpStatus.BAD_REQUEST, "강의를 10분 이상 일찍 마칠 수 없습니다."),
     CANNOT_ENROLL_COURSE_NEAR_START_TIME(HttpStatus.BAD_REQUEST, "강의 시작 시간이 얼마 남지 않아 수강신청이 불가능합니다."),
     CANNOT_DROP_COURSE_NEAR_START_TIME(HttpStatus.BAD_REQUEST, "강의 시작 시간이 얼마 남지 않아 취소가 불가능합니다."),
     CANNOT_ENROLL_MORE(HttpStatus.BAD_REQUEST, "한 시간에 두 개 이상 수강할 수 없습니다."),
