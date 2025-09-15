@@ -21,9 +21,9 @@ public record LectureDto(
         String redirectUrl,
 
         @Schema(
-                description = "참여 학생 구글 이메일 목록",
+                description = "참여 학생 구글 이름 목록",
                 example = "[\"student1@google.com\", \"student2@google.com\", \"student3@google.com\", \"student4@google.com\"]"
         )
-        List<String> studentEmails
+        List<String> studentNames
 ) {
 }

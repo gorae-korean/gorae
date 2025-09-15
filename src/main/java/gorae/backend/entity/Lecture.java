@@ -75,13 +75,13 @@ public class Lecture extends BaseEntity {
     }
 
     public LectureDto toDto(boolean isInstructor) {
-        List<String> emails = students.stream().map(Student::getEmail).toList();
+        List<String> names = students.stream().map(Student::getName).toList();
 
         return LectureDto.builder()
                 .id(this.getPublicId())
                 .code(code)
                 .redirectUrl(url)
-                .studentEmails(isInstructor ? emails : null)
+                .studentNames(isInstructor ? names : null)
                 .build();
     }
 }

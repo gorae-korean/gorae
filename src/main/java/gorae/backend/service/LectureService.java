@@ -98,11 +98,8 @@ public class LectureService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.COURSE_NOT_FOUND));
 
         UUID memberPublicId = student.getPublicId();
-        log.info("[Service] JoinLecture started for member: {}", memberPublicId);
-
-        if (!course.getStudents().contains(student)) {
-            throw new CustomException(ErrorStatus.NO_PERMISSIONS);
-        }
+        UUID coursePublicId = course.getPublicId();
+        log.info("[Service] JoinLecture started for member: {}, course: {}", memberPublicId, coursePublicId);
 
         if (course.getStatus() != CourseStatus.UPCOMING) {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
@@ -113,11 +110,12 @@ public class LectureService {
             throw new CustomException(ErrorStatus.LECTURE_CAN_BE_JOINED_AS_EARLY_AS_5_MINUTES);
         }
 
-        Lecture lecture = lectureRepository.findByStudentsContainsAndScheduledStartTime(student, startTime)
+        Lecture lecture = lectureRepository.findByStudentsContainsAndCourse(student, course)
                 .orElseThrow(() -> new CustomException(ErrorStatus.LECTURE_NOT_FOUND));
         LectureDto lectureDto = lecture.toDto(false);
 
-        log.info("[Service] JoinLecture succeeded for member: {}, lecture: {}", memberPublicId, lecture.getPublicId());
+        log.info("[Service] JoinLecture succeeded for member: {}, course: {}, lecture: {}",
+                memberPublicId, coursePublicId, lecture.getPublicId());
         return lectureDto;
     }
 }
