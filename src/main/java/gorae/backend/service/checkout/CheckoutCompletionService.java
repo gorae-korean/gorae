@@ -31,9 +31,8 @@ public class CheckoutCompletionService {
         Product product = order.getProduct();
         if (product.getName() == ProductName.FIRST_CLASS) {
             Student student = order.getStudent();
-            Ticket ticket = student.addFirstTicket(product);
+            student.addFirstTicket(product);
             studentRepository.save(student);
-            ticketRepository.save(ticket);
         } else {
             List<Ticket> tickets = order.getStudent().addMonthlyTickets(product);
             ticketRepository.saveAll(tickets);
