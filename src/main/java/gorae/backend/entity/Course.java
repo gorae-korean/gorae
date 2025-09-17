@@ -41,6 +41,9 @@ public class Course extends BaseEntity {
     @JoinColumn(name = "textbook_id")
     private Textbook textbook;
 
+    @Builder.Default
+    private boolean isReal = true;
+
     @Column(nullable = false, updatable = false)
     private int maxCount;
 
@@ -86,9 +89,12 @@ public class Course extends BaseEntity {
     }
 
     public int getCurrentCount() {
-        return (int) enrollments.stream()
+        if (isReal) {
+            return (int) enrollments.stream()
                 .filter(enrollment -> enrollment.getStatus() == EnrollmentStatus.ENROLLED)
                 .count();
+        }
+        return maxCount;
     }
 
     public List<Student> getStudents() {
