@@ -39,7 +39,7 @@ public class CourseService {
         Instant startTime = dateTime.toInstant();
         Instant endTime = startTime.plus(23, ChronoUnit.HOURS);
         return courseRepository.findTimeTable(startTime, endTime)
-                .stream().filter(course -> course.getCurrentCount() < course.getMaxCount())
+                .stream()
                 .map(Course::getStartTime)
                 .distinct()
                 .toList();

@@ -35,5 +35,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @EntityGraph(attributePaths = {"enrollments.student"})
     List<Course> findTimeTable(Instant startTime, Instant endTime);
 
+    @Query("select c from Course c where c.instructor.id = :instructorId and c.status = :status and c.isReal = true")
     List<Course> findByInstructor_IdAndStatus(Long instructorId, CourseStatus status);
 }
