@@ -45,6 +45,12 @@ public class Student extends Member {
         super.setRole(MemberRole.STUDENT);
     }
 
+    public Ticket addFirstTicket(Product product) {
+        Ticket ticket = addMonthlyTicket(product, Instant.now());
+        isFirst = false;
+        return ticket;
+    }
+
     public Ticket addMonthlyTicket(Product product, Instant now) {
         Ticket ticket = Ticket.builder()
                 .student(this)

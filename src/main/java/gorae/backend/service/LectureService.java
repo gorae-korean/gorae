@@ -3,6 +3,7 @@ package gorae.backend.service;
 import gorae.backend.common.ProfileUtils;
 import gorae.backend.common.google.GoogleHttpClient;
 import gorae.backend.constant.CourseStatus;
+import gorae.backend.constant.LectureStatus;
 import gorae.backend.dto.client.google.SpaceDto;
 import gorae.backend.dto.lecture.CreateLectureRequestDto;
 import gorae.backend.dto.lecture.LectureDto;
@@ -71,6 +72,10 @@ public class LectureService {
         Optional<Lecture> optionalExistingLecture = lectureRepository.findByCourse(course);
         if (optionalExistingLecture.isPresent()) {
             Lecture existingLecture = optionalExistingLecture.get();
+            if (existingLecture.getStatus() == LectureStatus.ENDED) {
+                throw new CustomException(ErrorStatus.ALREADY_ENDED_LECTURE);
+            }
+
             log.info("[Service] Lecture already created and returned again for member: {}, course: {}, lecture: {}",
                     instructorPublicId, coursePublicId, existingLecture.getPublicId());
 
