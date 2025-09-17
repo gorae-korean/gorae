@@ -1,5 +1,6 @@
 package gorae.backend.controller;
 
+import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.product.ProductDto;
 import gorae.backend.service.ProductService;
@@ -8,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +30,17 @@ public class ProductController {
     @CommonApiResponses(summary = "상품 목록 조회")
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts() {
-        List<ProductDto> products = productService.getProducts();
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<ResponseDto<List<ProductDto>>> getProducts(Authentication authentication) {
+        String userId = JwtUtils.getId(authentication);
+        List<ProductDto> products = productService.getProducts(userId);
         return ResponseEntity.ok(ResponseDto.createSuccess(products));
     }
 
     @CommonApiResponses(summary = "특정 상품 정보 조회")
     @ApiResponse(responseCode = "200", description = "특정 상품 정보 조회 성공")
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ResponseDto<ProductDto>> getProduct(@PathVariable UUID id) {
         ProductDto product = productService.getProduct(id);
         return ResponseEntity.ok(ResponseDto.createSuccess(product));

@@ -1,17 +1,27 @@
 -- product 테이블
 INSERT INTO product (id, public_id, created_at, updated_at, name, price, discounted_price, currency_code, count,
                      duration, lesson_ratio)
-VALUES (2, '7b1f0e3d-2e49-4c53-bf10-8a1e7e1d3c45', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_FOUR',
-        '400', '360', 'THB', 4, 28, 4),
+
+VALUES (1, 'b7e9c8a4-3f2d-4de2-9a07-5f1a6b2c8f52', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FIRST_CLASS',
+        '300', '80', 'THB', 1, 7, 5),
+       (2, '7b1f0e3d-2e49-4c53-bf10-8a1e7e1d3c45', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_FOUR',
+        '1200', '1080', 'THB', 4, 28, 4),
        (3, '5e6d8c7a-1f23-4b8b-9c12-7d6e2e4f5b67', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_TWO',
-        '660', '590', 'THB', 4, 28, 2),
+        '1720', '1540', 'THB', 4, 28, 2),
        (4, 'a2d4c8e1-6f4b-4e2e-8c91-2e3f7b9d1a23', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'EIGHT_CLASSES_ONE_TO_FOUR',
-        '800', '650', 'THB', 8, 56, 4),
+        '2400', '1900', 'THB', 8, 56, 4),
        (5, 'f4e7c5b2-3d8e-4a1b-8e6c-9d2b5a7f3c18', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'EIGHT_CLASSES_ONE_TO_TWO',
-        '1320', '1050', 'THB', 8, 56, 2);
+        '3440', '2700', 'THB', 8, 56, 2),
+       (6, 'e8f3b9d2-7c4a-4c8b-9a5e-0b3f9e7b6a2f', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ONE_CLASS_ONE_TO_FOUR',
+        '300', '300', 'THB', 1, 7, 4),
+       (7, 'e7c9f6a7-3d45-4b0f-9c18-5a6e2b1d8c71', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ONE_CLASS_ONE_TO_TWO',
+        '430', '430', 'THB', 1, 7, 2);
 
 INSERT INTO product_benefit (product_id, benefits)
-VALUES (2, '1:4 group lesson'),
+VALUES (1, '1:5 group lesson'),
+       (1, '1-hour Google Meet class'),
+       (1, 'Only one-time purchase'),
+       (2, '1:4 group lesson'),
        (2, '1-hour Google Meet class'),
        (2, 'Post-class feedback'),
        (3, '1:2 group lesson'),
@@ -22,4 +32,10 @@ VALUES (2, '1:4 group lesson'),
        (4, 'Post-class feedback'),
        (5, '1:2 group lesson'),
        (5, '1-hour Google Meet class'),
-       (5, 'Post-class feedback');
+       (5, 'Post-class feedback'),
+       (6, '1:4 group lesson'),
+       (6, '1-hour Google Meet class'),
+       (6, 'Post-class feedback'),
+       (7, '1:2 group lesson'),
+       (7, '1-hour Google Meet class'),
+       (7, 'Post-class feedback');

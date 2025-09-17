@@ -4,6 +4,7 @@ import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.lecture.CreateLectureRequestDto;
 import gorae.backend.dto.lecture.LectureDto;
 import gorae.backend.service.LectureService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class LectureController {
     @ApiResponse(responseCode = "200", description = "화상 강의 생성 성공")
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<ResponseDto<LectureDto>> createLectureManually(
+    public ResponseEntity<ResponseDto<UUID>> createLectureManually(
             Authentication authentication,
             @RequestBody CreateLectureRequestDto requestDto
     ) throws Exception {
@@ -38,10 +39,10 @@ public class LectureController {
         String publicId = getPublicId(authentication);
         log.info("[API] CreateLectureManually requested from {}", publicId);
 
-        LectureDto lectureDto = lectureService.createLecture(userId, requestDto);
+        UUID lectureId = lectureService.createLecture(userId, requestDto);
         log.info("[API] CreateLectureManually responded to {}", publicId);
         return ResponseEntity.ok()
-                .body(ResponseDto.createSuccess(lectureDto));
+                .body(ResponseDto.createSuccess(lectureId));
     }
 
     @CommonApiResponses(
@@ -65,5 +66,39 @@ public class LectureController {
         log.info("[API] JoinLecture responded to {}", publicId);
         return ResponseEntity.ok()
                 .body(ResponseDto.createSuccess(lectureDto));
+    }
+
+    @Operation(summary = "생성된 화상 강의 정보 조회")
+    @ApiResponse(responseCode = "200", description = "화상 강의 정보 조회 성공")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ResponseDto<LectureDto>> getLectureInfo(
+            Authentication authentication,
+            @PathVariable(name = "id") UUID lectureId
+    ) {
+        String userId = getId(authentication);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetLectureInfo requested from {}, lecture: {}", publicId, lectureId);
+
+        LectureDto lectureDto = lectureService.getLectureInfo(userId, lectureId);
+        log.info("[API] GetLectureInfo responded to {}, lecture: {}", publicId, lectureId);
+        return ResponseEntity.ok(ResponseDto.createSuccess(lectureDto));
+    }
+
+    @Operation(summary = "화상 강의 완료")
+    @ApiResponse(responseCode = "200", description = "화상 강의 완료 성공")
+    @PatchMapping("/{id}/complete")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<ResponseDto<Void>> completeLecture(
+            Authentication authentication,
+            @PathVariable(name = "id") UUID lectureId
+    ) {
+        String userId = getId(authentication);
+        String publicId = getPublicId(authentication);
+        log.info("[API] CompleteLecture requested from {}, lecture: {}", publicId, lectureId);
+
+        lectureService.completeLecture(userId, lectureId);
+        log.info("[API] CompleteLecture responded to {}, lecture: {}", publicId, lectureId);
+        return ResponseEntity.ok(ResponseDto.createSuccess());
     }
 }

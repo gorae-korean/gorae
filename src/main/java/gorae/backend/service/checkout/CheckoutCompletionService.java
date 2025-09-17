@@ -1,9 +1,13 @@
 package gorae.backend.service.checkout;
 
 import gorae.backend.constant.CheckoutOrderStatus;
+import gorae.backend.constant.ProductName;
 import gorae.backend.entity.CheckoutOrder;
+import gorae.backend.entity.Product;
+import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
 import gorae.backend.repository.CheckoutOrderRepository;
+import gorae.backend.repository.StudentRepository;
 import gorae.backend.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +21,24 @@ import java.util.List;
 @Service
 public class CheckoutCompletionService {
     private final CheckoutOrderRepository checkoutOrderRepository;
+    private final StudentRepository studentRepository;
     private final TicketRepository ticketRepository;
 
     @Transactional
     public void handleCompletedOrder(CheckoutOrder order) {
         order.completeOrder();
-        List<Ticket> tickets = order.getStudent().addMonthlyTickets(order.getProduct());
+
+        Product product = order.getProduct();
+        if (product.getName() == ProductName.FIRST_CLASS) {
+            Student student = order.getStudent();
+            student.addFirstTicket(product);
+            studentRepository.save(student);
+        } else {
+            List<Ticket> tickets = order.getStudent().addMonthlyTickets(product);
+            ticketRepository.saveAll(tickets);
+        }
+
         checkoutOrderRepository.save(order);
-        ticketRepository.saveAll(tickets);
         log.info("[Service] Order {} completed in Paypal, syncing locally", order.getOrderId());
     }
 

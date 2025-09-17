@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByPublicId(UUID publicId);
 
-    @Query("select p from Product p order by p.price asc, p.name asc")
-    List<Product> findAllOrderByPrice();
+    @Query("select p from Product p where p.name != 'FIRST_CLASS' or :isFirst = true " +
+            "order by p.price asc, p.name asc")
+    List<Product> findAllOrderByPrice(boolean isFirst);
 }

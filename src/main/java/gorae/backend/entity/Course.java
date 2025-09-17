@@ -61,6 +61,10 @@ public class Course extends BaseEntity {
                 .build();
     }
 
+    public void completeCourse() {
+        status = CourseStatus.COMPLETED;
+    }
+
     public InstructorCourseDto toInstructorCourseDto(CourseStatus courseStatus) {
         List<StudentDto> students;
         if (courseStatus == CourseStatus.CANCELLED) {

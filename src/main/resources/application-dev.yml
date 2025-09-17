@@ -41,7 +41,7 @@ logging:
     web: debug
 
 jwt:
-  secret: e9f7c8b5a3d1f6e2b4a7c9d0e8f5a2b3c6d9e0f1a4b7c8d5e2f9a6b3c0d7e4f1
+  secret: b7a9c2e5f8d1b4a6c3e9f0d2a5b8c1e4f7d0a3b6c9e2f5a8d1b4c7e0f3a6b9d2
   # 100 days
   expiration: 8640000000
 

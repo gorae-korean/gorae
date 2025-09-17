@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
@@ -16,4 +17,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     Optional<Lecture> findByCourse(Course course);
 
     Optional<Lecture> findByStudentsContainsAndCourse(Student student, Course course);
+
+    Optional<Lecture> findByPublicId(UUID lectureId);
 }

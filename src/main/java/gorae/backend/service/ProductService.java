@@ -2,9 +2,11 @@ package gorae.backend.service;
 
 import gorae.backend.dto.product.ProductDto;
 import gorae.backend.entity.Product;
+import gorae.backend.entity.Student;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import gorae.backend.repository.ProductRepository;
+import gorae.backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final StudentRepository studentRepository;
 
-    public List<ProductDto> getProducts() {
-        return productRepository.findAllOrderByPrice()
+    public List<ProductDto> getProducts(String userId) {
+        long studentId = Long.parseLong(userId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return productRepository.findAllOrderByPrice(student.isFirst())
                 .stream().map(Product::toDto)
                 .toList();
     }

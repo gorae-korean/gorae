@@ -55,6 +55,10 @@ public class Enrollment extends BaseEntity {
         this.status = EnrollmentStatus.ENROLLED;
     }
 
+    public void completeEnrollment() {
+        status = EnrollmentStatus.COMPLETED;
+    }
+
     public EnrollmentDto toDto() {
         return EnrollmentDto.builder()
                 .id(this.getPublicId())

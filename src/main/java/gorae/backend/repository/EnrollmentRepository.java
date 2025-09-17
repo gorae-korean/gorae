@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,4 +22,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     boolean existsByStudentAndCourse_StartTimeAndStatus(Student student, Instant courseStartTime, EnrollmentStatus status);
 
     Optional<Enrollment> findByStudentAndCourse(Student student, Course course);
+
+    List<Enrollment> findByCourseAndStudentIn(Course course, Collection<Student> students);
 }
