@@ -16,6 +16,15 @@ public record MyInfoDto(
         String imageUrl,
 
         @Schema(description = "유저의 역할 (\"ROLE_\" + \"STUDENT\"와 같은 형식으로 나타남)", example = "ROLE_STUDENT")
-        String role
+        String role,
+
+        @Schema(description = "프로모션 적용됐는지 여부", example = "true")
+        boolean isFirst,
+
+        @Schema(description = "1:2 티켓 개수", example = "2")
+        long twoTicketCount,
+
+        @Schema(description = "1:4 티켓 개수", example = "4")
+        long fourTicketCount
 ) {
 }
