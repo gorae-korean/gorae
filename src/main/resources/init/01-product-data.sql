@@ -3,7 +3,7 @@ INSERT INTO product (id, public_id, created_at, updated_at, name, price, discoun
                      duration, lesson_ratio)
 
 VALUES (1, 'b7e9c8a4-3f2d-4de2-9a07-5f1a6b2c8f52', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FIRST_CLASS',
-        '300', '80', 'THB', 1, 7, 5),
+        '300', '90', 'THB', 1, 7, 5),
        (2, '7b1f0e3d-2e49-4c53-bf10-8a1e7e1d3c45', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_FOUR',
         '1200', '1080', 'THB', 4, 28, 4),
        (3, '5e6d8c7a-1f23-4b8b-9c12-7d6e2e4f5b67', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'FOUR_CLASSES_ONE_TO_TWO',

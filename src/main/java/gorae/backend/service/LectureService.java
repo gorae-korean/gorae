@@ -61,7 +61,7 @@ public class LectureService {
             throw new CustomException(ErrorStatus.INVALID_PARAMETER);
         }
 
-        if (profileUtils.isProdMode() && course.getCurrentCount() <= course.getMaxCount() / 2) {
+        if (course.getCurrentCount() == 0) {
             throw new CustomException(ErrorStatus.NOT_ENOUGH_STUDENTS);
         }
 
