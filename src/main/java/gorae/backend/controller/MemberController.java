@@ -1,7 +1,9 @@
 package gorae.backend.controller;
 
+import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.member.MyInfoDto;
+import gorae.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.Objects;
 @RequestMapping("/members")
 @Tag(name = "유저 정보 API")
 public class MemberController {
+    private final MemberService memberService;
 
     @CommonApiResponses(
             summary = "유저의 기본 정보 조회",
@@ -31,6 +34,7 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<ResponseDto<MyInfoDto>> getMyInfo(Authentication authentication) {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String userId = JwtUtils.getId(authentication);
 
         List<String> roles = oAuth2User.getAttribute("roles");
         String role = Objects.requireNonNull(roles).getFirst();
@@ -42,6 +46,7 @@ public class MemberController {
                 .role(role)
                 .build();
 
-        return ResponseEntity.ok(ResponseDto.createSuccess(myInfo));
+        MyInfoDto newMyInfo = memberService.addExtraInfo(userId, myInfo);
+        return ResponseEntity.ok(ResponseDto.createSuccess(newMyInfo));
     }
 }
