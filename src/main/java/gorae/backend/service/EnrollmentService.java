@@ -35,7 +35,8 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final ProfileUtils profileUtils;
 
-    private static final int DEADLINE_HOUR = 24;
+    private static final int ENROLL_DEADLINE_HOUR = 6;
+    private static final int DROP_DEADLINE_HOUR = 12;
 
     @Transactional
     public EnrollmentDto enroll(String userId, EnrollRequestDto dto) {
@@ -57,12 +58,11 @@ public class EnrollmentService {
         }
 
         long hoursDifference = Duration.between(now, startTime).toHours();
-        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
+        if (profileUtils.isProdMode() && hoursDifference < ENROLL_DEADLINE_HOUR) {
             throw new CustomException(ErrorStatus.CANNOT_ENROLL_COURSE_NEAR_START_TIME);
         }
 
-        // TODO: 1시간 단위로 수업이 꼭 이루어지지는 않아서 메소드 수정 필요
-        if (enrollmentRepository.existsByStudentAndCourse_StartTimeAndStatus(student, startTime, EnrollmentStatus.ENROLLED)) {
+        if (enrollmentRepository.existsByOverlappingTime(student, startTime, course.getEndTime())) {
             throw new CustomException(ErrorStatus.CANNOT_ENROLL_MORE);
         }
 
@@ -134,7 +134,7 @@ public class EnrollmentService {
         }
 
         long hoursDifference = Duration.between(now, courseStartTime).toHours();
-        if (profileUtils.isProdMode() && hoursDifference < DEADLINE_HOUR) {
+        if (profileUtils.isProdMode() && hoursDifference < DROP_DEADLINE_HOUR) {
             ticket.clearTicket();
         } else {
             ticket.returnTicket();

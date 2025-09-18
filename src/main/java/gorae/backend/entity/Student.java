@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +47,22 @@ public class Student extends Member {
         super.setRole(MemberRole.STUDENT);
     }
 
-    public Ticket addFirstTicket(Product product) {
-        Ticket ticket = addMonthlyTicket(product, Instant.now());
+    public void addFirstTicket() {
+        Instant now = Instant.now();
+        ZoneId thailandZone = ZoneId.of("Asia/Bangkok");
+        LocalDateTime endOfDay = LocalDateTime.of(2025, 9, 28, 23, 59, 59);
+        Instant endTime = endOfDay.atZone(thailandZone).toInstant();
+
+        Ticket ticket = Ticket.builder()
+                .student(this)
+                .startTime(now)
+                .endTime(endTime)
+                .lessonRatio(5)
+                .status(TicketStatus.ACTIVE)
+                .build();
+
+        tickets.add(ticket);
         isFirst = false;
-        return ticket;
     }
 
     public Ticket addMonthlyTicket(Product product, Instant now) {

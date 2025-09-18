@@ -1,10 +1,10 @@
 package gorae.backend.repository;
 
-import gorae.backend.constant.EnrollmentStatus;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Enrollment;
 import gorae.backend.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -19,7 +19,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     Optional<Enrollment> findByPublicId(UUID publicId);
 
-    boolean existsByStudentAndCourse_StartTimeAndStatus(Student student, Instant courseStartTime, EnrollmentStatus status);
+    @Query("select count(e) > 0 from Enrollment e where e.student = :student and e.status = 'ENROLLED' and " +
+            "e.course.startTime < :endTime and e.course.endTime > :startTime")
+    boolean existsByOverlappingTime(Student student, Instant startTime, Instant endTime);
 
     Optional<Enrollment> findByStudentAndCourse(Student student, Course course);
 
