@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -26,18 +28,20 @@ public class CheckoutCompletionService {
 
     @Transactional
     public void handleCompletedOrder(CheckoutOrder order) {
-        order.completeOrder();
-
         Product product = order.getProduct();
+        List<Ticket> tickets;
         if (product.getName() == ProductName.FIRST_CLASS) {
             Student student = order.getStudent();
-            student.addFirstTicket();
+            Ticket firstTicket = student.addFirstTicket();
+
+            tickets = new ArrayList<>(Collections.singletonList(firstTicket));
             studentRepository.save(student);
         } else {
-            List<Ticket> tickets = order.getStudent().addMonthlyTickets(product);
+            tickets = order.getStudent().addMonthlyTickets(product);
             ticketRepository.saveAll(tickets);
         }
 
+        order.completeOrder(tickets);
         checkoutOrderRepository.save(order);
         log.info("[Service] Order {} completed in Paypal, syncing locally", order.getOrderId());
     }

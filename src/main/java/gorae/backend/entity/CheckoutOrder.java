@@ -3,11 +3,14 @@ package gorae.backend.entity;
 import gorae.backend.constant.CheckoutOrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,11 +32,20 @@ public class CheckoutOrder extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Ticket> tickets = new ArrayList<>();
+
     private Instant paymentDate;
 
-    public void completeOrder() {
+    public void completeOrder(List<Ticket> tickets) {
         status = CheckoutOrderStatus.COMPLETED;
         paymentDate = Instant.now();
+        this.tickets = tickets;
+
+        for (Ticket ticket : tickets) {
+            ticket.setOrder(this);
+        }
     }
 
     public void updateStatus(CheckoutOrderStatus status) {

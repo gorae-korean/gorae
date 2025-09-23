@@ -1,6 +1,5 @@
 package gorae.backend.entity;
 
-import gorae.backend.constant.MemberRole;
 import gorae.backend.constant.TicketStatus;
 import gorae.backend.dto.member.StudentDto;
 import jakarta.persistence.*;
@@ -42,12 +41,7 @@ public class Student extends Member {
     @Builder.Default
     private List<Lecture> lectures = new ArrayList<>();
 
-    @PrePersist
-    public void prePersist() {
-        super.setRole(MemberRole.STUDENT);
-    }
-
-    public void addFirstTicket() {
+    public Ticket addFirstTicket() {
         Instant now = Instant.now();
         ZoneId thailandZone = ZoneId.of("Asia/Bangkok");
         LocalDateTime endOfDay = LocalDateTime.of(2025, 9, 28, 23, 59, 59);
@@ -63,6 +57,7 @@ public class Student extends Member {
 
         tickets.add(ticket);
         isFirst = false;
+        return ticket;
     }
 
     public Ticket addMonthlyTicket(Product product, Instant now) {
