@@ -51,7 +51,7 @@ public class Student extends Member {
                 .student(this)
                 .startTime(now)
                 .endTime(endTime)
-                .lessonRatio(5)
+                .lessonRatio(7)
                 .status(TicketStatus.ACTIVE)
                 .build();
 
