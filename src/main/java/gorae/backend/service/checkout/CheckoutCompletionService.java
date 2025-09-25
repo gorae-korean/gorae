@@ -7,8 +7,6 @@ import gorae.backend.entity.Product;
 import gorae.backend.entity.Student;
 import gorae.backend.entity.Ticket;
 import gorae.backend.repository.CheckoutOrderRepository;
-import gorae.backend.repository.StudentRepository;
-import gorae.backend.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +21,6 @@ import java.util.List;
 @Service
 public class CheckoutCompletionService {
     private final CheckoutOrderRepository checkoutOrderRepository;
-    private final StudentRepository studentRepository;
-    private final TicketRepository ticketRepository;
 
     @Transactional
     public void handleCompletedOrder(CheckoutOrder order) {
@@ -33,16 +29,12 @@ public class CheckoutCompletionService {
         if (product.getName() == ProductName.FIRST_CLASS) {
             Student student = order.getStudent();
             Ticket firstTicket = student.addFirstTicket();
-
             tickets = new ArrayList<>(Collections.singletonList(firstTicket));
-            studentRepository.save(student);
         } else {
             tickets = order.getStudent().addMonthlyTickets(product);
-            ticketRepository.saveAll(tickets);
         }
 
         order.completeOrder(tickets);
-        checkoutOrderRepository.save(order);
         log.info("[Service] Order {} completed in Paypal, syncing locally", order.getOrderId());
     }
 
