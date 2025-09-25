@@ -20,7 +20,7 @@ public record PaymentSource(PaypalPaymentSource paypal) {
             public enum ShippingPreference {
                 GET_FROM_FILE,
                 NO_SHIPPING,
-                SET_PROVIDED, ADDRESS
+                SET_PROVIDED_ADDRESS
             }
 
             public enum LandingPage {

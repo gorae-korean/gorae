@@ -110,13 +110,13 @@ public class CheckoutService {
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
                         .returnUrl(frontendUrl + "/approve")
                         .cancelUrl(frontendUrl + "/pricing")
+                        .shippingPreference(PaymentSource.PaypalPaymentSource.ExperienceContext.ShippingPreference.NO_SHIPPING)
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
-                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
+                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.NO_PREFERENCE)
                         .build()
         );
 
-        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getDiscountedPrice().toString());
-        PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
+        PurchaseUnit purchaseUnit = PurchaseUnit.createPurchaseUnit(product);
         return CreateOrderRequestDto.builder()
                 .intent(PaypalOrderIntent.CAPTURE)
                 .purchaseUnits(List.of(purchaseUnit))

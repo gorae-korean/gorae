@@ -43,9 +43,9 @@ public class Student extends Member {
 
     public Ticket addFirstTicket() {
         Instant now = Instant.now();
-        ZoneId thailandZone = ZoneId.of("Asia/Bangkok");
-        LocalDateTime endOfDay = LocalDateTime.of(2025, 9, 28, 23, 59, 59);
-        Instant endTime = endOfDay.atZone(thailandZone).toInstant();
+        ZoneId indonesiaZone = ZoneId.of("Asia/Jakarta");
+        LocalDateTime endOfDay = LocalDateTime.of(2025, 10, 9, 23, 59, 59);
+        Instant endTime = endOfDay.atZone(indonesiaZone).toInstant();
 
         Ticket ticket = Ticket.builder()
                 .student(this)
