@@ -1,6 +1,8 @@
 package gorae.backend.entity;
 
 import gorae.backend.constant.CheckoutOrderStatus;
+import gorae.backend.constant.TicketStatus;
+import gorae.backend.dto.checkout.CheckoutOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,6 +40,17 @@ public class CheckoutOrder extends BaseEntity {
 
     private Instant paymentDate;
 
+    public CheckoutOrderDto toDto() {
+        return CheckoutOrderDto.builder()
+                .id(getPublicId())
+                .product(product.toSummaryDto())
+                .currentCount(getCurrentTicketCount())
+                .paymentDate(paymentDate)
+                .endDate(tickets.isEmpty() ? null : tickets.getFirst().getEndTime())
+                .status(status)
+                .build();
+    }
+
     public void completeOrder(List<Ticket> tickets) {
         status = CheckoutOrderStatus.COMPLETED;
         paymentDate = Instant.now();
@@ -50,5 +63,10 @@ public class CheckoutOrder extends BaseEntity {
 
     public void updateStatus(CheckoutOrderStatus status) {
         this.status = status;
+    }
+
+    public int getCurrentTicketCount() {
+        return Math.toIntExact(tickets.stream().filter(
+                ticket -> ticket.getStatus() == TicketStatus.ACTIVE).count());
     }
 }

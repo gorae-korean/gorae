@@ -5,6 +5,7 @@ import gorae.backend.constant.CheckoutOrderStatus;
 import gorae.backend.constant.paypal.PaypalOrderStatus;
 import gorae.backend.constant.paypal.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
+import gorae.backend.dto.checkout.CheckoutOrderDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
 import gorae.backend.dto.client.paypal.OrderDto;
@@ -179,5 +180,12 @@ public class CheckoutService {
         }
 
         log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CheckoutOrderDto> getOrders(String userId) {
+        long studentId = Long.parseLong(userId);
+        return checkoutOrderRepository.findByStudent_Id(studentId)
+                .stream().map(CheckoutOrder::toDto).toList();
     }
 }
