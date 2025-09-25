@@ -17,6 +17,6 @@ public interface CheckoutOrderRepository extends JpaRepository<CheckoutOrder, Lo
 
     Optional<CheckoutOrder> findByStudentAndProductAndStatus(Student student, Product product, CheckoutOrderStatus status);
 
-    @Query("select c from CheckoutOrder c where c.student.id = :studentId and c.status in ('COMPLETED', 'FAILED')")
+    @Query("select c from CheckoutOrder c where c.student.id = :studentId and c.status = 'COMPLETED'")
     List<CheckoutOrder> findByStudent_Id(Long studentId);
 }
