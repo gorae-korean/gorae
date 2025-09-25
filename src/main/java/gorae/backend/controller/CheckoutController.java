@@ -3,11 +3,13 @@ package gorae.backend.controller;
 import gorae.backend.common.JwtUtils;
 import gorae.backend.dto.ResponseDto;
 import gorae.backend.dto.checkout.ApproveRequestDto;
+import gorae.backend.dto.checkout.CheckoutOrderDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.exception.CustomException;
 import gorae.backend.exception.ErrorStatus;
 import gorae.backend.service.checkout.CheckoutService;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static gorae.backend.common.JwtUtils.getId;
 import static gorae.backend.common.JwtUtils.getPublicId;
@@ -97,5 +101,19 @@ public class CheckoutController {
 
         log.info("[API] ApproveCheckout responded to user: {}, order: {}", publicId, orderId);
         return ResponseEntity.ok(ResponseDto.createSuccess());
+    }
+
+    @Operation(summary = "결제 내역 조회")
+    @ApiResponse(responseCode = "200", description = "결제 내역 조회 성공")
+    @GetMapping
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<ResponseDto<List<CheckoutOrderDto>>> getOrders(Authentication authentication) {
+        String userId = getId(authentication);
+        String publicId = getPublicId(authentication);
+        log.info("[API] GetOrders requested from {}", publicId);
+
+        List<CheckoutOrderDto> orderDtoList = checkoutService.getOrders(userId);
+        log.info("[API] GetOrders responded to {}", publicId);
+        return ResponseEntity.ok(ResponseDto.createSuccess(orderDtoList));
     }
 }

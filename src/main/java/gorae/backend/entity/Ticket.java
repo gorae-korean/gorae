@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
@@ -33,6 +34,11 @@ public class Ticket extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private CheckoutOrder order;
 
     public void useTicket() {
         status = TicketStatus.USED;

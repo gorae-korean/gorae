@@ -1,8 +1,9 @@
 package gorae.backend.entity;
 
+import gorae.backend.constant.MemberRole;
+import gorae.backend.entity.instructor.Instructor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -24,8 +25,7 @@ public abstract class BaseEntity {
     private Long id;
 
     @Column(unique = true, updatable = false, nullable = false, columnDefinition = "uuid")
-    @Builder.Default
-    private UUID publicId = UUID.randomUUID();
+    private UUID publicId;
 
     @CreatedDate
     @Column(updatable = false)
@@ -34,4 +34,19 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column
     private Instant updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (publicId == null) {
+            publicId = UUID.randomUUID();
+        }
+
+        if (this instanceof Member member) {
+            if (member instanceof Student) {
+                member.setRole(MemberRole.STUDENT);
+            } else if (member instanceof Instructor) {
+                member.setRole(MemberRole.INSTRUCTOR);
+            }
+        }
+    }
 }

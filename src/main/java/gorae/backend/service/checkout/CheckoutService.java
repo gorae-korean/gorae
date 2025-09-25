@@ -5,6 +5,7 @@ import gorae.backend.constant.CheckoutOrderStatus;
 import gorae.backend.constant.paypal.PaypalOrderStatus;
 import gorae.backend.constant.paypal.PaypalOrderIntent;
 import gorae.backend.constant.ProductName;
+import gorae.backend.dto.checkout.CheckoutOrderDto;
 import gorae.backend.dto.checkout.CheckoutRequestDto;
 import gorae.backend.dto.client.paypal.CreateOrderRequestDto;
 import gorae.backend.dto.client.paypal.OrderDto;
@@ -109,13 +110,13 @@ public class CheckoutService {
                 PaymentSource.PaypalPaymentSource.ExperienceContext.builder()
                         .returnUrl(frontendUrl + "/approve")
                         .cancelUrl(frontendUrl + "/pricing")
+                        .shippingPreference(PaymentSource.PaypalPaymentSource.ExperienceContext.ShippingPreference.NO_SHIPPING)
                         .userAction(PaymentSource.PaypalPaymentSource.ExperienceContext.UserAction.PAY_NOW)
-                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.LOGIN)
+                        .landingPage(PaymentSource.PaypalPaymentSource.ExperienceContext.LandingPage.NO_PREFERENCE)
                         .build()
         );
 
-        PurchaseUnit.Amount amount = new PurchaseUnit.Amount(product.getCurrencyCode(), product.getDiscountedPrice().toString());
-        PurchaseUnit purchaseUnit = new PurchaseUnit(amount);
+        PurchaseUnit purchaseUnit = PurchaseUnit.createPurchaseUnit(product);
         return CreateOrderRequestDto.builder()
                 .intent(PaypalOrderIntent.CAPTURE)
                 .purchaseUnits(List.of(purchaseUnit))
@@ -179,5 +180,12 @@ public class CheckoutService {
         }
 
         log.info("[Service] ApproveCheckout succeeded for member: {}, order: {}", studentPublicId, orderId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CheckoutOrderDto> getOrders(String userId) {
+        long studentId = Long.parseLong(userId);
+        return checkoutOrderRepository.findByStudent_Id(studentId)
+                .stream().map(CheckoutOrder::toDto).toList();
     }
 }

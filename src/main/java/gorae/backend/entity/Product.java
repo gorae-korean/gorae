@@ -3,6 +3,7 @@ package gorae.backend.entity;
 import gorae.backend.common.DiscountCalculator;
 import gorae.backend.constant.ProductName;
 import gorae.backend.dto.product.ProductDto;
+import gorae.backend.dto.product.ProductSummaryDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -57,6 +58,21 @@ public class Product extends BaseEntity {
                 .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
                 .benefits(benefits)
                 .duration(duration)
+                .lessonRatio(lessonRatio)
+                .build();
+    }
+
+    public ProductSummaryDto toSummaryDto() {
+        return ProductSummaryDto.builder()
+                .id(getPublicId())
+                .name(name.getKey())
+                .price(price)
+                .discountedPrice(discountedPrice)
+                .discountPercentage(DiscountCalculator.getDiscountPercentage(price, discountedPrice))
+                .discountAmount(DiscountCalculator.getDiscountAmount(price, discountedPrice))
+                .currencyCode(currencyCode)
+                .count(count)
+                .hasDiscount(DiscountCalculator.getHasDiscount(price, discountedPrice))
                 .lessonRatio(lessonRatio)
                 .build();
     }

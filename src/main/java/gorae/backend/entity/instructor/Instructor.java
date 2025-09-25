@@ -1,6 +1,5 @@
 package gorae.backend.entity.instructor;
 
-import gorae.backend.constant.MemberRole;
 import gorae.backend.dto.instructor.InstructorDto;
 import gorae.backend.entity.Course;
 import gorae.backend.entity.Lecture;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,11 +46,6 @@ public class Instructor extends Member {
 
     @OneToMany(mappedBy = "instructor", orphanRemoval = true)
     private List<Lecture> lectures;
-
-    @PrePersist
-    public void prePersist() {
-        super.setRole(MemberRole.INSTRUCTOR);
-    }
 
     public InstructorDto toDto() {
         return new InstructorDto(getName(), profileImageUrl);
