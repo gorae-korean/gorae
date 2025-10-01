@@ -3,7 +3,7 @@
 
 ## 🧑‍💻 개발 기간
 > **서울시립대학교 창업동아리 인액터스** <br>
-> 2025.04 ~
+> 2025.04 ~ 2025.10
 
 ## ❓ 프로젝트 소개
 동남아시아 현지인이 튜티(Tutee)가 되고, 한국의 미혼모가 튜터(Tutor)가 되어 한국어 회화 온라인 수업을 진행하는 교육 플랫폼입니다.
@@ -22,4 +22,5 @@
 <img src="https://github.com/user-attachments/assets/b2e6fc2c-c5da-44d0-a537-5f3b78990b12" width="80"></a>
 <img src="https://github.com/user-attachments/assets/37ad89cd-8cfc-492d-839a-a49ada2d821d" width="80"></a>
 <img src="https://github.com/user-attachments/assets/9c6e5a31-3631-4c97-af37-6dbcb93069d1" width="80"></a>
+
 
