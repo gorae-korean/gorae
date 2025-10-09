@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/gorae
-    username: gorae
-    password: gorae123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -21,8 +21,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 812361353897-0o75jou9q7pl9jp590bhh8dd78qkmbll.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             # 여기서 openid를 추가하면 문제가 생김
             scope:
@@ -30,9 +30,9 @@ spring:
               - profile
 
 paypal:
-  baseUrl: https://api-m.sandbox.paypal.com
-  clientId: AXlRpjTDKe1fU7Sutb7ZdeiZg57WjzlOEY2To_OvMZ8TZAlDXc7RnKYthOJx0-duuZASZpm9So2Rc6ZB
-  secret: EDghk3mhBDLcyVniDLl_WPAvTmGNWXEbsRoH8sVqnVf7zcPRLxlxNqSz5XYSmxKTx44GFO7BPOX3eExM
+  baseUrl: ${PAYPAL_BASE_URL}
+  clientId: ${PAYPAL_CLIENT_ID}
+  secret: ${PAYPAL_SECRET}
 
 logging:
   level:
@@ -41,7 +41,7 @@ logging:
     web: debug
 
 jwt:
-  secret: b7a9c2e5f8d1b4a6c3e9f0d2a5b8c1e4f7d0a3b6c9e2f5a8d1b4c7e0f3a6b9d2
+  secret: ${JWT_SECRET}
   # 100 days
   expiration: 8640000000
 
