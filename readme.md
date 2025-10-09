@@ -13,7 +13,7 @@
 > **수강 신청 및 취소** : 원하는 시간에 수업을 신청하거나, 신청된 수업을 취소합니다. <br>
 > **온라인 강의 생성 및 참여** : `Google Meet API`를 통해 튜터가 온라인 강의실을 생성하고, 튜티가 참여합니다. <br>
 > **수강권 결제** : `Paypal API`를 통해 수강 신청에 필요한 수강권을 결제합니다. <br>
-> **데모 영상** : [https://youtu.be/zQKphYjhtqE](https://youtu.be/zQKphYjhtqE)
+> **강의 관련 데모 영상** : [https://youtu.be/zQKphYjhtqE](https://youtu.be/zQKphYjhtqE)
 
 ## 🖥️ 기술 스택
 <img src="https://github.com/user-attachments/assets/6bf4d2e3-f01d-47bd-924e-32d2647a5b01" width="80"></a>
@@ -23,6 +23,7 @@
 <img src="https://github.com/user-attachments/assets/b2e6fc2c-c5da-44d0-a537-5f3b78990b12" width="80"></a>
 <img src="https://github.com/user-attachments/assets/37ad89cd-8cfc-492d-839a-a49ada2d821d" width="80"></a>
 <img src="https://github.com/user-attachments/assets/9c6e5a31-3631-4c97-af37-6dbcb93069d1" width="80"></a>
+
 
 
 
